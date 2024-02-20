@@ -11,7 +11,7 @@ services:
     depends_on:
       - mysql_service
     links:
-      - mysql_service  
+      - mysql_service
 
   nginx_service:
     build:
@@ -29,10 +29,12 @@ services:
     container_name: mysql
     image: mysql:8
     environment:
-      - MYSQL_ROOT_PASSWORD=root2 
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
     restart: always
     volumes:
       - './docker/volumes/mysql:/var/lib/mysql'
+    secrets:
+      - db_root_password
 
   phpmyadmin_service:
     image: phpmyadmin
@@ -44,3 +46,7 @@ services:
     restart: always
     ports:
       - 8080:80
+
+secrets:
+  db_root_password:
+    file: ./db_root_password.txt
