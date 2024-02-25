@@ -23,13 +23,4 @@ class Category extends Model
         return $this->hasMany(Book::class);
     }
 
-    public function subCategories(): HasMany
-    {
-        return $this->hasMany(Category::class);
-    }
-
-    public function parentCategory(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
 }
