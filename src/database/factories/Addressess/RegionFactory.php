@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Addressess;
 
+use App\Models\Addressess\Country;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class RegionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->unique()->state(),
+            'country_id' => Country::all()->random()->id,
         ];
     }
 }

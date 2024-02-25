@@ -17,9 +17,8 @@ return new class extends Migration
             $table->string('description', 1200);
             $table->year('publication_year');
             $table->string('language', 50);
-            $table->string('cover_image_url');
-            $table->boolean('published')->default(false);
-            $table->timestamp('published_at');
+            $table->string('cover_image_url')->nullable();
+            $table->timestamp('published_at')->nullable();
 
             $table->foreignId('publisher_id')
                 ->constrained()
@@ -30,24 +29,6 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-
-            $table->foreignId('paper_format_id')
-                ->nullable()
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->nullOnDelete();
-
-            $table->foreignId('audio_format_id')
-                ->nullable()
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->nullOnDelete();
-
-            $table->foreignId('electronic_format_id')
-                ->nullable()
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->nullOnDelete();
 
             $table->timestamps();
         });

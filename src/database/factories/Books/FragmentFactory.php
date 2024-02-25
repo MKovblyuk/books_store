@@ -2,12 +2,13 @@
 
 namespace Database\Factories\Books;
 
+use App\Models\Books\Book;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Books\Category>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Books\Fragment>
  */
-class CategoryFactory extends Factory
+class FragmentFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +18,8 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'url' => fake()->imageUrl(),
+            'book_id' => Book::all()->random()->id,
         ];
     }
 }

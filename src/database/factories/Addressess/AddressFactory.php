@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Addressess;
 
+use App\Models\Addressess\District;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,11 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'settlement_name' => fake()->city(),
+            'street_name' => fake()->streetName(),
+            'street_number' => rand(1,50),
+            'postal_code' => fake()->unique()->postcode(),
+            'district_id' => District::all()->random()->id,
         ];
     }
 }

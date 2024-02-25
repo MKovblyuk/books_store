@@ -26,11 +26,6 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->foreignId('parent_review_id')
-                ->constrained('reviews')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-
             $table->timestamps();
         });
     }

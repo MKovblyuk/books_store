@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('first_name', 50);
             $table->string('last_name', 50);
             $table->string('description', 1000);
-            $table->string('photo_url');
+            $table->string('photo_url')->nullable();
             $table->timestamps();
         });
     }
