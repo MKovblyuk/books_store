@@ -17,7 +17,6 @@ class Review extends Model
         'review',
         'user_id',
         'book_id',
-        'parent_review_id',
     ];
 
     public function user(): BelongsTo
@@ -28,15 +27,5 @@ class Review extends Model
     public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);
-    }
-
-    public function parentReview(): BelongsTo
-    {
-        return $this->belongsTo(Review::class);
-    }
-
-    public function childReviews(): HasMany
-    {
-        return $this->hasMany(Review::class);
     }
 }
