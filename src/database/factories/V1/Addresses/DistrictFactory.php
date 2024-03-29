@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories\Addressess;
+namespace Database\Factories\V1\Addresses;
 
-use App\Models\Addressess\Region;
+use App\Models\V1\Addresses\Region;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

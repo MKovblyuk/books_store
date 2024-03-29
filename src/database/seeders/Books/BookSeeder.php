@@ -2,11 +2,11 @@
 
 namespace Database\Seeders\Books;
 
-use App\Models\Books\AudioFormat;
-use App\Models\Books\Author;
-use App\Models\Books\Book;
-use App\Models\Books\ElectronicFormat;
-use App\Models\Books\PaperFormat;
+use App\Models\V1\Books\AudioFormat;
+use App\Models\V1\Books\Author;
+use App\Models\V1\Books\Book;
+use App\Models\V1\Books\ElectronicFormat;
+use App\Models\V1\Books\PaperFormat;
 use Illuminate\Database\Seeder;
 
 class BookSeeder extends Seeder

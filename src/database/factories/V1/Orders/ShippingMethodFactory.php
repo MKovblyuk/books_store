@@ -1,13 +1,13 @@
 <?php
 
-namespace Database\Factories\Addressess;
+namespace Database\Factories\V1\Orders;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Addressess\Country>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Orders\ShippingMethod>
  */
-class CountryFactory extends Factory
+class ShippingMethodFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,7 @@ class CountryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->country(),
+            'name' => fake()->text(20),
         ];
     }
 }

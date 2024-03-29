@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Factories\Orders;
+namespace Database\Factories\V1\Orders;
 
 use App\Enums\OrderStatus;
-use App\Models\Addressess\Address;
-use App\Models\Orders\ShippingMethod;
-use App\Models\User;
+use App\Models\V1\Addresses\Address;
+use App\Models\V1\Orders\ShippingMethod;
+use App\Models\V1\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,7 +23,6 @@ class OrderFactory extends Factory
         $order_statuses = array_column(OrderStatus::cases(), 'name');
 
         return [
-            'date' => fake()->dateTime(),
             'status' => $order_statuses[array_rand($order_statuses)],
             'user_id' => User::all()->random()->id,
             'address_id' => Address::all()->random()->id,

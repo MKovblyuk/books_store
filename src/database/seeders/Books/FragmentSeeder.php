@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Books;
 
-use App\Models\Books\Fragment;
+use App\Models\V1\Books\Fragment;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

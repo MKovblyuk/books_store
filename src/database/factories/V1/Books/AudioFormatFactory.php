@@ -1,13 +1,13 @@
 <?php
 
-namespace Database\Factories\Books;
+namespace Database\Factories\V1\Books;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Books\ElectronicFormat>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Books\AudioFormat>
  */
-class ElectronicFormatFactory extends Factory
+class AudioFormatFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,7 +19,7 @@ class ElectronicFormatFactory extends Factory
         return [
             'price' => rand(10, 500) + rand(1, 100) / 100,
             'discount' => rand(1, 9) + rand(1, 100) / 100,
-            'page_count' => rand(60, 1200),
+            'duration' => rand(60, 1200),
             'url' => fake()->url(),
         ];
     }

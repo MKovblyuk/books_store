@@ -3,9 +3,8 @@
 namespace Database\Seeders\Orders;
 
 use App\Enums\BookFormat;
-use App\Models\Books\Book;
-use App\Models\Books\PaperFormat;
-use App\Models\Orders\Order;
+use App\Models\V1\Books\Book;
+use App\Models\V1\Orders\Order;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -25,7 +24,7 @@ class OrderSeeder extends Seeder
                 [
                     'quantity' => 1,
                     'total_price' => rand(100,300),
-                    'book_type' => BookFormat::Paper->name,
+                    'book_format' => BookFormat::Paper->name,
                 ]
             )
             ->create();

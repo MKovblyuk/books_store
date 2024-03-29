@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Books;
 
-use App\Models\Books\Publisher;
+use App\Models\V1\Books\Publisher;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

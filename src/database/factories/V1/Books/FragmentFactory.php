@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories\Books;
+namespace Database\Factories\V1\Books;
 
-use App\Models\Books\Book;
+use App\Models\V1\Books\Book;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

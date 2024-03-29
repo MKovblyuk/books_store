@@ -4,11 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Books\LikedBook;
-use Database\Seeders\Addressess\AddressSeeder;
-use Database\Seeders\Addressess\CountrySeeder;
-use Database\Seeders\Addressess\DistrictSeeder;
-use Database\Seeders\Addressess\RegionSeeder;
+use Database\Seeders\Addresses\AddressSeeder;
+use Database\Seeders\Addresses\CountrySeeder;
+use Database\Seeders\Addresses\DistrictSeeder;
+use Database\Seeders\Addresses\RegionSeeder;
 use Database\Seeders\Books\AuthorSeeder;
 use Database\Seeders\Books\BookSeeder;
 use Database\Seeders\Books\CategorySeeder;

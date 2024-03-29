@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('book_id')
                 ->constrained()
                 ->cascadeOnUpdate()
-                ->restrictOnDelete();
+                ->cascadeOnDelete();
 
             $table->timestamps();
         });

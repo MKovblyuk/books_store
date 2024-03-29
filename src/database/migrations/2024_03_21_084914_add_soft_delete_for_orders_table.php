@@ -11,16 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fragments', function (Blueprint $table) {
-            $table->id();
-            $table->string('url');
-            
-            $table->foreignId('book_id')
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-
-            $table->timestamps();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fragments');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };

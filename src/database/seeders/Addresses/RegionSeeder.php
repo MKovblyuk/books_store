@@ -1,18 +1,18 @@
 <?php
 
-namespace Database\Seeders\Addressess;
+namespace Database\Seeders\Addresses;
 
-use App\Models\Addressess\Country;
+use App\Models\V1\Addresses\Region;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class CountrySeeder extends Seeder
+class RegionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Country::factory(10)->create();
+        Region::factory(10)->create();
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Seeders\Addressess;
+namespace Database\Seeders\Addresses;
 
-use App\Models\Addressess\District;
+use App\Models\V1\Addresses\District;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
