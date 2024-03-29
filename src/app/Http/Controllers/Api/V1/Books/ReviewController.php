@@ -16,8 +16,6 @@ class ReviewController extends Controller
 {
     public function index()
     {
-        $reviews = Review::all();
-
         $reviews = QueryBuilder::for(Review::class)
             ->allowedFields('id', 'rating', 'review', 'user_id', 'book_id', 'updated_at')
             ->allowedFilters(
