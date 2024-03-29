@@ -2,8 +2,8 @@
 
 namespace App\Enums;
 
-enum BookFormat {
-    case Audio;
-    case Electronic;
-    case Paper;
+enum BookFormat : string {
+    case Audio = 'Audio';
+    case Electronic = 'Electronic';
+    case Paper = 'Paper';
 }

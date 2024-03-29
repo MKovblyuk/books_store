@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Http\Resources\V1\Books;
+
+use App\Traits\AllowedIncludes;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class BookResource extends JsonResource
+{
+    use AllowedIncludes;
+
+    public function toArray(Request $request): array
+    {
+        if (isset($request->fields)){
+            return $this->resourceWithSelectedFields($request);
+        }
+
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'publicationYear' => $this->publication_year,
+            'language' => $this->language,
+            'coverImageUrl' => $this->cover_image_url,
+            'publishedAt' => $this->published_at,
+            'audioFormat' => new AudioFormatResource($this->audioFormat),
+            'electronicFormat' => new ElectronicFormatResource($this->electronicFormat),
+            'paperFormat' => new PaperFormatResource($this->paperFormat),
+
+            $this->mergeWhen($this->fieldIsNotIncluded('publisher', $request),
+                ['publisherId' => $this->publisher_id]
+            ),
+            $this->mergeWhen($this->fieldIsIncluded('publisher', $request), 
+                ['publisher' => new PublisherResource($this->publisher)]
+            ),
+
+            $this->mergeWhen($this->fieldIsNotIncluded('category', $request),
+                ['categoryId' => $this->category_id]
+            ),
+            $this->mergeWhen($this->fieldIsIncluded('category', $request),
+                ['category' => new CategoryResource($this->category)]
+            ),
+            
+            $this->mergeWhen($this->fieldIsIncluded('authors', $request),
+                ['authors' => new AuthorCollection($this->authors)]
+            ),
+        ];
+    }
+
+    public function resourceWithSelectedFields(Request $request): array
+    {
+        $fields = explode(',', $request->fields['books']);
+
+        return [
+            $this->mergeWhen(in_array('id', $fields),
+                ['id' => $this->id]
+            ),
+            $this->mergeWhen(in_array('name', $fields),
+                ['name' => $this->name]
+            ),
+            $this->mergeWhen(in_array('description', $fields),
+                ['description' => $this->description]
+            ),
+            $this->mergeWhen(in_array('publication_year', $fields),
+                ['publicationYear' => $this->publication_year]
+            ),
+            $this->mergeWhen(in_array('language', $fields),
+                ['language' => $this->language]
+            ),
+            $this->mergeWhen(in_array('cover_image_url', $fields),
+                ['coverImageUrl' => $this->cover_image_url]
+            ),
+            $this->mergeWhen(in_array('published_at', $fields),
+                ['publishedAt' => $this->published_at]
+            ),
+            $this->mergeWhen(in_array('category_id', $fields),
+                ['categoryId' => $this->category_id]
+            ),
+            $this->mergeWhen(in_array('publisher_id', $fields),
+                ['publisherId' => $this->publisher_id]
+            ),
+        ];
+    }
+}

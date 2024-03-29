@@ -2,9 +2,9 @@
 
 namespace App\Enums;
 
-enum OrderStatus {
-    case Received;
-    case Sent;
-    case Refused;
-    case Preparing;
+enum OrderStatus : string {
+    case Received = 'Received';
+    case Sent = 'Sent';
+    case Refused = 'Refused';
+    case Preparing = 'Preparing';
 }
