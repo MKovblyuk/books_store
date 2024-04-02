@@ -2,9 +2,11 @@
 
 namespace App\Models\V1\Orders;
 
+use App\Enums\OrderStatus;
 use App\Models\V1\Addresses\Address;
 use App\Models\V1\Books\Book;
 use App\Models\V1\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,6 +25,14 @@ class Order extends Model
         'address_id',
         'shipping_method_id',
     ];
+
+    protected function status(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $status) => OrderStatus::from($status),
+            set: fn (OrderStatus $status) => $status->value,
+        );
+    }
 
     public function shippingMethod(): BelongsTo
     {

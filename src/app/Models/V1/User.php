@@ -4,9 +4,11 @@ namespace App\Models\V1;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\UserRole;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\Review;
 use App\Models\V1\Orders\Order;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -37,6 +39,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected function role(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $role) => UserRole::from($role),
+            set: fn (UserRole $role) => $role->value,
+        );
+    }
 
     public function orders(): HasMany
     {
