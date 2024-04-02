@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\Books\ReviewController;
 use App\Http\Controllers\Api\V1\Orders\OrderController;
 use App\Http\Controllers\Api\V1\Orders\ShippingMethodController;
 use App\Http\Controllers\Api\V1\Users\UserController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function(){
 
     Route::group(['namespace' => 'Books'], function(){
@@ -46,7 +51,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::delete('books/{book}/{format}', [BookController::class, 'deleteFormat'])->missing(fn() => notFoundJsonResponse());
     });
 
-    Route::group(['namespace' => 'Addresses'], function(){
+    Route::group(['namespace' => 'Addresses', 'middleware' => 'auth:sanctum'], function(){
         Route::apiResource('countries', CountryController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('regions', RegionController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('districts', DistrictController::class)->missing(fn() => notFoundJsonResponse());

@@ -19,8 +19,8 @@ class StoreUserRequest extends UserRequest
             'first_name' => ['required', 'max:75'],
             'last_name' => ['required', 'max:75'],
             'email' => ['required', 'email', 'unique:users,email'],
-            'role' => ['required', Rule::enum(UserRole::class)],
-            'phone_number' => ['required', 'max:30', new PhoneNumber()],
+            'role' => ['sometimes', Rule::enum(UserRole::class)],
+            'phone_number' => ['required', 'max:30', 'unique:users,phone_number', new PhoneNumber()],
             'password' => ['required', 'max:15', 'min:6', 'confirmed'],
             'password_confirmation' => ['required']
         ];
