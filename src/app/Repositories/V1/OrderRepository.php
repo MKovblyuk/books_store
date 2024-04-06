@@ -55,7 +55,10 @@ class OrderRepository implements OrderRepositoryInterface
 
             foreach ($attributes['details'] as $detail) {
                 $order->books()->attach($detail['book_id'], $detail);
-                Book::find($detail['book_id'])->paperFormat?->decreaseQuantity($detail['quantity']);
+
+                if ($detail['book_format'] === BookFormat::Paper->value) {
+                    Book::find($detail['book_id'])->paperFormat->decreaseQuantity($detail['quantity']);
+                }
             } 
         });
 
