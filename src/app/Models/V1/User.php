@@ -44,7 +44,7 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn (string $role) => UserRole::from($role),
-            set: fn (UserRole $role) => $role->value,
+            // set: fn (UserRole $role) => $role->value,
         );
     }
 
@@ -69,5 +69,20 @@ class User extends Authenticatable
             'user_id' => $this->id,
             'book_id' => $book->id,
         ]);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRole::Admin;
+    }
+
+    public function isEditor(): bool
+    {
+        return $this->role === UserRole::Editor;
+    }
+
+    public function isCustomer(): bool
+    {
+        return $this->role === UserRole::Customer;
     }
 }
