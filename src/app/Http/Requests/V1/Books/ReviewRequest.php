@@ -15,9 +15,8 @@ class ReviewRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if (isset($this->userId)) {
-            $this->merge(['user_id' => $this->userId]);
-        }
+        $this->merge(['user_id' => request()->user()->id]);
+
         if (isset($this->bookId)) {
             $this->merge(['book_id' => $this->bookId]);
         }
