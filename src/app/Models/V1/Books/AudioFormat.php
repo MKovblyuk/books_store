@@ -24,6 +24,10 @@ class AudioFormat extends Model
         'discount' => 'decimal:2',
     ];
 
+    protected $hidden = [
+        'url',
+    ];
+
     public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);
