@@ -6,7 +6,7 @@ class StoreReviewRequest extends ReviewRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return request()->user() !== null;
     }
 
     public function rules(): array
