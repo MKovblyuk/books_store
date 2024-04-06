@@ -30,7 +30,7 @@ class Order extends Model
     {
         return Attribute::make(
             get: fn (string $status) => OrderStatus::from($status),
-            set: fn (OrderStatus $status) => $status->value,
+            // set: fn (OrderStatus $status) => $status->value,
         );
     }
 
