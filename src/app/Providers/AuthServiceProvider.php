@@ -3,6 +3,27 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use App\Models\V1\Addresses\Address;
+use App\Models\V1\Addresses\Country;
+use App\Models\V1\Addresses\District;
+use App\Models\V1\Addresses\Region;
+use App\Models\V1\Books\Author;
+use App\Models\V1\Books\Book;
+use App\Models\V1\Books\Category;
+use App\Models\V1\Books\Fragment;
+use App\Models\V1\Books\Publisher;
+use App\Models\V1\Books\Review;
+use App\Policies\Addresses\AddressPolicy;
+use App\Policies\Addresses\CountryPolicy;
+use App\Policies\Addresses\DistrictPolicy;
+use App\Policies\Addresses\RegionPolicy;
+use App\Policies\Books\AuthorPolicy;
+use App\Policies\Books\BookPolicy;
+use App\Policies\Books\CategoryPolicy;
+use App\Policies\Books\FragmentPolicy;
+use App\Policies\Books\PublisherPolicy;
+use App\Policies\Books\ReviewPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,7 +34,17 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Category::class => CategoryPolicy::class,
+        Author::class => AuthorPolicy::class,
+        Publisher::class => PublisherPolicy::class,
+        Fragment::class => FragmentPolicy::class,
+        Review::class => ReviewPolicy::class,
+        Book::class => BookPolicy::class,
+
+        Address::class => AddressPolicy::class,
+        Country::class => CountryPolicy::class,
+        District::class => DistrictPolicy::class,
+        Region::class => RegionPolicy::class,
     ];
 
     /**
