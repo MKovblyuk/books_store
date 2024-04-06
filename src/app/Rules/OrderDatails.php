@@ -30,7 +30,8 @@ class OrderDatails implements ValidationRule
                 $fail('The ' . $data['book_format'] . ' it is more than count of book with id: ' . $data['book_id']);
             }
             if (!$this->quantityAvailable($data)) {
-                $fail('The ' . $data['quantity'] . ' books not availble for book with id: ' . $data['book_id']);
+                $fail('The ' . $data['quantity'] . ' books not availble for book with id: ' . $data['book_id'] . 
+                    ' and format ' . $data['book_format']);
             }
         }
     }
@@ -44,6 +45,6 @@ class OrderDatails implements ValidationRule
     {
         return BookFormat::Paper === BookFormat::from($data['book_format'])
             ? Book::find($data['book_id'])->paperFormat->quantity >= $data['quantity']
-            : $data['quantity'] > 0;
+            : $data['quantity'] === 1;
     }
 }
