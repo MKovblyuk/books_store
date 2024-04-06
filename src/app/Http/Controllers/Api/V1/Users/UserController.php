@@ -12,9 +12,16 @@ use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum', ['except' => ['store']]);
+    }
+
     public function index()
     {
+        $this->authorize('viewAny', User::class);
+
         $users = QueryBuilder::for(User::class)
             ->allowedFields('id', 'first_name', 'last_name', 'email', 'role', 'phone_number')
             ->allowedFilters(AllowedFilter::exact('id'), 'first_name', 'last_name', 'email', 'role', 'phone_number')
@@ -33,17 +40,22 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        $this->authorize('view', $user);
         return new UserResource($user);
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
+        $this->authorize('update', $user);
         $user->update($request->validated());
+
         return response()->json(['message' => 'User successfully updated'], 200);
     }
 
     public function destroy(User $user)
     {
+        $this->authorize('delete', $user);
+
         return $user->delete()
             ? response()->noContent()
             : response()->json(['message' => 'User not deleted'], 400);

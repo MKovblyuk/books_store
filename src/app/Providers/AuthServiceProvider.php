@@ -14,6 +14,7 @@ use App\Models\V1\Books\Category;
 use App\Models\V1\Books\Fragment;
 use App\Models\V1\Books\Publisher;
 use App\Models\V1\Books\Review;
+use App\Models\V1\User;
 use App\Policies\Addresses\AddressPolicy;
 use App\Policies\Addresses\CountryPolicy;
 use App\Policies\Addresses\DistrictPolicy;
@@ -24,6 +25,7 @@ use App\Policies\Books\CategoryPolicy;
 use App\Policies\Books\FragmentPolicy;
 use App\Policies\Books\PublisherPolicy;
 use App\Policies\Books\ReviewPolicy;
+use App\Policies\Users\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -45,6 +47,8 @@ class AuthServiceProvider extends ServiceProvider
         Country::class => CountryPolicy::class,
         District::class => DistrictPolicy::class,
         Region::class => RegionPolicy::class,
+
+        User::class => UserPolicy::class,
     ];
 
     /**

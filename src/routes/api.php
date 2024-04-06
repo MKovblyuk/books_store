@@ -28,9 +28,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
@@ -63,10 +60,6 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::apiResource('orders', OrderController::class)->missing(fn() => notFoundJsonResponse());
         Route::get('orders/{order}/details', [OrderController::class, 'showDetails'])->missing(fn() => notFoundJsonResponse());
     });
-
-    // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    //     return $request->user();
-    // });
 
     Route::group(['namespace' => 'Users'], function(){
         Route::apiResource('users', UserController::class)->missing(fn() => notFoundJsonResponse());
