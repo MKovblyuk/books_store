@@ -13,6 +13,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class AddressController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {
         $addresses = QueryBuilder::for(Address::class)
@@ -27,7 +32,9 @@ class AddressController extends Controller
 
     public function store(StoreAddressRequest $request)
     {
+        $this->authorize('create', Address::class);        
         Address::create($request->validated());
+
         return response()->json(['message' => 'Address successfully created'], 201);
     }
 
@@ -38,12 +45,16 @@ class AddressController extends Controller
 
     public function update(UpdateAddressRequest $request, Address $address)
     {
+        $this->authorize('update', $address);
         $address->update($request->validated());
+
         return response()->json(['message' => 'Address successfully updated'], 200);
     }
 
     public function destroy(Address $address)
     {
+        $this->authorize('delete', $address);
+
         return $address->delete()
             ? response()->noContent()
             : response()->json(['message' => 'Address not deleted'], 400);

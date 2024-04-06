@@ -13,6 +13,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class AuthorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {
         $authors = QueryBuilder::for(Author::class)
@@ -26,7 +31,9 @@ class AuthorController extends Controller
 
     public function store(StoreAuthorRequest $request)
     {
+        $this->authorize('create', Author::class);
         Author::create($request->validated());
+
         return response()->json(['message' => 'Author successfully created'], 201);
     }
 
@@ -37,12 +44,16 @@ class AuthorController extends Controller
 
     public function update(UpdateAuthorRequest $request, Author $author)
     {
+        $this->authorize('update', $author);
         $author->update($request->validated());
+        
         return response()->json(['message' => 'Author successfully updated'], 200);
     }
 
     public function destroy(Author $author)
     {
+        $this->authorize('delete', $author);
+
         return $author->delete()
             ? response()->noContent()
             : response()->json(['message' => 'Author not deleted'], 500);

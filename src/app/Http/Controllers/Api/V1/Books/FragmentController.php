@@ -11,6 +11,11 @@ use App\Models\V1\Books\Fragment;
 
 class FragmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {
         return new FragmentCollection(Fragment::all());
@@ -18,7 +23,9 @@ class FragmentController extends Controller
 
     public function store(StoreFragmentRequest $request)
     {
+        $this->authorize('create', Fragment::class);
         Fragment::create($request->validated());
+
         return response()->json(['message' => 'Fragment successfully created'], 201);
     }
 
@@ -29,12 +36,16 @@ class FragmentController extends Controller
 
     public function update(UpdateFragmentRequest $request, Fragment $fragment)
     {
+        $this->authorize('update', $fragment);
         $fragment->update($request->validated());
+        
         return response()->json(['message' => 'Fragment successfully updated'], 200);
     }
 
     public function destroy(Fragment $fragment)
     {
+        $this->authorize('delete', $fragment);
+
         return $fragment->delete()
             ? response()->noContent()
             : response()->json(['message' => 'Fragment not deleted'], 500);

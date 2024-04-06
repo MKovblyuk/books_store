@@ -11,6 +11,11 @@ use App\Models\V1\Books\Category;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {
         $categories = Category::whereIsRoot()->first()->children()->get();
@@ -19,12 +24,16 @@ class CategoryController extends Controller
 
     public function store(StoreCategoryRequest $request)
     {
+        $this->authorize('create', Category::class);
+
         return $this->storeForParent($request, Category::whereIsRoot()->first());
     }
 
     public function storeForParent(StoreCategoryRequest $request, Category $parentCategory)
     {
+        $this->authorize('createForParent', Category::class);
         Category::create($request->validated(), $parentCategory);
+
         return response()->json(['message' => 'Category successfully created'], 201);
     }
 
@@ -35,12 +44,16 @@ class CategoryController extends Controller
 
     public function update(UpdateCategoryRequest $request, Category $category)
     {
+        $this->authorize('update', $category);
         $category->update($request->validated());
+        
         return response()->json(['message' => 'Category successfully updated'], 200);
     }
 
     public function destroy(Category $category)
     {
+        $this->authorize('delete', $category);
+
         return $category->delete()
             ? response()->noContent()
             : response()->json(['message' => 'Category not deleted'], 500);

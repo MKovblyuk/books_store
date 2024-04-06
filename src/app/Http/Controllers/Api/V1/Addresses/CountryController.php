@@ -12,6 +12,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class CountryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {
         $countries = QueryBuilder::for(Country::class)
@@ -26,7 +31,9 @@ class CountryController extends Controller
 
     public function store(StoreCountryRequest $request)
     {
+        $this->authorize('create', Country::class);
         Country::create($request->validated());
+
         return response()->json(['message' => 'Country successfully created'], 201);
     }
 
@@ -37,12 +44,16 @@ class CountryController extends Controller
 
     public function update(UpdateCountryRequest $request, Country $country)
     {
+        $this->authorize('update', $country);
         $country->update($request->validated());
+
         return response()->json(['message' => 'Country successfully updated'], 200);
     }
 
     public function destroy(Country $country)
     {
+        $this->authorize('delete', $country);
+
         return $country->delete() 
             ? response()->noContent()
             : response()->json(['message' => 'Author not deleted'], 400);

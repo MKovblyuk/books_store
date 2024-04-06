@@ -8,12 +8,16 @@ use App\Http\Requests\V1\Books\UpdateReviewRequest;
 use App\Http\Resources\V1\Books\ReviewCollection;
 use App\Http\Resources\V1\Books\ReviewResource;
 use App\Models\V1\Books\Review;
-use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ReviewController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {
         $reviews = QueryBuilder::for(Review::class)
@@ -33,7 +37,9 @@ class ReviewController extends Controller
 
     public function store(StoreReviewRequest $request)
     {
+        $this->authorize('create', Review::class);
         Review::create($request->validated());
+
         return response()->json(['message' => 'Review successfully created'], 201);
     }
 
@@ -44,12 +50,16 @@ class ReviewController extends Controller
 
     public function update(UpdateReviewRequest $request, Review $review)
     {
+        $this->authorize('update', $review);
         $review->update($request->validated());
+        
         return response()->json(['message' => 'Review successfully updated'], 200);
     }
 
     public function destroy(Review $review)
     {
+        $this->authorize('delete', $review);
+
         return $review->delete()
             ? response()->noContent()
             : response()->json(['message' => 'Review not deleted'], 400);
