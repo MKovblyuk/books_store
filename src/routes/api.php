@@ -51,7 +51,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::delete('books/{book}/{format}', [BookController::class, 'deleteFormat'])->missing(fn() => notFoundJsonResponse());
     });
 
-    Route::group(['namespace' => 'Addresses', 'middleware' => 'auth:sanctum'], function(){
+    Route::group(['namespace' => 'Addresses'], function(){
         Route::apiResource('countries', CountryController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('regions', RegionController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('districts', DistrictController::class)->missing(fn() => notFoundJsonResponse());
