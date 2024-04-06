@@ -11,7 +11,7 @@ class StoreOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return request()->user() !== null;
     }
 
     public function rules(): array
@@ -31,11 +31,10 @@ class StoreOrderRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        $this->merge(['user_id' => request()->user()->id]);
+        
         if (isset($this->addressId)) {
             $this->merge(['address_id' => $this->addressId ]);
-        }
-        if (isset($this->userId)) {
-            $this->merge(['user_id' => $this->userId]);
         }
         if (isset($this->shippingMethodId)) {
             $this->merge(['shipping_method_id' => $this->shippingMethodId]);
