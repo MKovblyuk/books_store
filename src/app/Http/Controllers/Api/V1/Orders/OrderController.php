@@ -17,15 +17,19 @@ class OrderController extends Controller
         private OrderRepositoryInterface $repository
     )
     {
+        $this->middleware('auth:sanctum');
     }
 
     public function index()
     {
+        $this->authorize('viewAny', Order::class);
         return new OrderCollection($this->repository->getAll());
     }
 
     public function store(StoreOrderRequest $request)
     {
+        $this->authorize('create', Order::class);
+
         return $this->repository->store($request->validated())
             ? response()->json(['message' => 'Order successfully created'], 201)
             : response()->json(['message' => 'Order not created'], 400);;
@@ -33,16 +37,20 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+        $this->authorize('view', $order);
         return new OrderResource($order);
     }
 
     public function showDetails(Order $order)
     {
+        $this->authorize('showDetails', $order);
         return new OrderDetailCollection($order->details());
     }
 
     public function update(UpdateOrderRequest $request, Order $order)
     {
+        $this->authorize('update', $order);
+
         return $this->repository->update($order, $request->validated())
             ? response()->json(['message' => 'Order successfully updated'], 200)
             : response()->json(['message' => 'Order not updated'], 400);
@@ -50,6 +58,8 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
+        $this->authorize('delete', $order);
+
         return $this->repository->destroy($order)
             ? response()->noContent()
             : response()->json(['message' => 'Order not deleted']);

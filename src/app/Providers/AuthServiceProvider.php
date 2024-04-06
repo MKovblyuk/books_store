@@ -14,6 +14,8 @@ use App\Models\V1\Books\Category;
 use App\Models\V1\Books\Fragment;
 use App\Models\V1\Books\Publisher;
 use App\Models\V1\Books\Review;
+use App\Models\V1\Orders\Order;
+use App\Models\V1\Orders\ShippingMethod;
 use App\Models\V1\User;
 use App\Policies\Addresses\AddressPolicy;
 use App\Policies\Addresses\CountryPolicy;
@@ -25,6 +27,8 @@ use App\Policies\Books\CategoryPolicy;
 use App\Policies\Books\FragmentPolicy;
 use App\Policies\Books\PublisherPolicy;
 use App\Policies\Books\ReviewPolicy;
+use App\Policies\Orders\OrderPolicy;
+use App\Policies\Orders\ShippingMethodPolicy;
 use App\Policies\Users\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -49,6 +53,9 @@ class AuthServiceProvider extends ServiceProvider
         Region::class => RegionPolicy::class,
 
         User::class => UserPolicy::class,
+
+        ShippingMethod::class => ShippingMethodPolicy::class,
+        Order::class => OrderPolicy::class,
     ];
 
     /**

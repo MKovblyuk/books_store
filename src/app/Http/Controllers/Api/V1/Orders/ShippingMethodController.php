@@ -11,6 +11,11 @@ use App\Models\V1\Orders\ShippingMethod;
 
 class ShippingMethodController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {
         return new ShippingMethodCollection(ShippingMethod::all());
@@ -18,7 +23,9 @@ class ShippingMethodController extends Controller
 
     public function store(StoreShippingMethodRequest $request)
     {
+        $this->authorize('create', ShippingMethod::class);
         ShippingMethod::create($request->validated());
+
         return response()->json(['message' => 'Shipping method successfully created'], 201);
     }
 
@@ -29,12 +36,16 @@ class ShippingMethodController extends Controller
 
     public function update(UpdateShippingMethodRequest $request, ShippingMethod $shippingMethod)
     {
+        $this->authorize('update', $shippingMethod);
         $shippingMethod->update($request->validated());
+
         return response()->json(['message' => 'Shipping method successfully updated'], 200);
     }
 
     public function destroy(ShippingMethod $shippingMethod)
     {
+        $this->authorize('delete', $shippingMethod);
+
         return $shippingMethod->delete()
             ? response()->noContent()
             : response()->json(['message' => 'Shipping method not deleted'], 400);
