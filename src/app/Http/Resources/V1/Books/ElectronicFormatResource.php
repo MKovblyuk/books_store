@@ -7,11 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ElectronicFormatResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
@@ -19,7 +14,6 @@ class ElectronicFormatResource extends JsonResource
             'price' => $this->price,
             'discount' => $this->discount,
             'pageCount' => $this->page_count,
-            'url' => $this->url,
         ];
     }
 }
