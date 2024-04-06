@@ -11,7 +11,7 @@ class OrderDetailResource extends JsonResource
     {
         return [
             'bookId' => $this->book_id,
-            'bookType' => $this->book_type,
+            'bookFormat' => $this->book_format,
             'quantity' => $this->quantity,
             'totalPrice' => $this->total_price,
         ];
