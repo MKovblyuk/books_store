@@ -10,6 +10,7 @@ use App\Http\Resources\V1\Orders\OrderDetailCollection;
 use App\Http\Resources\V1\Orders\OrderResource;
 use App\Interfaces\Repositories\OrderRepositoryInterface;
 use App\Models\V1\Orders\Order;
+use App\Services\Orders\OrderService;
 
 class OrderController extends Controller
 {
@@ -30,9 +31,9 @@ class OrderController extends Controller
     {
         $this->authorize('create', Order::class);
 
-        return $this->repository->store($request->validated())
+        return OrderService::store($request->validated())
             ? response()->json(['message' => 'Order successfully created'], 201)
-            : response()->json(['message' => 'Order not created'], 400);;
+            : response()->json(['message' => 'Order not created'], 400);
     }
 
     public function show(Order $order)
@@ -51,7 +52,7 @@ class OrderController extends Controller
     {
         $this->authorize('update', $order);
 
-        return $this->repository->update($order, $request->validated())
+        return OrderService::update($request->validated(), $order)
             ? response()->json(['message' => 'Order successfully updated'], 200)
             : response()->json(['message' => 'Order not updated'], 400);
     }
@@ -60,7 +61,7 @@ class OrderController extends Controller
     {
         $this->authorize('delete', $order);
 
-        return $this->repository->destroy($order)
+        return $order->delete()
             ? response()->noContent()
             : response()->json(['message' => 'Order not deleted']);
     }

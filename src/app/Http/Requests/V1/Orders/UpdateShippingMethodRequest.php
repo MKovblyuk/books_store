@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\V1\Orders;
 
+use App\Enums\ShippingMethods;
 use App\Exceptions\Http\FailedValidationHttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateShippingMethodRequest extends FormRequest
 {
@@ -21,14 +23,14 @@ class UpdateShippingMethodRequest extends FormRequest
     protected function putRules(): array
     {
         return [
-            'name' => ['required', 'max:255']
+            'name' => ['required', 'max:255', Rule::enum(ShippingMethods::class)]
         ];
     }
 
     protected function patchRules(): array
     {
         return [
-            'name' => ['max:255']
+            'name' => ['max:255', Rule::enum(ShippingMethods::class)]
         ];
     }
 

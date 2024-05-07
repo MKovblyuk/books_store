@@ -10,7 +10,7 @@ class AddressPolicy
 {
     public function before(User $user, string $ability): bool|null 
     {
-        return $user->isAdmin() | $user->isEditor() ? true : null;
+        return $user->isAdmin() || $user->isEditor() ? true : null;
     }
 
     public function viewAny(User $user): bool
