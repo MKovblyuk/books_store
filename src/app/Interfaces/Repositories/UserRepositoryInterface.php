@@ -2,12 +2,8 @@
 
 namespace App\Interfaces\Repositories;
 
-use App\Models\V1\User;
+use App\Models\V1\Orders\Order;
 
-interface UserRepositoryInterface {
-    public function getAll();
-    public function getById(User $user);
-    public function store(array $attributes);
-    public function update(User $user, array $attributes);
-    public function destroy(User $user);
+interface UserRepositoryInterface extends RepositoryInterface {
+
 }

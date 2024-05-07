@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\V1;
+namespace App\Repositories;
 
 use App\Interfaces\Repositories\BookRepositoryInterface;
 use App\Models\V1\Books\AudioFormat;
@@ -18,30 +18,30 @@ class BookRepository implements BookRepositoryInterface {
     {
         return QueryBuilder::for(Book::class)
             ->allowedFilters([
-                AllowedFilter::exact('id'), 
-                'name', 
-                'publication_year', 
-                'language', 
+                AllowedFilter::exact('id'),
+                'name',
+                'publication_year',
+                'language',
                 'published_at',
                 'publisher_id',
                 'category_id'
             ])
             ->allowedFields([
-                'id', 
-                'name', 
-                'description', 
-                'publication_year', 
-                'language', 
-                'cover_image_url', 
+                'id',
+                'name',
+                'description',
+                'publication_year',
+                'language',
+                'cover_image_url',
                 'published_at',
                 'publisher_id',
                 'category_id',
             ])
             ->allowedSorts([
-                'id', 
-                'name', 
-                'publication_year', 
-                'language', 
+                'id',
+                'name',
+                'publication_year',
+                'language',
                 'published_at',
                 'publisher_id',
                 'category_id'
@@ -79,7 +79,7 @@ class BookRepository implements BookRepositoryInterface {
         DB::transaction(function () use($book, $attributes) {
             $book->update($attributes);
             $book->authors()->sync(Author::find($attributes['authors_ids']));
-    
+
             if (isset($attributes['formats']['paper'])) {
                 $book->paperFormat->update($attributes['formats']['paper']);
             }
