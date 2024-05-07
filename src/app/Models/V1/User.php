@@ -44,7 +44,15 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn (string $role) => UserRole::from($role),
-            // set: fn (UserRole $role) => $role->value,
+            set: fn (UserRole $role) => $role->value
+        );
+    }
+
+    protected function phoneNumber(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $number) => $number,
+            set: fn (string $number) => preg_match("/\+380\d{9}$/", $number) ? $number : "+38".$number
         );
     }
 
