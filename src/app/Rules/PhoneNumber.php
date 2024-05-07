@@ -14,10 +14,8 @@ class PhoneNumber implements ValidationRule
         }
     }
 
-    private function isPhoneNumber($value): bool
+    public function isPhoneNumber($value): bool
     {
-        // todo
-
-        return true;
+        return preg_match("/(\+38)?0\d{9}$/", $value);
     }
 }
