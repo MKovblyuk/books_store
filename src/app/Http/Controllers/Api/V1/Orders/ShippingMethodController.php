@@ -8,6 +8,7 @@ use App\Http\Requests\V1\Orders\UpdateShippingMethodRequest;
 use App\Http\Resources\V1\Orders\ShippingMethodCollection;
 use App\Http\Resources\V1\Orders\ShippingMethodResource;
 use App\Models\V1\Orders\ShippingMethod;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ShippingMethodController extends Controller
 {
@@ -23,8 +24,12 @@ class ShippingMethodController extends Controller
 
     public function store(StoreShippingMethodRequest $request)
     {
-        $this->authorize('create', ShippingMethod::class);
-        ShippingMethod::create($request->validated());
+        try {
+            $this->authorize('create', ShippingMethod::class);
+            ShippingMethod::create($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Shipping method successfully created'], 201);
     }
@@ -36,18 +41,26 @@ class ShippingMethodController extends Controller
 
     public function update(UpdateShippingMethodRequest $request, ShippingMethod $shippingMethod)
     {
-        $this->authorize('update', $shippingMethod);
-        $shippingMethod->update($request->validated());
+        try {
+            $this->authorize('update', $shippingMethod);
+            $shippingMethod->update($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Shipping method successfully updated'], 200);
     }
 
     public function destroy(ShippingMethod $shippingMethod)
     {
-        $this->authorize('delete', $shippingMethod);
+        try {
+            $this->authorize('delete', $shippingMethod);
 
-        return $shippingMethod->delete()
-            ? response()->noContent()
-            : response()->json(['message' => 'Shipping method not deleted'], 400);
+            return $shippingMethod->delete()
+                ? response()->noContent()
+                : response()->json(['message' => 'Shipping method not deleted'], 400);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
     }
 }

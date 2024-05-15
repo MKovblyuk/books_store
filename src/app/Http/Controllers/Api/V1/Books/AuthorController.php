@@ -8,6 +8,7 @@ use App\Http\Requests\V1\Books\UpdateAuthorRequest;
 use App\Http\Resources\V1\Books\AuthorCollection;
 use App\Http\Resources\V1\Books\AuthorResource;
 use App\Models\V1\Books\Author;
+use Illuminate\Auth\Access\AuthorizationException;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -31,8 +32,12 @@ class AuthorController extends Controller
 
     public function store(StoreAuthorRequest $request)
     {
-        $this->authorize('create', Author::class);
-        Author::create($request->validated());
+        try {
+            $this->authorize('create', Author::class);
+            Author::create($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Author successfully created'], 201);
     }
@@ -44,18 +49,26 @@ class AuthorController extends Controller
 
     public function update(UpdateAuthorRequest $request, Author $author)
     {
-        $this->authorize('update', $author);
-        $author->update($request->validated());
-        
+        try {
+            $this->authorize('update', $author);
+            $author->update($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+
         return response()->json(['message' => 'Author successfully updated'], 200);
     }
 
     public function destroy(Author $author)
     {
-        $this->authorize('delete', $author);
+        try {
+            $this->authorize('delete', $author);
 
-        return $author->delete()
-            ? response()->noContent()
-            : response()->json(['message' => 'Author not deleted'], 500);
+            return $author->delete()
+                ? response()->noContent()
+                : response()->json(['message' => 'Author not deleted'], 500);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
     }
 }

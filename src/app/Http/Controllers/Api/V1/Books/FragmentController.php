@@ -8,6 +8,7 @@ use App\Http\Requests\V1\Books\UpdateFragmentRequest;
 use App\Http\Resources\V1\Books\FragmentCollection;
 use App\Http\Resources\V1\Books\FragmentResource;
 use App\Models\V1\Books\Fragment;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class FragmentController extends Controller
 {
@@ -23,8 +24,12 @@ class FragmentController extends Controller
 
     public function store(StoreFragmentRequest $request)
     {
-        $this->authorize('create', Fragment::class);
-        Fragment::create($request->validated());
+        try {
+            $this->authorize('create', Fragment::class);
+            Fragment::create($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Fragment successfully created'], 201);
     }
@@ -36,18 +41,26 @@ class FragmentController extends Controller
 
     public function update(UpdateFragmentRequest $request, Fragment $fragment)
     {
-        $this->authorize('update', $fragment);
-        $fragment->update($request->validated());
-        
+        try {
+            $this->authorize('update', $fragment);
+            $fragment->update($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+
         return response()->json(['message' => 'Fragment successfully updated'], 200);
     }
 
     public function destroy(Fragment $fragment)
     {
-        $this->authorize('delete', $fragment);
+        try {
+            $this->authorize('delete', $fragment);
 
-        return $fragment->delete()
-            ? response()->noContent()
-            : response()->json(['message' => 'Fragment not deleted'], 500);
+            return $fragment->delete()
+                ? response()->noContent()
+                : response()->json(['message' => 'Fragment not deleted'], 500);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
     }
 }

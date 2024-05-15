@@ -8,6 +8,7 @@ use App\Http\Requests\V1\Books\UpdateReviewRequest;
 use App\Http\Resources\V1\Books\ReviewCollection;
 use App\Http\Resources\V1\Books\ReviewResource;
 use App\Models\V1\Books\Review;
+use Illuminate\Auth\Access\AuthorizationException;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -23,10 +24,10 @@ class ReviewController extends Controller
         $reviews = QueryBuilder::for(Review::class)
             ->allowedFields('id', 'rating', 'review', 'user_id', 'book_id', 'updated_at')
             ->allowedFilters(
-                AllowedFilter::exact('id'), 
-                AllowedFilter::exact('rating'), 
-                AllowedFilter::exact('user_id'), 
-                AllowedFilter::exact('book_id'), 
+                AllowedFilter::exact('id'),
+                AllowedFilter::exact('rating'),
+                AllowedFilter::exact('user_id'),
+                AllowedFilter::exact('book_id'),
                 'updated_at'
             )
             ->allowedSorts('id', 'rating', 'updated_at')
@@ -37,8 +38,12 @@ class ReviewController extends Controller
 
     public function store(StoreReviewRequest $request)
     {
-        $this->authorize('create', Review::class);
-        Review::create($request->validated());
+        try {
+            $this->authorize('create', Review::class);
+            Review::create($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Review successfully created'], 201);
     }
@@ -50,18 +55,26 @@ class ReviewController extends Controller
 
     public function update(UpdateReviewRequest $request, Review $review)
     {
-        $this->authorize('update', $review);
-        $review->update($request->validated());
-        
+        try {
+            $this->authorize('update', $review);
+            $review->update($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+
         return response()->json(['message' => 'Review successfully updated'], 200);
     }
 
     public function destroy(Review $review)
     {
-        $this->authorize('delete', $review);
+        try {
+            $this->authorize('delete', $review);
 
-        return $review->delete()
-            ? response()->noContent()
-            : response()->json(['message' => 'Review not deleted'], 400);
+            return $review->delete()
+                ? response()->noContent()
+                : response()->json(['message' => 'Review not deleted'], 400);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
     }
 }

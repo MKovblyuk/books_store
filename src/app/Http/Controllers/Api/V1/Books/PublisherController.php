@@ -8,6 +8,7 @@ use App\Http\Requests\V1\Books\UpdatePublisherRequest;
 use App\Http\Resources\V1\Books\PublisherCollection;
 use App\Http\Resources\V1\Books\PublisherResource;
 use App\Models\V1\Books\Publisher;
+use Illuminate\Auth\Access\AuthorizationException;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -31,8 +32,12 @@ class PublisherController extends Controller
 
     public function store(StorePublisherRequest $request)
     {
-        $this->authorize('create', Publisher::class);
-        Publisher::create($request->validated());
+        try {
+            $this->authorize('create', Publisher::class);
+            Publisher::create($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Publshier successfully created'], 201);
     }
@@ -44,18 +49,26 @@ class PublisherController extends Controller
 
     public function update(UpdatePublisherRequest $request, Publisher $publisher)
     {
-        $this->authorize('update', $publisher);
-        $publisher->update($request->validated());
-        
+        try {
+            $this->authorize('update', $publisher);
+            $publisher->update($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+
         return response()->json(['message' => 'Publisher successfully updated'], 200);
     }
 
     public function destroy(Publisher $publisher)
     {
-        $this->authorize('delete', $publisher);
+        try {
+            $this->authorize('delete', $publisher);
 
-        return $publisher->delete() 
-            ? response()->noContent()
-            : response()->json(['message' => "Publisher not deleted"], 500);
+            return $publisher->delete()
+                ? response()->noContent()
+                : response()->json(['message' => "Publisher not deleted"], 500);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
     }
 }

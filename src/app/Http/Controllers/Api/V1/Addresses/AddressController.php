@@ -8,6 +8,7 @@ use App\Http\Requests\V1\Addresses\UpdateAddressRequest;
 use App\Http\Resources\V1\Addresses\AddressCollection;
 use App\Http\Resources\V1\Addresses\AddressResource;
 use App\Models\V1\Addresses\Address;
+use Illuminate\Auth\Access\AuthorizationException;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -32,8 +33,12 @@ class AddressController extends Controller
 
     public function store(StoreAddressRequest $request)
     {
-        $this->authorize('create', Address::class);        
-        Address::create($request->validated());
+        try {
+            $this->authorize('create', Address::class);
+            Address::create($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Address successfully created'], 201);
     }
@@ -45,18 +50,27 @@ class AddressController extends Controller
 
     public function update(UpdateAddressRequest $request, Address $address)
     {
-        $this->authorize('update', $address);
-        $address->update($request->validated());
+        try {
+            $this->authorize('update', $address);
+            $address->update($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Address successfully updated'], 200);
     }
 
     public function destroy(Address $address)
     {
-        $this->authorize('delete', $address);
+        try {
+            $this->authorize('delete', $address);
 
-        return $address->delete()
-            ? response()->noContent()
-            : response()->json(['message' => 'Address not deleted'], 400);
+            return $address->delete()
+                ? response()->noContent()
+                : response()->json(['message' => 'Address not deleted'], 400);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+
     }
 }

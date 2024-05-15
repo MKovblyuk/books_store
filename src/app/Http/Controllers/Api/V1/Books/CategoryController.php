@@ -8,6 +8,7 @@ use App\Http\Requests\V1\Books\UpdateCategoryRequest;
 use App\Http\Resources\V1\Books\CategoryCollection;
 use App\Http\Resources\V1\Books\CategoryResource;
 use App\Models\V1\Books\Category;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class CategoryController extends Controller
 {
@@ -24,15 +25,23 @@ class CategoryController extends Controller
 
     public function store(StoreCategoryRequest $request)
     {
-        $this->authorize('create', Category::class);
+        try {
+            $this->authorize('create', Category::class);
+            return $this->storeForParent($request, Category::whereIsRoot()->first());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
-        return $this->storeForParent($request, Category::whereIsRoot()->first());
     }
 
     public function storeForParent(StoreCategoryRequest $request, Category $parentCategory)
     {
-        $this->authorize('createForParent', Category::class);
-        Category::create($request->validated(), $parentCategory);
+        try {
+            $this->authorize('createForParent', Category::class);
+            Category::create($request->validated(), $parentCategory);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Category successfully created'], 201);
     }
@@ -44,18 +53,26 @@ class CategoryController extends Controller
 
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $this->authorize('update', $category);
-        $category->update($request->validated());
-        
+        try {
+            $this->authorize('update', $category);
+            $category->update($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+
         return response()->json(['message' => 'Category successfully updated'], 200);
     }
 
     public function destroy(Category $category)
     {
-        $this->authorize('delete', $category);
+        try {
+            $this->authorize('delete', $category);
 
-        return $category->delete()
-            ? response()->noContent()
-            : response()->json(['message' => 'Category not deleted'], 500);
+            return $category->delete()
+                ? response()->noContent()
+                : response()->json(['message' => 'Category not deleted'], 500);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
     }
 }

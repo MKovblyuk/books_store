@@ -8,6 +8,7 @@ use App\Http\Requests\V1\Addresses\UpdateRegionRequest;
 use App\Http\Resources\V1\Addresses\RegionCollection;
 use App\Http\Resources\V1\Addresses\RegionResource;
 use App\Models\V1\Addresses\Region;
+use Illuminate\Auth\Access\AuthorizationException;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class RegionController extends Controller
@@ -31,9 +32,13 @@ class RegionController extends Controller
 
     public function store(StoreRegionRequest $request)
     {
-        $this->authorize('create', Region::class);
-        Region::create($request->validated());
-        
+        try {
+            $this->authorize('create', Region::class);
+            Region::create($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+
         return response()->json(['message' => 'Region successfully created'], 201);
     }
 
@@ -44,18 +49,26 @@ class RegionController extends Controller
 
     public function update(UpdateRegionRequest $request, Region $region)
     {
-        $this->authorize('update', $region);
-        $region->update($request->validated());
+        try {
+            $this->authorize('update', $region);
+            $region->update($request->validated());
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
 
         return response()->json(['message' => 'Region seccessfully updated'], 200);
     }
 
     public function destroy(Region $region)
     {
-        $this->authorize('delete', $region);
+        try {
+            $this->authorize('delete', $region);
 
-        return $region->delete()
-            ? response()->noContent()
-            : response()->json(['message' => 'Region not deleted'], 400);
+            return $region->delete()
+                ? response()->noContent()
+                : response()->json(['message' => 'Region not deleted'], 400);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
     }
 }
