@@ -1,0 +1,19 @@
+.back{
+    background-color: #eceaff;
+    min-height: 100vh;
+}
+
+.btn-login {
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem;
+    padding: 0.75rem 1rem;
+}
+
+.btn-google {
+    color: white !important;
+    background-color: #ea4335;
+}
+
+.btn-google:hover {
+    background-color: #dd2b1c;
+}
