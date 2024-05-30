@@ -16,6 +16,8 @@ class BookRepository implements BookRepositoryInterface {
 
     public function getAll()
     {
+        $per_page = request()->get('per_page', 10);
+
         return QueryBuilder::for(Book::class)
             ->allowedFilters([
                 AllowedFilter::exact('id'),
@@ -51,7 +53,7 @@ class BookRepository implements BookRepositoryInterface {
                 'category',
                 'authors',
             ])
-            ->get();
+            ->paginate($per_page);
     }
 
     public function store(array $attributes): bool

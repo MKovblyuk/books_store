@@ -21,6 +21,8 @@ class ReviewController extends Controller
 
     public function index()
     {
+        $per_page = request()->get('per_page', 10);
+
         $reviews = QueryBuilder::for(Review::class)
             ->allowedFields('id', 'rating', 'review', 'user_id', 'book_id', 'updated_at')
             ->allowedFilters(
@@ -31,7 +33,7 @@ class ReviewController extends Controller
                 'updated_at'
             )
             ->allowedSorts('id', 'rating', 'updated_at')
-            ->get();
+            ->paginate($per_page);
 
         return new ReviewCollection($reviews);
     }
