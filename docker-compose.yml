@@ -1,25 +1,33 @@
 
 services:
 
-  php_service:
+  backend_service:
     build:
       context: './docker/php'
     container_name: php
     volumes:
-      - './src:/var/www/html'
+      - './backend:/var/www/html'
     depends_on:
       - mysql_service
     links:
       - mysql_service
+
+  frontend_service:
+    build:
+      context: './docker/node'
+    container_name: nodejs
+    volumes:
+      - './frontend:/app'
 
   nginx_service:
     build:
       context: './docker/nginx'
     container_name: nginx
     depends_on: 
-      - 'php_service'
+      - 'backend_service'
+      - 'frontend_service'
     volumes:
-      - './src:/var/www/html'
+      - './backend:/var/www/html'
       - './docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro'
     ports:
       - '80:80'
