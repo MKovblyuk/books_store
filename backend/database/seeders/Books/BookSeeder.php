@@ -16,12 +16,12 @@ class BookSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->createBooksWithFormats(2, PaperFormat::class);
-        $this->createBooksWithFormats(2, PaperFormat::class, ElectronicFormat::class);
-        $this->createBooksWithFormats(2, PaperFormat::class, AudioFormat::class, ElectronicFormat::class); 
+        $this->createBooksWithFormats(20, PaperFormat::class);
+        $this->createBooksWithFormats(20, PaperFormat::class, ElectronicFormat::class);
+        $this->createBooksWithFormats(20, PaperFormat::class, AudioFormat::class, ElectronicFormat::class);
     }
 
-    private function createBookWithFormats(string ...$formatClasses): void 
+    private function createBookWithFormats(string ...$formatClasses): void
     {
         $authors = Author::all()->random(2);
         $book = Book::factory()
@@ -33,7 +33,7 @@ class BookSeeder extends Seeder
         }
     }
 
-    private function createBooksWithFormats(int $booksCount, string ...$formatClasses): void 
+    private function createBooksWithFormats(int $booksCount, string ...$formatClasses): void
     {
         for ($i = 0; $i < $booksCount; $i++) {
             $this->createBookWithFormats(...$formatClasses);
