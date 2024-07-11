@@ -48,13 +48,13 @@ class User extends Authenticatable
         );
     }
 
-    protected function phoneNumber(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $number) => $number,
-            set: fn (string $number) => preg_match("/\+380\d{9}$/", $number) ? $number : "+38".$number
-        );
-    }
+    // protected function phoneNumber(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (string $number) => $number,
+    //         set: fn (string $number) => preg_match("/\+380\d{9}$/", $number) ? $number : "+38".$number
+    //     );
+    // }
 
     public function orders(): HasMany
     {

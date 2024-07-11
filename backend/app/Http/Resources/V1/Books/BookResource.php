@@ -31,7 +31,7 @@ class BookResource extends JsonResource
             $this->mergeWhen($this->fieldIsNotIncluded('publisher', $request),
                 ['publisherId' => $this->publisher_id]
             ),
-            $this->mergeWhen($this->fieldIsIncluded('publisher', $request), 
+            $this->mergeWhen($this->fieldIsIncluded('publisher', $request),
                 ['publisher' => new PublisherResource($this->publisher)]
             ),
 
@@ -41,9 +41,13 @@ class BookResource extends JsonResource
             $this->mergeWhen($this->fieldIsIncluded('category', $request),
                 ['category' => new CategoryResource($this->category)]
             ),
-            
+
             $this->mergeWhen($this->fieldIsIncluded('authors', $request),
                 ['authors' => new AuthorCollection($this->authors)]
+            ),
+
+            $this->mergeWhen($this->fieldIsIncluded('reviews', $request),
+                ['reviews' => new ReviewCollection($this->reviews)]
             ),
         ];
     }

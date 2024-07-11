@@ -8,8 +8,10 @@ use App\Http\Requests\V1\Books\StoreBookRequest;
 use App\Http\Requests\V1\Books\UpdateBookRequest;
 use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Books\BookResource;
+use App\Http\Resources\V1\Books\ReviewCollection;
 use App\Interfaces\Repositories\BookRepositoryInterface;
 use App\Models\V1\Books\Book;
+use App\Models\V1\Books\Review;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class BookController extends Controller
@@ -18,7 +20,7 @@ class BookController extends Controller
         private BookRepositoryInterface $repository
     )
     {
-        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+        $this->middleware('auth:sanctum', ['except' => ['index', 'show', 'getReviews']]);
     }
 
     public function index()
@@ -88,6 +90,14 @@ class BookController extends Controller
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
+    }
+
+    public function getReviews(Book $book)
+    {
+        $per_page = request()->get('per_page', 10);
+        $reviews = $book->reviews()->paginate($per_page);
+
+        return new ReviewCollection($reviews);
     }
 
     public function buy(Book $book, string $format)

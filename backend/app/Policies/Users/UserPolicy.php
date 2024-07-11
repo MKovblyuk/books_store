@@ -47,4 +47,24 @@ class UserPolicy
     {
         return false;
     }
+
+    public function getOrders(User $user, User $model): bool
+    {
+        return $user->id === $model->id;
+    }
+
+    public function getElectronicBooks(User $user, User $model): bool
+    {
+        return $user->id === $model->id;
+    }
+
+    public function getAudioBooks(User $user, User $model): bool
+    {
+        return $user->id === $model->id;
+    }
+
+    public function getLikedBooks(User $user, User $model): bool
+    {
+        return $user->id === $model->id;
+    }
 }
