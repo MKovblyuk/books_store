@@ -10,7 +10,7 @@ import Filter from "@/components/filter/Filter.vue";
 <template>
     <nav class="p-2">
         <SideMenuCategoryItem/>
-        <Filter class="mt-2"/>
+        <Filter class="mt-2" @filter_options_changed="$emit('filter_options_changed')"/>
     </nav>
 
 </template>

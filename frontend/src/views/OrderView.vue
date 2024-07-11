@@ -1,123 +1,14 @@
 <script setup>
 import CartItem from "@/components/cart/CartItem.vue";
+import { useCartStore } from "@/stores/cartStore";
 
-const books = [
-    {
-        name: "some",
-        price: 34234,
-        quantity: 1,
-        discount: 0.3,
-    },
-    {
-        name: "some2",
-        price: 213,
-        quantity: 1,
-        discount: 0.3,
-    },
-    {
-        name: "some3",
-        price: 2,
-        quantity: 1,
-        discount: 0.3,
-    },
-    {
-        name: "some",
-        price: 34234,
-        quantity: 1,
-        discount: 0.3,
-    },
-    {
-        name: "some2",
-        price: 213,
-        quantity: 1
-    },
-    {
-        name: "some3",
-        price: 2,
-        quantity: 1
-    },
-    {
-        name: "some",
-        price: 34234,
-        quantity: 1
-    },
-    {
-        name: "some2",
-        price: 213,
-        quantity: 1
-    },
-    {
-        name: "some3",
-        price: 2,
-        quantity: 1
-    },
-    {
-        name: "some",
-        price: 34234,
-        quantity: 1
-    },
-    {
-        name: "some2",
-        price: 213,
-        quantity: 1
-    },
-    {
-        name: "some3",
-        price: 2,
-        quantity: 1
-    },
-    {
-        name: "some",
-        price: 34234,
-        quantity: 1
-    },
-    {
-        name: "some2",
-        price: 213,
-        quantity: 1
-    },
-    {
-        name: "some3",
-        price: 2,
-        quantity: 1
-    },
-    {
-        name: "some",
-        price: 34234,
-        quantity: 1
-    },
-    {
-        name: "some2",
-        price: 213,
-        quantity: 1
-    },
-    {
-        name: "some3",
-        price: 2,
-        quantity: 1
-    },
-    {
-        name: "some",
-        price: 34234,
-        quantity: 1
-    },
-    {
-        name: "some2",
-        price: 213,
-        quantity: 1
-    },
-    {
-        name: "some3",
-        price: 2,
-        quantity: 1
-    },
+const cartStore = useCartStore();
 
-];
 </script>
 
 <template>
     <div class="p-3">
-        <RouterLink to="/" class="btn btn-outline-primary">Home</RouterLink>
+        <RouterLink to="/1" class="btn btn-outline-primary">Home</RouterLink>
         <div class="d-flex mt-4">
             <form class="order_contacts">
                 <h5>Placing an order</h5>
@@ -227,16 +118,16 @@ const books = [
 
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        All {{books.length}}
+                        All {{cartStore.items.length}}
                     </div>
                 </div>
 
                 <div class="cart_items_list">
-                    <CartItem v-for="item in books" :item class="mt-2"/>
+                    <CartItem v-for="item in cartStore.items" :item class="mt-2"/>
                 </div>
 
                 <div class="mt-3">
-                    <div>Total Price 3453</div>
+                    <div>Total Price {{ cartStore.totalPrice }}</div>
                     <button class="btn btn-success w-100">Accept</button>
                 </div>
             </div>

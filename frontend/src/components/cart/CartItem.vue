@@ -1,5 +1,19 @@
 <script setup>
+import { useCartStore } from '@/stores/cartStore';
+
 const props = defineProps(['item']);
+const cartStore = useCartStore();
+
+function increaseQuantity()
+{
+    props.item.increaseQuantity();
+}
+
+function decreaseQuantity()
+{
+    props.item.decreaseQuantity();
+}
+
 </script>
 
 <template>
@@ -7,30 +21,31 @@ const props = defineProps(['item']);
         <div class="d-flex">
             <img class="cart_item_img" src="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg">
             <div class="ps-1">
-                <div class="cart_item_title">{{item.name}}</div>
+                <div class="cart_item_title">{{item.getBookName()}}</div>
+                <div> {{ item.getBookFormat() }}</div>
                 <div class="cart_item_price">
-                    <template v-if="item.discount > 0">
+                    <template v-if="item.getDiscount() > 0">
                         <div class="old_price">
-                            {{item.price}}
+                            {{item.getPrice()}}
                         </div>
-                        <div v-if="item.discount > 0">
-                            {{(item.price * item.discount).toFixed(2)}}
+                        <div>
+                            {{ item.getPriceWithDiscount() }}
                         </div>
                     </template>
                     <template v-else>
-                        {{item.price}}
+                        {{item.getPrice()}}
                     </template>
                 </div>
             </div>
         </div>
         <div class="d-flex flex-column justify-content-between">
-            <a href="#" class="text-end">
+            <a href="#" class="text-end" @click="cartStore.removeItem(item)">
                 Remove
             </a>
             <div>
-                <button class="me-2 btn btn-outline-dark">-</button>
-                {{item.quantity}}
-                <button class="ms-2 btn btn-outline-dark">+</button>
+                <button class="me-2 btn btn-outline-dark" @click="decreaseQuantity()">-</button>
+                {{item.getQuantity()}}
+                <button class="ms-2 btn btn-outline-dark" @click="increaseQuantity()">+</button>
             </div>
         </div>
     </div>

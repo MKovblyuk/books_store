@@ -17,3 +17,8 @@
 .btn-google:hover {
     background-color: #dd2b1c;
 }
+
+.error_message {
+    color: red;
+    font-size: small;
+}

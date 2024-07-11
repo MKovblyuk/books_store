@@ -4,91 +4,92 @@ import BookPreview from "@/components/books/BookPreview.vue";
 import BookDetails from "@/components/books/BookDetails.vue";
 import InlineBookList from "@/components/books/InlineBookList.vue";
 import ReviewsSection from "@/components/reviews/ReviewsSection.vue";
-import {ref} from "vue";
-import BookCard from "@/components/books/BookCard.vue";
+import {onMounted, ref} from "vue";
+import {useBookStore} from "@/stores/bookStore.js";
+import {useRoute, useRouter} from "vue-router";
+import {useReviewStore} from "@/stores/reviewStore.js";
+import { useCartStore } from "@/stores/cartStore";
+import { CartItem } from "@/models/CartItem";
+import { useBook } from "@/composables/book";
 
-const book = ref({
-    "id": 5,
-    "name": "Modi fuga omnis qui.",
-    "description": "Expedita at non quis iure omnis atque. Natus blanditiis et aperiam nihil at sequi quo. Dignissimos qui accusantium nihil ab minus quo eum. Ut exercitationem ea sed quis.",
-    "publicationYear": "2005",
-    "language": "French",
-    "coverImageUrl": "https://via.placeholder.com/640x480.png/00aa22?text=et",
-    "publishedAt": "2005-10-28 22:06:40",
-    "audioFormat": {
-        "id": 1,
-        "price": "453.01",
-        "discount": "9.57",
-        "duration": 881
-    },
-    "electronicFormat": {
-        "id": 3,
-        "price": "442.68",
-        "discount": "5.16",
-        "pageCount": 107
-    },
-    "paperFormat": {
-        "id": 5,
-        "price": "333.19",
-        "discount": "4.19",
-        "quantity": 162,
-        "pageCount": 673
-    },
-    "publisher": {
-        "id": 5,
-        "name": "Heidenreich Group"
-    },
-    "category": {
-        "id": 13,
-        "name": "history",
-        "parentId": 1,
-        "children": [
-            {
-                "id": 14,
-                "name": "military history",
-                "parentId": 13,
-                "children": []
-            },
-            {
-                "id": 15,
-                "name": "world history",
-                "parentId": 13,
-                "children": []
-            }
-        ]
-    },
-    "authors": [
-        {
-            "id": 4,
-            "firstName": "Elda",
-            "lastName": "Lemke",
-            "description": "Nihil mollitia ab architecto qui facere perferendis et. Hic dolores maxime iure id quas. Ut unde voluptatum corporis odio sit et perspiciatis.",
-            "photoUrl": "https://via.placeholder.com/640x480.png/0099bb?text=beatae"
-        },
-        {
-            "id": 9,
-            "firstName": "Ruby",
-            "lastName": "Lynch",
-            "description": "Inventore maxime maxime doloremque beatae laborum aut. Optio qui harum est excepturi debitis. Esse ducimus ea et minus quas quas modi. Deleniti aut maxime assumenda ex quia minus.",
-            "photoUrl": "https://via.placeholder.com/640x480.png/0000ff?text=adipisci"
-        }
-    ]
+const bookStore = useBookStore();
+const reviewStore = useReviewStore();
+const cartStore = useCartStore();
+
+const route = useRoute();
+const router = useRouter();
+
+const reviews_per_page = 2;
+
+const selectedFormat = ref();
+
+onMounted( () => {
+    fetchData(route.params.id).then(
+        () => selectedFormat.value = useBook(bookStore.book).getAvailableFormat()
+    );
 });
+
+const fetchData = async (book_id) => {
+    await bookStore.fetchBook(book_id);
+    await bookStore.fetchRelatedBooks();
+    await reviewStore.fetchReviews(route.params.id, 1, reviews_per_page);
+}
+
+const book_card_click_handler = (book_id) => {
+    router.push('/book/' + book_id);
+    fetchData(book_id);
+}
+
+const review_page_changed_handler = async (page) => {
+    await reviewStore.fetchReviews(route.params.id, page, reviews_per_page);
+}
+
+function addToCart() 
+{
+    const cartItem = new CartItem(bookStore.book, selectedFormat.value);
+    cartStore.addItem(cartItem);
+}
+
+function buy()
+{
+    addToCart();
+    router.push('/order');
+}
+
 
 </script>
 
 <template>
     <div>
         <div class="d-flex p-2">
-            <BookPreview class="book_preview px-2" :coverImageUrl="book.coverImageUrl"/>
-            <BookDetails class="book_details px-5" :book/>
+            <BookPreview 
+                class="book_preview px-2" 
+                :coverImageUrl="bookStore.book.coverImageUrl"
+                @to_cart="addToCart"
+                @buy="buy"
+            />
+            <BookDetails 
+                v-if="bookStore.bookIsLoaded" 
+                class="book_details px-5" 
+                :book="bookStore.book"
+                :selectedFormat
+                @select_format="(format_name) => selectedFormat = format_name"
+            />
         </div>
         <div class="p-2">
             <h6>Related Books</h6>
-            <InlineBookList/>
+            <InlineBookList 
+                :books="bookStore.relatedBooks" 
+                @book_card_click="book_card_click_handler"
+            />
         </div>
 
-        <ReviewsSection class="mt-4"/>
+        <ReviewsSection 
+            class="mt-4" 
+            :reviews="reviewStore.reviews" 
+            :meta="reviewStore.meta"
+            @page_changed="review_page_changed_handler"
+        />
     </div>
 </template>
 

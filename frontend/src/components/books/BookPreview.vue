@@ -15,8 +15,15 @@ const lastUrl = "https://img.freepik.com/free-photo/painting-mountain-lake-with-
             class="w-100 mb-2"
             alt="book_preview_image"
         >
-        <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button type="button" class="btn btn-success w-100 mb-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             Preview
+        </button>
+
+        <button type="button" class="btn btn-primary w-100 mb-2" @click="$emit('to_cart')">
+            To Cart
+        </button>
+        <button type="button" class="btn btn-primary w-100 mb-2" @click="$emit('buy')">
+            Buy
         </button>
 
         <div class="modal fade" id="staticBackdrop"  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

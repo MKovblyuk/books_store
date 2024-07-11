@@ -1,5 +1,7 @@
 <script setup>
-import {ref} from "vue";
+import {ref, defineEmits} from "vue";
+import { BookFormats } from "@/enums/bookFormats";
+import { useFilterStore } from "@/stores/filterStore";
 
 const publishers = ref([
     {
@@ -124,6 +126,24 @@ const languages = ref([
     'French'
 ]);
 
+const emit = defineEmits(['filter_options_changed']);
+
+
+const filterStore = useFilterStore();
+
+
+const change_handler = (event) => {
+    if (event.target.checked) {
+        filterStore.addOptionValue(event.target.name, event.target.value);
+    }
+    else {
+        filterStore.removeOptionValue(event.target.name, event.target.value)
+    }
+    
+    emit('filter_options_changed');
+}
+
+
 </script>
 
 <template>
@@ -139,7 +159,15 @@ const languages = ref([
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="form_check_paper">
+                        <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            @change="change_handler" 
+                            id="form_check_paper"
+                            name="formats"
+                            :value="BookFormats.Paper"
+                            :checked="filterStore.isCheckedOptionValue('formats', BookFormats.Paper)"
+                        >
                         <label class="form-check-label" for="form_check_paper">
                             Paper
                         </label>
@@ -147,7 +175,15 @@ const languages = ref([
                 </li>
                 <li class="list-group-item">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="form_check_electronic">
+                        <input 
+                            class="form-check-input"    
+                            type="checkbox" 
+                            :value="BookFormats.Electronic" 
+                            id="form_check_electronic"
+                            name="formats"
+                            @change="change_handler" 
+                            :checked="filterStore.isCheckedOptionValue('formats', BookFormats.Electronic)"
+                        >
                         <label class="form-check-label" for="form_check_electronic">
                             Electronic
                         </label>
@@ -155,7 +191,15 @@ const languages = ref([
                 </li>
                 <li class="list-group-item">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="form_check_audio">
+                        <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            :value="BookFormats.Audio" 
+                            id="form_check_audio"
+                            name="formats"
+                            @change="change_handler" 
+                            :checked="filterStore.isCheckedOptionValue('formats', BookFormats.Audio)"
+                        >
                         <label class="form-check-label" for="form_check_audio">
                             Audio
                         </label>
@@ -171,7 +215,15 @@ const languages = ref([
             <ul class="list-group list-group-flush">
                 <li v-for="publisher in publishers" :key="publisher.id" class="list-group-item">
                     <div  class="form-check">
-                        <input class="form-check-input" type="checkbox" :id="`form_check_publisher_${publisher.id}`">
+                        <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            :id="`form_check_publisher_${publisher.id}`"
+                            @change="change_handler"
+                            :value=publisher.id
+                            name="publishers"
+                            :checked="filterStore.isCheckedOptionValue('publishers', publisher.id)"
+                        >
                         <label class="form-check-label" :for="`form_check_publisher_${publisher.id}`">
                             {{publisher.name}}
                         </label>
@@ -187,7 +239,15 @@ const languages = ref([
             <ul class="list-group list-group-flush">
                 <li v-for="author in authors" :key="author.id" class="list-group-item">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" :id="`form_check_author_${author.id}`">
+                        <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            :id="`form_check_author_${author.id}`"
+                            :value="author.id"
+                            name="authors"
+                            :checked="filterStore.isCheckedOptionValue('authors', author.id)"
+                            @change="change_handler"
+                        >
                         <label class="form-check-label" :for="`form_check_author_${author.id}`">
                             {{author.firstName + " " + author.lastName}}
                         </label>
@@ -203,7 +263,15 @@ const languages = ref([
             <ul class="list-group list-group-flush">
                 <li v-for="i in languages.length" class="list-group-item">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" :id="`form_check_language_${languages[i-1]}`">
+                        <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            :value="languages[i-1]" 
+                            :id="`form_check_language_${languages[i-1]}`"
+                            @change="change_handler"
+                            name="languages"
+                            :checked="filterStore.isCheckedOptionValue('languages', languages[i-1])"
+                        >
                         <label class="form-check-label" :for="`form_check_language_${languages[i-1]}`">
                             {{languages[i-1]}}
                         </label>
@@ -218,12 +286,26 @@ const languages = ref([
             </div>
             <div>
                 <label>From</label>
-                <input class="w-100 mb-2" type="number" placeholder="From">
+                <input 
+                    class="w-100 mb-2" 
+                    type="number" 
+                    placeholder="From"
+                    :value="filterStore.getPriceFrom()"
+                    @input="filterStore.setPriceFrom($event.target.value)"
+                >
 
                 <label>To</label>
-                <input class="w-100 mb-4" type="number" placeholder="To">
-
-                <button class="btn btn-primary w-100">Apply</button>
+                <input 
+                    class="w-100 mb-4" 
+                    type="number" 
+                    placeholder="To"
+                    :value="filterStore.getPriceTo()"
+                    @input="filterStore.setPriceTo($event.target.value)"
+                >
+                <div class="fw-light mb-3">
+                    (prices apply to all book types for more accurate filtering, select the required book type)
+                </div>
+                <button class="btn btn-primary w-100" @click="$emit('filter_options_changed')">Apply</button>
             </div>
         </section>
     </div>
