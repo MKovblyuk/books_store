@@ -4,11 +4,13 @@ namespace App\Models\V1;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\BookFormat;
 use App\Enums\UserRole;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\Review;
 use App\Models\V1\Orders\Order;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -92,5 +94,36 @@ class User extends Authenticatable
     public function isCustomer(): bool
     {
         return $this->role === UserRole::Customer;
+    }
+
+    public function getElectronicBooks(): Collection
+    {
+        return $this->getBooksWithFormat(BookFormat::Electronic);
+    }
+
+    public function getAudioBooks(): Collection
+    {
+        return $this->getBooksWithFormat(BookFormat::Audio);
+    }
+
+    private function getBooksWithFormat(BookFormat $format) : Collection 
+    {
+        return Book::query()
+            ->join('book_order', 'book_order.book_id', '=', 'books.id')
+            ->join('orders', 'book_order.order_id', '=', 'orders.id')
+            ->where('book_order.book_format', $format)
+            ->join('users', 'orders.user_id', '=', 'users.id')
+            ->where('users.id', $this->id)
+            ->get([
+                'book_id as id',
+                'name', 
+                'description', 
+                'publication_year', 
+                'language', 
+                'cover_image_url', 
+                'published_at',
+                'publisher_id',
+                'category_id'
+            ]);
     }
 }

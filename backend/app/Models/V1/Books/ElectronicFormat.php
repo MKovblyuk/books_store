@@ -14,7 +14,7 @@ class ElectronicFormat extends Model
         'price',
         'discount',
         'page_count',
-        'url',
+        'path',
         'book_id',
     ];
 
@@ -24,7 +24,7 @@ class ElectronicFormat extends Model
     ];
 
     protected $hidden = [
-        'url',
+        'path',
     ];
 
     public function book(): BelongsTo

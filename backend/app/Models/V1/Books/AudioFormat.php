@@ -14,7 +14,7 @@ class AudioFormat extends Model
         'price',
         'discount',
         'duration',
-        'url',
+        'path',
         'book_id',
 
     ];
@@ -25,7 +25,7 @@ class AudioFormat extends Model
     ];
 
     protected $hidden = [
-        'url',
+        'path',
     ];
 
     public function book(): BelongsTo

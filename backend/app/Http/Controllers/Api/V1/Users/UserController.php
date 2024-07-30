@@ -99,45 +99,8 @@ class UserController extends Controller
     {
         try {
             $this->authorize('getElectronicBooks', $user);
+            return new BookCollection($user->getBooksWithFormat(BookFormat::Electronic));
 
-            // TODO realize in controller or in user model
-            // $order = $user->orders[0];
-
-            // dd($order->details());
-
-            
-            // dd(DB::select("select id from book_order where book_order.book_format = 'Electronic'"));
-
-            // $res = DB::select("select * from books where books.id in (
-            //     select book_id from book_order where book_order.book_format = ? and book_order.order_id in (
-            //     select id from orders where orders.user_id = ?))", ['Electronic', $user->id]);
-
-      
-            // $res = DB::table('books')
-            //     ->join('electronic_formats', 'books.id', '=', 'electronic_formats.book_id')
-            //     ->get();
-
-            // $res = User::query()
-            //         ->join('orders', 'users.id', '=', 'orders.user_id')
-            //         ->where('users.id', $user->id)
-            //         ->get();
-
-            $res = User::query()
-                    ->where('users.id', $user->id)
-                    ->join('orders', 'users.id', '=', 'orders.user_id')
-                    ->join('book_order', 'book_order.order_id', '=', 'orders.id')
-                    ->where('book_order.book_format', BookFormat::Electronic)
-                    ->get();
-
-            // $res = Book::query()->whereHas('orders', function ($query) {
-            //     // $query->where('id',1);
-            // })->ddRawSql();
-
-            // $res = Book::query()->whereIn('id', [1,2,3])->ddRawSql();
-
-            dd($res);
-
-            // return new BookCollection($res);
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
@@ -147,10 +110,8 @@ class UserController extends Controller
     {
         try {
             $this->authorize('getAudioBooks', $user);
-
-            // TODO realize in controller or in user model
-
-            return new BookCollection([]);
+            // dd($user->getBooksWithFormat(BookFormat::Audio));
+            return new BookCollection($user->getBooksWithFormat(BookFormat::Audio));
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }

@@ -87,7 +87,7 @@ class BookRepository implements BookRepositoryInterface {
             }
         });
 
-        return true;
+        return false;
     }
 
     public function update(Book $book, array $attributes): bool

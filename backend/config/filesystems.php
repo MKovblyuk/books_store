@@ -30,6 +30,18 @@ return [
 
     'disks' => [
 
+        'electronic' => [
+            'driver' => 'local',
+            'root' => storage_path('app/books/electronic'),
+            'throw' => false,
+        ],
+
+        'audio' => [
+            'driver' => 'local',
+            'root' => storage_path('app/books/audio'),
+            'throw' => false,
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),

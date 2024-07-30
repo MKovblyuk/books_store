@@ -5,6 +5,7 @@ namespace App\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\File;
 
 class BookFormats implements ValidationRule
 {
@@ -42,7 +43,6 @@ class BookFormats implements ValidationRule
             'price' => ['required', 'decimal:0,2', 'min:0'],
             'discount' => ['sometimes', 'decimal:0,2', 'min:0'],
             'page_count' => ['required', 'integer', 'min:1'],
-            'url' => ['required', 'url'],
         ]);
 
         if ($validator->fails()) {
@@ -56,7 +56,6 @@ class BookFormats implements ValidationRule
             'price' => ['required', 'decimal:0,2', 'min:0'],
             'discount' => ['sometimes', 'decimal:0,2', 'min:0'],
             'duration' => ['required', 'integer', 'min:0'],
-            'url' => ['required', 'url'],
         ]);
 
         if ($validator->fails()) {

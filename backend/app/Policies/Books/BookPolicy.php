@@ -52,4 +52,19 @@ class BookPolicy
     {
         return false;
     }
+
+    public function downloadElectronicBook(User $user, Book $book): bool
+    {
+        return $user->getElectronicBooks()->contains($book);
+    }
+
+    public function downloadAudioBook(User $user, Book $book): bool
+    {
+        return $user->getAudioBooks()->contains($book);
+    }
+
+    public function uploadFiles(): bool
+    {
+        return false;
+    }
 }
