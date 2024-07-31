@@ -2,90 +2,51 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
+use App\Actions\Books\GetAllBooksWithPaginateAction;
+use App\Actions\Books\StoreBookAction;
+use App\Actions\Books\UpdateBookAction;
 use App\Enums\BookFormat;
-use App\Exceptions\General\DeniedMimeTypeException;
 use App\Exceptions\General\FileExistException;
-use App\Helpers\DirectoryNameGenerator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StoreBookRequest;
 use App\Http\Requests\V1\Books\UpdateBookRequest;
 use App\Http\Requests\V1\Books\UploadAudioBookRequest;
-use App\Http\Requests\V1\Books\UploadBookFilesRequest;
 use App\Http\Requests\V1\Books\UploadElectronicBookRequest;
 use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Books\BookResource;
 use App\Http\Resources\V1\Books\ReviewCollection;
-use App\Interfaces\Repositories\BookRepositoryInterface;
-use App\Models\V1\Books\AudioFormat;
-use App\Models\V1\Books\Author;
 use App\Models\V1\Books\Book;
-use App\Models\V1\Books\ElectronicFormat;
-use App\Models\V1\Books\PaperFormat;
-use App\Models\V1\Books\Review;
-use App\Services\BookFileStorageService;
 use App\Services\Books\AudioBookStorageService;
 use App\Services\Books\BookStorageServiceInterface;
 use App\Services\Books\ElectronicBookStorageService;
-use App\Services\BookService;
-use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
-    private BookRepositoryInterface $repository;
     private BookStorageServiceInterface $electronicStorageService;
     private BookStorageServiceInterface $audioStorageService;
 
-    public function __construct(BookRepositoryInterface $repository)
+    public function __construct()
     {
-        $this->repository = $repository;
         $this->electronicStorageService = new ElectronicBookStorageService();
         $this->audioStorageService = new AudioBookStorageService();
 
         $this->middleware('auth:sanctum', ['except' => ['index', 'show', 'getReviews']]);
     }
 
-    public function index()
+    public function index(GetAllBooksWithPaginateAction $action)
     {
-        return new BookCollection($this->repository->getAll());
+        return new BookCollection($action->execute(request()->get('per_page', 10)));
     }
 
-    public function store(StoreBookRequest $request, DirectoryNameGenerator $generator)
+    public function store(StoreBookRequest $request, StoreBookAction $storeBookAction)
     {
         try {
             $this->authorize('create', Book::class);
 
-            $attributes = $request->validated();
-
-
-            // move into action /////////////////////////////////////////////////////
-
-            $book_id = DB::transaction(function () use($attributes, $generator) {
-
-                $book = Book::create($attributes);
-                $book->authors()->saveMany(Author::find($attributes['authors_ids']));
-
-                $path = $generator->generate($book->id, $book->name);
-    
-                if (isset($attributes['formats']['paper'])) {
-                    $book->paperFormat()->save(new PaperFormat($attributes['formats']['paper']));
-                }
-                if (isset($attributes['formats']['audio'])) {
-                    $attributes['formats']['audio']['path'] = $path;
-                    $book->audioFormat()->save(new AudioFormat($attributes['formats']['audio']));
-                }
-                if (isset($attributes['formats']['electronic'])) {
-                    $attributes['formats']['electronic']['path'] = $path;
-                    $book->electronicFormat()->save(new ElectronicFormat($attributes['formats']['electronic']));
-                }
-
-                return $book->id;
-            });
-
+            $book_id = $storeBookAction->execute($request->validated());
 
             if ($book_id) {
                 return response()->json([
@@ -96,9 +57,6 @@ class BookController extends Controller
 
             return response()->json(['message' => 'Book not created'], 400);
 
-            // return $this->repository->store($request->validated())
-            //     ? response()->json(['message' => 'Book successfully created'], 201)
-            //     : response()->json(['message' => 'Book not created'], 400);
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
@@ -110,12 +68,12 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
-    public function update(UpdateBookRequest $request, Book $book)
+    public function update(UpdateBookRequest $request, Book $book, UpdateBookAction $updateBookAction)
     {
         try {
             $this->authorize('update', $book);
 
-            return $this->repository->update($book, $request->validated())
+            return $updateBookAction->execute($book, $request->validated())
                 ? response()->json(['message' => 'Book successfully updated'], 200)
                 : response()->json(['message' => 'Book not updated'], 400);
         } catch (AuthorizationException $e) {
@@ -123,12 +81,15 @@ class BookController extends Controller
         }
     }
 
+    // TODO 
+    // when force deleting, delete all files or all files specific format
+
     public function destroy(Book $book)
     {
         try {
             $this->authorize('delete', $book);
 
-            return $this->repository->destroy($book)
+            return $book->delete()
                 ? response()->noContent()
                 : response()->json(['message' => 'Book not deleted'], 400);
         } catch (AuthorizationException $e) {
@@ -175,8 +136,6 @@ class BookController extends Controller
             return response()->json(['message' => $e->getMessage()], 403);
         } catch (FileNotFoundException $e) {
             return response()->json(['message' => $e->getMessage()], 404);
-        } catch (Exception $e) {
-            dd('exception');
         }
     }
 

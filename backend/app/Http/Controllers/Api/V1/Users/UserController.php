@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Users;
 
-use App\Enums\BookFormat;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Users\StoreUserRequest;
 use App\Http\Requests\V1\Users\UpdateUserRequest;
@@ -10,11 +9,8 @@ use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Orders\OrderCollection;
 use App\Http\Resources\V1\Users\UserCollection;
 use App\Http\Resources\V1\Users\UserResource;
-use App\Models\V1\Books\Book;
-use App\Models\V1\Orders\Order;
 use App\Models\V1\User;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -99,8 +95,7 @@ class UserController extends Controller
     {
         try {
             $this->authorize('getElectronicBooks', $user);
-            return new BookCollection($user->getBooksWithFormat(BookFormat::Electronic));
-
+            return new BookCollection($user->getElectronicBooks());
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
@@ -110,8 +105,7 @@ class UserController extends Controller
     {
         try {
             $this->authorize('getAudioBooks', $user);
-            // dd($user->getBooksWithFormat(BookFormat::Audio));
-            return new BookCollection($user->getBooksWithFormat(BookFormat::Audio));
+            return new BookCollection($user->getAudioBooks());
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }

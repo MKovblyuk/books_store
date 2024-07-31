@@ -1,2 +1,3 @@
 /docker/volumes/mysql
 db_root_password.txt
+/.idea
