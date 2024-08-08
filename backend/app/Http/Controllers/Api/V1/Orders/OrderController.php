@@ -2,31 +2,29 @@
 
 namespace App\Http\Controllers\Api\V1\Orders;
 
+use App\Actions\Orders\GetAllOrdersWithPaginateAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Orders\StoreOrderRequest;
 use App\Http\Requests\V1\Orders\UpdateOrderRequest;
 use App\Http\Resources\V1\Orders\OrderCollection;
 use App\Http\Resources\V1\Orders\OrderDetailCollection;
 use App\Http\Resources\V1\Orders\OrderResource;
-use App\Interfaces\Repositories\OrderRepositoryInterface;
 use App\Models\V1\Orders\Order;
 use App\Services\Orders\OrderService;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class OrderController extends Controller
 {
-    public function __construct(
-        private OrderRepositoryInterface $repository
-    )
+    public function __construct()
     {
         $this->middleware('auth:sanctum');
     }
 
-    public function index()
+    public function index(GetAllOrdersWithPaginateAction $action)
     {
         try {
             $this->authorize('viewAny', Order::class);
-            return new OrderCollection($this->repository->getAll());
+            return new OrderCollection($action->execute(request()->get('per_page', 10)));
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
