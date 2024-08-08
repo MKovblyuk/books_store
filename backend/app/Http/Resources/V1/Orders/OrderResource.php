@@ -42,6 +42,10 @@ class OrderResource extends JsonResource
             $this->mergeWhen($this->fieldIsIncluded('books', $request),
                 ['books' => new BookCollection($this->books)]
             ),
+
+            $this->mergeWhen($this->fieldIsIncluded('details', $request),
+                ['details' => $this->details()]
+            ),
         ];
     }
 
@@ -70,6 +74,9 @@ class OrderResource extends JsonResource
             ),
             $this->mergeWhen(in_array('updated_at', $fields), 
                 ['updatedAt' => $this->updated_at]
+            ),
+            $this->mergeWhen(in_array('details', $fields),
+                ['details' => $this->details()]
             ),
         ];
     }

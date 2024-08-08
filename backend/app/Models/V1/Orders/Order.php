@@ -61,6 +61,7 @@ class Order extends Model
         $details = [];
 
         foreach($this->books as $book){
+            unset($book->details['order_id']);
             $details[] = $book->details;
         }
 
