@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources\V1\Orders;
 
+use App\Http\Resources\V1\Addresses\FullAddressResource;
 use App\Traits\AllowedIncludes;
 use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Users\UserResource;
+use App\Models\V1\Addresses\Address;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,9 +23,16 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'status' => $this->status,
-            'addressId' => $this->address_id,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
+
+
+            $this->mergeWhen($this->fieldIsIncluded('address', $request),
+                ['address' => new FullAddressResource($this->getFullAddress($this->address))],
+            ),
+            $this->mergeWhen($this->fieldIsNotIncluded('address', $request),
+                ['addressId' => $this->address_id,]
+            ),
 
             $this->mergeWhen($this->fieldIsNotIncluded('user', $request), 
                 ['userId' => $this->user_id,]
@@ -79,5 +88,15 @@ class OrderResource extends JsonResource
                 ['details' => $this->details()]
             ),
         ];
+    }
+
+    private function getFullAddress(Address $address)
+    {
+        $fullAddress = $address;
+        $fullAddress->districtName = $address->district->name;
+        $fullAddress->regionName = $address->district->region->name;
+        $fullAddress->countryName = $address->district->region->country->name;
+
+        return $fullAddress;
     }
 }

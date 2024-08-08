@@ -19,7 +19,8 @@ class GetAllOrdersWithPaginateAction
                 'shipping_method_id',
                 'created_at',
                 'updated_at',
-                'details'
+                'details',
+                // 'address',
             ])
             ->allowedFilters([
                 AllowedFilter::exact('id'),
@@ -39,7 +40,7 @@ class GetAllOrdersWithPaginateAction
                 'user',
                 'shippingMethod',
                 'books',
-                'details'
+                'details',
             ])
             ->paginate($per_page);
     }
