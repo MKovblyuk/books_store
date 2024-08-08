@@ -8,8 +8,6 @@ import { useUserStore } from "@/stores/userStore";
 const cartStore = useCartStore();
 const userStore = useUserStore();
 
-console.log(userStore.isAuthorized());
-
 </script>
 
 <template>
@@ -38,9 +36,9 @@ console.log(userStore.isAuthorized());
                 <span class="visually-hidden">unread messages</span>
             </span>
         </button>
-        <template v-if="userStore.isAuthorized()">
+        <template v-if="userStore.authorized">
             <RouterLink to="/profile" class="btn btn-primary ms-2">Profile</RouterLink>
-            <button class="btn btn-primary ms-2" @click="userStore.logout">Logout</button>
+            <RouterLink to="/1" class="btn btn-primary ms-2" @click="userStore.logout">Logout</RouterLink>
         </template>
         <template v-else>
             <RouterLink to="/login" class="btn btn-primary ms-2">Sign In</RouterLink>

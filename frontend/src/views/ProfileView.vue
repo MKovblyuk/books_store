@@ -2,24 +2,29 @@
 import UsersBookList from "@/components/user/BookList.vue";
 import BookList from "@/components/books/BookList.vue";
 import OrderList from "@/components/orders/OrderList.vue"
-import {ref} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 import axios from "axios";
+import MimeTypeExtensions from "@/helpers/MimeTypeExtensions";
+import { useUserStore } from "@/stores/userStore";
+import AudioPlayer from '@/components/widgets/AudioPlayer.vue';
+import * as bootstrap from 'bootstrap';
 
-const user = ref({
-    "id": 13,
-    "firstName": "TomCustomer",
-    "lastName": "TomLast",
-    "email": "customer@email.com",
-    "role": "Customer",
-    "phoneNumber": "232112"
-});
+
+const userStore = useUserStore();
 
 const passwordData = ref({
-    "currentPassword": "",
-    "newPassword": "",
-    "newPasswordConfirmation": "",
+    "password": "",
+    "passwordConfirmation": "",
 });
 
+const errors = ref({});
+
+
+const electronicBooks = ref([]);
+const audioBooks = ref([]);
+
+const audioSrc = ref('');
+const audioPlyaerCoverImageSrc = ref('');
 const books = [
 {
             "id": 1,
@@ -169,6 +174,8 @@ const meta = {
         "total": 6
 };
 
+const orders = ref([]);
+
 const INFO = 'info';
 const ELECTRONIC_BOOKS = 'electronic_books';
 const AUDIO_BOOKS = 'audio_books';
@@ -179,24 +186,189 @@ const activeTab = ref(INFO);
 
 
 const updateData = async () => {
-    console.log('update data');
-    // send data to back with user token 
-    // try {
-    //     const response = await axios.put('/users', user, )
-    // } catch(e) {
-    //     console.log('errrorrrrr', e);
-    // }
+    try {
+        await axios.patch('/users/' + userStore.user.id, userStore.user, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+            }
+        });
+    } catch(e) {
+        if (e.response.status === 422) {
+            errors.value = e.response.data.errors;
+        }
+
+        console.log('errors in  update data');
+        console.log(errors.value);
+        console.log(e);
+    }
 }
 
 const updatePassword = async () => {
-    console.log('update password');
+    try {
+        const response = await axios.patch('/users/' + userStore.user.id, passwordData.value, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+            }
+        });
+        console.log(response);
+    } catch(e) {
+        if (e.response.status === 422) {
+            errors.value = e.response.data.errors;
+        }
+    }
+}
 
-    // send data to back with user token 
-    // try {
-    //     const response = await axios.put()
-    // } catch(e) {
-    //     console.log('errrorrrrr', e);
-    // }
+async function readAudioBook(book, extension) {
+
+    extension = 'mp3';
+
+    try {
+        const response = await axios.get('/books/audio/' + book.id + '/download/' + extension, { 
+            responseType: 'arraybuffer',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+            }
+        });
+
+        const blob = new Blob([response.data], { type: MimeTypeExtensions.getMimeType(extension) });
+        audioSrc.value = window.URL.createObjectURL(blob);
+        audioPlyaerCoverImageSrc.value = book.coverImageUrl;
+
+        const audioModal = document.getElementById('audioModal');
+        const modal = bootstrap.Modal.getOrCreateInstance(audioModal);
+        modal.show();
+  } catch (error) {
+    console.error('Error reading file:', error);
+  }
+}
+
+async function downloadAudioBook(book, extension) {
+    console.log('download audio book');
+
+    extension = 'mp3';
+
+    try {
+        const response = await axios.get('/books/audio/' + book.id + '/download/' + extension, { 
+            responseType: 'arraybuffer',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+            }
+        });
+
+        console.log(response);
+
+        const blob = new Blob([response.data], { type: MimeTypeExtensions.getMimeType(extension) });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = book.name;
+        link.click();
+        window.URL.revokeObjectURL(link.href);
+  } catch (error) {
+    console.error('Error reading file:', error);
+  }
+}
+
+async function fetchOrders() {
+    try {
+        const response = await axios.get('users/' + userStore.user.id + '/orders', {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+            }
+        });
+        console.log('fetch orders');
+        console.log(response);
+    } catch (e) {
+        console.log('error in fetching orders:', e);
+    }
+}
+
+async function fetchAudioBooks() {
+    try {
+        const response = await axios.get('users/' + userStore.user.id + '/audioBooks', {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+            }
+        });
+
+        audioBooks.value = response.data.data;
+        console.log('electronic books fetched');
+        console.log(audioBooks.value);
+        console.log('///');
+    } catch (e) {
+        console.log('error in fetching audio books:', e);
+    }
+}
+
+async function readElectronicBook(book, extension) {
+    try {
+        const response = await axios.get('/books/electronic/' + book.id + '/download/' + extension, { 
+            responseType: 'arraybuffer',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+            }
+        });
+        const blob = new Blob([response.data], { type: MimeTypeExtensions.getMimeType(extension) });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.target="_blank";
+        link.click();
+        window.URL.revokeObjectURL(link.href);
+  } catch (error) {
+    console.error('Error reading file:', error);
+  }
+
+}
+
+async function downloadElectronicBook(book, extension) {
+    try {
+        const response = await axios.get('/books/electronic/' + book.id + '/download/' + extension, { 
+            responseType: 'arraybuffer',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken'),
+            }
+        });
+        const blob = new Blob([response.data], { type: MimeTypeExtensions.getMimeType(extension) });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = book.name;
+        link.click();
+        window.URL.revokeObjectURL(link.href);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+  }
+}
+
+async function fetchElectronicBooks() {
+    try {
+        const response = await axios.get('users/' + userStore.user.id + '/electronicBooks', {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+            }
+        });
+
+        electronicBooks.value = response.data.data;
+        console.log('electronic books fetched');
+        console.log(electronicBooks.value);
+        console.log('///');
+    } catch (e) {
+        console.log('error in fetching electronic books:', e);
+    }
+}
+
+
+function showElectronicBooksTab() {
+    activeTab.value = ELECTRONIC_BOOKS;
+    fetchElectronicBooks();
+}
+
+function showAudioBooksTab() {
+    activeTab.value = AUDIO_BOOKS;
+    fetchAudioBooks();
+}
+
+function showOrdersTab() {
+    activeTab.value = ORDER_HISTORY;
+    fetchOrders();
 }
 
 </script>
@@ -205,30 +377,30 @@ const updatePassword = async () => {
     <div>
         <div class="tab_buttons">
             <button @click="activeTab=INFO" class="btn btn-success me-1">Info</button>
-            <button @click="activeTab=ELECTRONIC_BOOKS" class="btn btn-success me-1">Electronic Books</button>
-            <button @click="activeTab=AUDIO_BOOKS" class="btn btn-success me-1">Audio Books</button>
-            <button @click="activeTab=ORDER_HISTORY" class="btn btn-success me-1">Order history</button>
+            <button @click="showElectronicBooksTab" class="btn btn-success me-1">Electronic Books</button>
+            <button @click="showAudioBooksTab" class="btn btn-success me-1">Audio Books</button>
+            <button @click="showOrdersTab" class="btn btn-success me-1">Order history</button>
             <button @click="activeTab=LIKED_BOOKS" class="btn btn-success">Liked books</button>
         </div>
         <section class="pt-2" v-if="activeTab===INFO">
             <form class="profile_form">
-                <div class="mb-3 fw-bold">{{user.firstName + " " + user.lastName}}</div>
+                <div class="mb-3 fw-bold">{{userStore.user.firstName + " " + userStore.user.lastName}}</div>
 
                 <div class="mb-3">
                     <label for="firstName" class="form-label">First Name:</label>
-                    <input type="text" class="form-control" id="firstName" :value="user.firstName">
+                    <input type="text" class="form-control" id="firstName" v-model="userStore.user.firstName">
                 </div>
                 <div class="mb-3">
                     <label for="lastName" class="form-label">Last Name:</label>
-                    <input type="text" class="form-control" id="lastName" :value="user.lastName">
+                    <input type="text" class="form-control" id="lastName" v-model="userStore.user.lastName">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
-                    <input type="email" class="form-control" id="email" :value="user.email">
+                    <input type="email" class="form-control" id="email" v-model="userStore.user.email">
                 </div>
                 <div class="mb-3">
                     <label for="phoneNumber" class="form-label">Phone Number:</label>
-                    <input type="tel" class="form-control" id="phoneNumber" :value="user.phoneNumber">
+                    <input type="tel" class="form-control" id="phoneNumber" v-model="userStore.user.phoneNumber">
                 </div>
 
                 <button class="btn btn-primary me-1" @click.prevent="updateData">
@@ -247,15 +419,6 @@ const updatePassword = async () => {
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="currentPassword" class="form-label">Current Password:</label>
-                                    <input 
-                                        type="password" 
-                                        class="form-control" 
-                                        id="currentPassword" 
-                                        v-model="passwordData.currentPassword"
-                                        >
-                                </div>
                                 <div class="mb-3">
                                     <label for="newPassword" class="form-label">New Password:</label>
                                     <input 
@@ -288,22 +451,28 @@ const updatePassword = async () => {
         <section v-if="activeTab===ELECTRONIC_BOOKS">
             Electronic books tab
             <UsersBookList 
-                :books
+                :books="electronicBooks"
                 :meta
+                @read="readElectronicBook"
+                @download="downloadElectronicBook"
             />
         </section>
 
         <section v-if="activeTab===AUDIO_BOOKS">
             Audio books tab
             <UsersBookList
-                :books
+                :books="audioBooks"
                 :meta
+                @read="readAudioBook"
+                @download="downloadAudioBook"
             />
         </section>
 
         <section v-if="activeTab===ORDER_HISTORY">
             Orders history tab
-            <OrderList/>
+            <OrderList
+                :orders
+            />
         </section>
 
         <section v-if="activeTab===LIKED_BOOKS">
@@ -313,7 +482,22 @@ const updatePassword = async () => {
                 :meta
             />
         </section>
-            
+
+        <div class="modal" id="audioModal" tabindex="-1" aria-labelledby="audioModalLabel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body audio-body">
+                        <AudioPlayer 
+                            :audioSrc="audioSrc"
+                            :imageSrc="audioPlyaerCoverImageSrc"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>   
     </div>
 </template>
 

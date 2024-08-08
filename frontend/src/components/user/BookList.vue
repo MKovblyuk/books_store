@@ -2,6 +2,7 @@
 import BookCard from './BookCard.vue';
 
 const props = defineProps(['books', 'meta']);
+const emit = defineEmits(['read', 'download']);
 
 </script>
 
@@ -12,6 +13,8 @@ const props = defineProps(['books', 'meta']);
             :book 
             :key="book.id"
             class="mt-2"
+            @read="(book, extension) => emit('read', book, extension)"
+            @download="(book, extension) => emit('download', book, extension)"
         />
     </div>
 </template>

@@ -13,6 +13,9 @@ export const useFilterStore = defineStore('filter', () => {
 
     // }
 
+
+    // more detailed read in form input bindings section in vue documentation
+
     const options = ref({
         book_types: [],
         publishers: [],

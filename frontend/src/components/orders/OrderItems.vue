@@ -1,5 +1,7 @@
 <script setup>
 
+const props = defineProps(['order'])
+
 </script>
 
 <template>

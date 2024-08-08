@@ -19,10 +19,14 @@ const userStore = useUserStore();
 const router = useRouter();
 
 const login = async () => {
-    try {
+    try {        
         const response = await axios.post('http://localhost/api/login', loginData.value);
 
-        userStore.setToken(response.data.token);
+        localStorage.setItem('userId', response.data.userId);
+        localStorage.setItem('userToken', response.data.token);
+
+        userStore.fetchUser();
+        
         router.push('/1');
     } catch(e) {
         if (e.response.status === 422) {

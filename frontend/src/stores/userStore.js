@@ -1,35 +1,44 @@
+import axios from "axios";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useUserStore = defineStore('user', () => {
-    // const token = ref();
+    const user = ref();
+    const loading = ref(false);
+    const authorized = ref(false);
 
-    function getToken()
-    {
-        localStorage.getItem('user_token');
+
+    const fetchUser = async () => {
+        loading.value = true;
+
+        const userId = localStorage.getItem('userId');
+        const response = await axios.get('users/' + userId, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+            }
+        })
+
+        user.value = response.data.data;
+        loading.value = false;
+
+        authorized.value = true;
     }
 
-    function setToken(token)
-    {
-        localStorage.setItem('user_token', token);
-    }
+    // const login = async () => {
+    //     const response = await axios.post('http://localhost/api/login', loginData.value);
 
-    // remove in future
-    const tmp_auth_status = ref(true);
-
-    function isAuthorized()
-    {
-        // console.log(getToken());
-        return tmp_auth_status.value;
-    }
+    //     localStorage.setItem('userId', response.data.userId);
+    //     localStorage.setItem('userToken', response.data.token);
+    // }
 
     function logout() 
     {
-        localStorage.removeItem('user_token');
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('userId');
 
-        tmp_auth_status.value = false;
-        console.log('successfully logged out');
+        authorized.value = false;
+        user.value = null;
     }
 
-    return {getToken, setToken, isAuthorized, logout, tmp_auth_status}
+    return {logout, fetchUser, user, authorized}
 });
