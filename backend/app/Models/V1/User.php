@@ -42,13 +42,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected function role(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $role) => UserRole::from($role),
-            set: fn (UserRole $role) => $role->value
-        );
-    }
+    // protected function role(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (string $role) => UserRole::from($role),
+    //         set: fn (UserRole $role) => $role->value
+    //     );
+    // }
 
     // protected function phoneNumber(): Attribute
     // {
@@ -83,17 +83,17 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role === UserRole::Admin;
+        return UserRole::from($this->role) === UserRole::Admin;
     }
 
     public function isEditor(): bool
     {
-        return $this->role === UserRole::Editor;
+        return UserRole::from($this->role) === UserRole::Editor;
     }
 
     public function isCustomer(): bool
     {
-        return $this->role === UserRole::Customer;
+        return UserRole::from($this->role) === UserRole::Customer;
     }
 
     public function getElectronicBooks(): Collection
