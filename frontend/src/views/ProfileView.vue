@@ -1,13 +1,13 @@
 <script setup>
 import UsersBookList from "@/components/user/BookList.vue";
 import BookList from "@/components/books/BookList.vue";
-import OrderList from "@/components/orders/OrderList.vue"
 import {onBeforeMount, onMounted, ref} from "vue";
 import axios from "axios";
 import MimeTypeExtensions from "@/helpers/MimeTypeExtensions";
 import { useUserStore } from "@/stores/userStore";
 import AudioPlayer from '@/components/widgets/AudioPlayer.vue';
 import * as bootstrap from 'bootstrap';
+import OrderTable from "@/components/orders/OrderTable.vue";
 
 
 const userStore = useUserStore();
@@ -270,13 +270,14 @@ async function downloadAudioBook(book, extension) {
 
 async function fetchOrders() {
     try {
-        const response = await axios.get('users/' + userStore.user.id + '/orders', {
+        const response = await axios.get('users/' + 13 + '/orders?include=details,address,shippingMethod', {
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+                'Authorization': 'Bearer ' + '68|prEUDNBXFVrNaqeLah4Z9uYuJKEG9pfwH4PUjPD1c615e755'
             }
         });
-        console.log('fetch orders');
-        console.log(response);
+        // console.log(response.data.data[0].address);
+        
+        orders.value = response.data.data;
     } catch (e) {
         console.log('error in fetching orders:', e);
     }
@@ -470,7 +471,7 @@ function showOrdersTab() {
 
         <section v-if="activeTab===ORDER_HISTORY">
             Orders history tab
-            <OrderList
+            <OrderTable
                 :orders
             />
         </section>
