@@ -11,7 +11,6 @@ class StoreOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // return request()->user() !== null;
         return true;
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Orders;
 
+use App\Actions\Orders\CreateOrderAction;
 use App\Actions\Orders\GetAllOrdersWithPaginateAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Orders\StoreOrderRequest;
@@ -30,12 +31,12 @@ class OrderController extends Controller
         }
     }
 
-    public function store(StoreOrderRequest $request)
+    public function store(StoreOrderRequest $request, CreateOrderAction $action)
     {
         try {
             $this->authorize('create', Order::class);
 
-            return OrderService::store($request->validated())
+            return $action->execute($request->validated())
                 ? response()->json(['message' => 'Order successfully created'], 201)
                 : response()->json(['message' => 'Order not created'], 400);
         } catch (AuthorizationException $e) {
