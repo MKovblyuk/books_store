@@ -4,6 +4,7 @@ namespace App\Actions\Orders;
 
 use App\Enums\BookFormat;
 use App\Enums\ShippingMethods;
+use App\Factories\ShippingServiceFactory;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Orders\Order;
 use App\Models\V1\Orders\ShippingMethod;
@@ -13,19 +14,15 @@ class CreateOrderAction
 {
     public function execute(array $attributes): bool
     {
-        dd($attributes);
+        dump($attributes);
 
         $this->calculateTotalPriceField($attributes['details']);
 
+        dd($attributes);
+
         $shippingMethod = ShippingMethod::find($attributes['shipping_method_id']);
-
-        if ($shippingMethod->name === ShippingMethods::UponReceiving) {
-            // TODO call and change order status
-        }
-
-        if ($shippingMethod->name === ShippingMethods::GooglePay) {
-            // TODO payment transaction
-        }
+        $shippingService = ShippingServiceFactory::create(ShippingMethods::from($shippingMethod->name));
+        $shippingService->send();
 
 
         DB::transaction(function () use($attributes){

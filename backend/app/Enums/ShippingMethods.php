@@ -4,6 +4,6 @@ namespace App\Enums;
 
 enum ShippingMethods : string
 {
-    case UponReceiving = 'Upon Receiving';
-    case GooglePay = 'Google Pay';
+    case UkrPoshta = 'UkrPoshta';
+    case NovaPoshta = 'NovaPoshta';
 }
