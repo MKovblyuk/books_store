@@ -110,9 +110,9 @@ class Book extends Model
             : true;
     }
 
-    public function getPrice(BookFormat $format, int $quantity = 1): float
+    public function getPrice(BookFormat $format): float
     {
-        return $this->getFormat($format)->price * $quantity;
+        return $this->getFormat($format)->price;
     }
 
     public function likesCount(): int

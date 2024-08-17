@@ -6,7 +6,6 @@ use App\Enums\OrderStatus;
 use App\Models\V1\Addresses\Address;
 use App\Models\V1\Books\Book;
 use App\Models\V1\User;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,14 +23,17 @@ class Order extends Model
         'user_id',
         'address_id',
         'shipping_method_id',
+        'total_price',
+        'payment_method_id',
     ];
 
-    protected function status(): Attribute
+    protected $casts = [
+        'status' => OrderStatus::class,
+    ];
+
+    public function paymentMethod(): BelongsTo
     {
-        return Attribute::make(
-            get: fn (string $status) => OrderStatus::from($status),
-            // set: fn (OrderStatus $status) => $status->value,
-        );
+        return $this->belongsTo(PaymentMethod::class);
     }
 
     public function shippingMethod(): BelongsTo
@@ -53,7 +55,7 @@ class Order extends Model
     {
         return $this->belongsToMany(Book::class)
             ->as('details')
-            ->withPivot('book_format', 'quantity', 'total_price');
+            ->withPivot('book_format', 'quantity');
     }
 
     public function details(): array

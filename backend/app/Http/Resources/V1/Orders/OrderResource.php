@@ -25,6 +25,7 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
+            'totalPrice' => $this->total_price, 
 
 
             $this->mergeWhen($this->fieldIsIncluded('address', $request),

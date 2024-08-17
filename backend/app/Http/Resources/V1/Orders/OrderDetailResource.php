@@ -13,7 +13,7 @@ class OrderDetailResource extends JsonResource
             'bookId' => $this->book_id,
             'bookFormat' => $this->book_format,
             'quantity' => $this->quantity,
-            'totalPrice' => $this->total_price,
+            // 'totalPrice' => $this->total_price,
         ];
     }
 }

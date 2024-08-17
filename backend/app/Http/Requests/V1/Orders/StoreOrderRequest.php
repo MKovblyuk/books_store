@@ -20,6 +20,7 @@ class StoreOrderRequest extends FormRequest
             'address_id' => ['required', 'exists:addresses,id'],
             'user_id' => ['required', 'exists:users,id'],
             'shipping_method_id' => ['required', 'exists:shipping_methods,id'],
+            'payment_method_id' => ['required', 'exists:payment_methods,id'],
             'details' => ['required', 'array', new OrderDatails()],
         ];
     }
@@ -47,6 +48,10 @@ class StoreOrderRequest extends FormRequest
         }
         if (isset($this->details)) {
             $this->merge(['details' => $this->prepareDetailsForValidation($this->details)]);
+        }
+
+        if (isset($this->paymentMethodId)) {
+            $this->merge(['payment_method_id' => $this->paymentMethodId]);
         }
     }
 

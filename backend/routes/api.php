@@ -65,6 +65,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::apiResource('shippingMethods',ShippingMethodController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('orders', OrderController::class)->missing(fn() => notFoundJsonResponse());
         Route::get('orders/{order}/details', [OrderController::class, 'showDetails'])->missing(fn() => notFoundJsonResponse());
+        Route::post('orders/createOnlinePaymentOrder', [OrderController::class, 'createOnlinePaymentOrder']);
+        Route::post('orders/confirmOnlinePaymentOrder', [OrderController::class, 'confirmOnlinePaymentOrder']);
     });
 
     Route::group(['namespace' => 'Users'], function(){
@@ -74,5 +76,4 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::get('users/{user}/audioBooks', [UserController::class, 'getAudioBooks'])->missing(fn() => notFoundJsonResponse());
         Route::get('users/{user}/likedBooks', [UserController::class, 'getLikedBooks'])->missing(fn() => notFoundJsonResponse());
     });
-
 });

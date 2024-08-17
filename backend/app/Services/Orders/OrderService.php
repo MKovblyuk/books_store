@@ -3,63 +3,101 @@
 namespace App\Services\Orders;
 
 use App\Enums\BookFormat;
-use App\Enums\ShippingMethods;
-use App\Events\Orders\OrderCreated;
-use App\Events\Orders\OrderUpdated;
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethods;
+use App\Events\Orders\OrderReadyToSend;
+use App\Events\Orders\UponReceivingOrderCreated;
+use App\Exceptions\Orders\IncorrectPaymentMethodException;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Orders\Order;
-use App\Models\V1\Orders\ShippingMethod;
+use App\Models\V1\Orders\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
-    public static function store(array $attributes): bool
+    private PaymentServiceInterface $paymentService;
+    private PriceCalculatorService $priceCalculator;
+
+    public function __construct(PaymentServiceInterface $paymentService, PriceCalculatorInterface $priceCalculator)
     {
-        self::calculateTotalPriceField($attributes['details']);
+        $this->paymentService = $paymentService;
+        $this->priceCalculator = $priceCalculator;
+    }
 
-        $shippingMethod = ShippingMethod::find($attributes['shipping_method_id']);
+    public function createUponReceivingOrder(array $attributes): bool
+    {
+        $attributes['total_price'] = $this->priceCalculator->calculate($attributes);
+        $paymentMethod = PaymentMethod::find($attributes['payment_method_id'])->method;
 
-        if ($shippingMethod->name === ShippingMethods::UponReceiving) {
-            // TODO call and change order status
+        if ($paymentMethod !== PaymentMethods::UponReceiving) {
+            throw new IncorrectPaymentMethodException('Incorrect payment method');
         }
-
-        if ($shippingMethod->name === ShippingMethods::GooglePay) {
-            // TODO payment transaction
-        }
-
 
         DB::transaction(function () use($attributes){
-
-            $order = Order::create($attributes);
-
-            foreach ($attributes['details'] as $detail) {
-                $order->books()->attach($detail['book_id'], $detail);
-
-                if ($detail['book_format'] === BookFormat::Paper->value) {
-                    Book::find($detail['book_id'])->paperFormat->decreaseQuantity($detail['quantity']);
-                }
-            }
-
-            OrderCreated::dispatch();
+            $order = $this->createOrder($attributes);
+            UponReceivingOrderCreated::dispatch($order);
         });
 
         return true;
     }
 
-    public static function update(array $attributes, Order $order): bool
+    public function createOnlinePaymentOrder(array $attributes) 
     {
-        $order->update($attributes);
-        OrderUpdated::dispatch();
+        return DB::transaction(function () use($attributes) {
+            $attributes['total_price'] = $this->priceCalculator->calculate($attributes);
+            $attributes['status'] = OrderStatus::Pending;
+    
+            $paymentMethod = PaymentMethod::find($attributes['payment_method_id'])->method;
+            if ($paymentMethod === PaymentMethods::UponReceiving) {
+                throw new IncorrectPaymentMethodException('Incorrect payment method');
+            }
 
-        return true;
+            $payment = [
+                'methods' => [strtolower($paymentMethod->value)],
+                'capture' => ['descriptive' => 'Purchase in Book Store']
+            ];
+    
+            $order = $this->createOrder($attributes);
+
+            $customer = [
+                'email' => 'some@email.com',
+            ];
+            $type = 'single';
+            $orderData = [
+                'key' => $order->id,
+                'value' => $attributes['total_price'],
+            ];
+        
+            return $this->paymentService->createSession($type, $payment, $orderData, $customer);
+        });
     }
 
-    private static function calculateTotalPriceField(&$details): void
+    public function confirmOnlinePaymentOrder($data)
     {
-        for ($i = 0; $i < count($details); $i++) {
-            $book = Book::find($details[$i]['book_id']);
-            $total_price = $book->getPrice(BookFormat::from($details[$i]['book_format']), $details[$i]['quantity']);
-            $details[$i]['total_price'] = $total_price;
+        $order = Order::query()->find($data['key']);
+
+        if ($order === null) {
+            return;
         }
+
+        DB::transaction(function () use($order){
+            $order->update(['status' => OrderStatus::ReadyToSend]);
+            OrderReadyToSend::dispatch($order);
+        });
+    }
+
+    private function createOrder(array $attributes): Order
+    {
+        $order = Order::create($attributes);
+
+        foreach ($attributes['details'] as $detail) {
+            $order->books()->attach($detail['book_id'], $detail);
+
+            if ($detail['book_format'] === BookFormat::Paper->value) {
+                Book::find($detail['book_id'])->paperFormat->decreaseQuantity($detail['quantity']);
+            }
+        }
+
+        return $order;
     }
 }

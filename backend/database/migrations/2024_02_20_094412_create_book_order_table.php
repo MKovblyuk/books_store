@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('order_id')
                 ->constrained()
                 ->cascadeOnUpdate()
-                ->restrictOnDelete();
+                ->cascadeOnDelete();
         });
     }
 
