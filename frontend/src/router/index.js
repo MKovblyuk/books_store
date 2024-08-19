@@ -19,6 +19,13 @@ const router = createRouter({
 	  },
 	  children: [
 		{
+			path: '1',
+			components: {
+				base_content: HomeView,
+			},
+			name: 'home'
+		},
+		{
 		  path: ':page',
 		  components: {
 			base_content: HomeView,
