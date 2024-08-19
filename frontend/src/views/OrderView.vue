@@ -5,28 +5,62 @@ import { useCartStore } from "@/stores/cartStore";
 import axios from "axios";
 import { onMounted } from "vue";
 import { ref } from "vue";
+import UISelectWithLabel from "@/components/ui/UISelectWithLabel.vue";
+import router from "@/router";
 
 const cartStore = useCartStore();
 
+let uponReceivingMethodId;
 const paymentMethodId = ref();
 const paymentMethods = ref([]);
 
-// const paymentData = ref({
-//     "addressId": '',
-//     "shippingMethodId": '',
-//     "paymentMethodId": '',
-//     "details": ''
-// });
+const countries = ref([]);
+const regions = ref([]);
+const districts = ref([]);
+const settlements = ref([]);
+const addressId = ref();
 
-let uponReceivingMethodId;
+const firstName = ref();
+const lastName = ref();
+const phoneNumber = ref();
+const email = ref();
 
 const easyPayCheckoutPopup = useEasyPayCheckoutPopup();
 
-onMounted(async () => {
+onMounted(() => {
+    fetchPaymentMethods();
+    fetchCountries();
+});
+
+async function fetchCountries() {
+    const response = await axios.get('/countries');
+    countries.value = response.data.data;
+}
+
+async function fetchRegions(countryId)
+{
+    const response = await axios.get('/regions?fields[regions]=id,name&filter[country_id]=' + countryId);
+    regions.value = response.data.data;
+}
+
+async function fetchDistricts(regionId)
+{
+    const response = await axios.get('/districts?fields[districts]=id,name&filter[region_id]=' + regionId);
+    districts.value = response.data.data;
+}
+
+async function fetchSettlements(districtId)
+{
+    const response = await axios.get('/addresses?filter[district_id]=' + districtId);
+    settlements.value = response.data.data.map(item => ({...item, name: item.settlementName}));
+}
+
+async function fetchPaymentMethods()
+{
     const response = await axios.get('/paymentMethods');
     paymentMethods.value = response.data;
     uponReceivingMethodId = paymentMethods.value.find( method => method.name === 'Upon Receiving').id;
-});
+}
 
 function getPaymentData()
 {
@@ -47,16 +81,21 @@ function getPaymentData()
 function createOrder()
 {
     if (cartStore.items.length === 0) {
-        console.log('cart is empty');
+        alert('Cart is empty');
+        return;
+    }
+ 
+    if (paymentMethods.value.findIndex(item => item.id == paymentMethodId.value) < 0) {
+        alert('Select payment method');
         return;
     }
 
-    if (paymentMethodId.value === undefined) {
-        console.log('select payment method');
+    if (addressId.value == undefined || addressId.value == '') {
+        alert('Select address');
         return;
     }
 
-    if (paymentMethodId === uponReceivingMethodId) {
+    if (paymentMethodId.value == uponReceivingMethodId) {
         createUponReceivingOrder();
     } else {
         easyPayCheckoutPopup.createOnlinePaymentOrder(getPaymentData());
@@ -66,7 +105,11 @@ function createOrder()
 async function createUponReceivingOrder()
 {
     const response = await axios.post('/orders', getPaymentData());
-    console.log(response);
+
+    if (response.status == 201) {
+        cartStore.$reset();
+        router.push('home');
+    }
 }
 
 </script>
@@ -84,7 +127,9 @@ async function createUponReceivingOrder()
 
                     <div class="row mt-3">
                         <div class="col-6">
-                            <label for="first_name">First name *</label>
+                            <label for="first_name">
+                                First name <span class="required_asteriks">*</span>
+                            </label>
                             <input
                                 type="text"
                                 class="form-control"
@@ -92,10 +137,13 @@ async function createUponReceivingOrder()
                                 aria-label="First name"
                                 id="first_name"
                                 required
+                                :value="firstName"
                             >
                         </div>
                         <div class="col-6">
-                            <label for="last_name">Last name *</label>
+                            <label for="last_name">
+                                Last name <span class="required_asteriks">*</span>
+                            </label>
                             <input
                                 type="text"
                                 class="form-control"
@@ -103,12 +151,15 @@ async function createUponReceivingOrder()
                                 aria-label="Last name"
                                 id="last_name"
                                 required
+                                :value="lastName"
                             >
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-6">
-                            <label for="phone_number">Phone number *</label>
+                            <label for="phone_number">
+                                Phone number <span class="required_asteriks">*</span>
+                            </label>
                             <input
                                 type="tel"
                                 class="form-control"
@@ -116,10 +167,13 @@ async function createUponReceivingOrder()
                                 aria-label="Phone number"
                                 id="phone_number"
                                 required
+                                :value="phoneNumber"
                             >
                         </div>
                         <div class="col-6">
-                            <label for="email">Email *</label>
+                            <label for="email">
+                                Email <span class="required_asteriks">*</span>
+                            </label>
                             <input
                                 type="email"
                                 class="form-control"
@@ -127,6 +181,7 @@ async function createUponReceivingOrder()
                                 aria-label="Email"
                                 id="email"
                                 required
+                                :value="email"
                             >
                         </div>
                     </div>
@@ -138,47 +193,56 @@ async function createUponReceivingOrder()
 
                     <div class="row mt-3">
                         <div class="col-6">
-                            <label for="country_select">Country *</label>
-                            <select class="form-select" aria-label="country_select" id="country_select">
-                                <option value="1" selected>Ukraine</option>
-                            </select>
+                            <UISelectWithLabel
+                                id="country_select"
+                                default-title="Select Country"
+                                :items="countries"
+                                label-text="Country"
+                                required="true"
+                                @change="e => e.target.value != '' && fetchRegions(e.target.value)"
+                            />
                         </div>
                         <div class="col-6">
-                            <label for="region_select">Region *</label>
-                            <select class="form-select" aria-label="region_select" id="region_select">
-                                <option selected>Select Region</option>
-                                <option value="1">Lviv</option>
-                                <option value="2">Kyiv</option>
-                                <option value="3">Ivano-Frankivsk</option>
-                            </select>
+                            <UISelectWithLabel
+                                id="region_select"
+                                default-title="Select Region"
+                                :items="regions"
+                                label-text="Region"
+                                required="true"
+                                @change="e => e.target.value != '' && fetchDistricts(e.target.value)"
+                            />
                         </div>
                     </div>
 
                     <div class="row mt-3">
                         <div class="col-6">
-                            <label for="district_select">District *</label>
-                            <select class="form-select" aria-label="district_select" id="district_select">
-                                <option selected>Select District</option>
-                                <option value="1">Kolomuya</option>
-                                <option value="2">Nadvirna</option>
-                                <option value="3">Ivano-Frankivsk</option>
-                            </select>
+                            <UISelectWithLabel
+                                id="district_select"
+                                default-title="Select District"
+                                :items="districts"
+                                label-text="Distrit"
+                                required="true"
+                                @change="e => e.target.value != '' && fetchSettlements(e.target.value)"
+                            />
                         </div>
                         <div class="col-6">
-                            <label for="settlement_select">Settlement *</label>
-                            <select class="form-select" aria-label="settlement_select" id="settlement_select">
-                                <option selected>Select Settlement Address</option>
-                                <option value="1">Lviv</option>
-                                <option value="2">Kyiv</option>
-                                <option value="3">Ivano-Frankivsk</option>
-                            </select>
+                            <UISelectWithLabel
+                                id="settlement_select"
+                                default-title="Select Settlement"
+                                :items="settlements"
+                                label-text="Settlement"
+                                required="true"
+                                @change="e => e.target.value != '' & (addressId = e.target.value)"
+                            />
                         </div>
                     </div>
                 </section>
 
                 <hr/>
                 <section class="mt-3">
-                    <h6>Payment Methods</h6>
+                    <h6>
+                        Payment Methods <span class="required_asteriks">*</span>
+                    </h6>
                     <div>
                         <template v-for="method in paymentMethods" :key="method.id">
                             <input 
@@ -239,5 +303,9 @@ async function createUponReceivingOrder()
         height: 50vh;
         overflow-x: hidden;
         margin-top: 0.5rem;
+    }
+
+    .required_asteriks {
+        color: red;
     }
 </style>
