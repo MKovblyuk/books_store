@@ -9,6 +9,8 @@ use App\Http\Resources\V1\Addresses\RegionCollection;
 use App\Http\Resources\V1\Addresses\RegionResource;
 use App\Models\V1\Addresses\Region;
 use Illuminate\Auth\Access\AuthorizationException;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class RegionController extends Controller
@@ -22,7 +24,7 @@ class RegionController extends Controller
     {
         $regions = QueryBuilder::for(Region::class)
             ->allowedFields('id', 'name', 'country_id')
-            ->allowedFilters('id', 'name', 'country_id')
+            ->allowedFilters('id', 'name', AllowedFilter::exact('country_id'))
             ->allowedSorts('id', 'name', 'country_id')
             ->allowedIncludes('country')
             ->get();

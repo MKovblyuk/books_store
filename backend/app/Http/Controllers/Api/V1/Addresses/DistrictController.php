@@ -9,6 +9,7 @@ use App\Http\Resources\V1\Addresses\DistrictCollection;
 use App\Http\Resources\V1\Addresses\DistrictResource;
 use App\Models\V1\Addresses\District;
 use Illuminate\Auth\Access\AuthorizationException;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class DistrictController extends Controller
@@ -21,9 +22,9 @@ class DistrictController extends Controller
     public function index()
     {
         $districts = QueryBuilder::for(District::class)
-            ->allowedFields('id', 'name', 'district_id')
-            ->allowedFilters('id', 'name', 'district_id')
-            ->allowedSorts('id', 'name', 'district_id')
+            ->allowedFields('id', 'name', 'region_id')
+            ->allowedFilters('id', 'name', AllowedFilter::exact('region_id'))
+            ->allowedSorts('id', 'name', 'region_id')
             ->allowedIncludes('region')
             ->get();
 
