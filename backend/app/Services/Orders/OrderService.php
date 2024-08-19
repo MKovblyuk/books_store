@@ -65,7 +65,7 @@ class OrderService
             $type = 'single';
             $orderData = [
                 'key' => $order->id,
-                'value' => $attributes['total_price'],
+                'value' => $order->total_price,
             ];
         
             return $this->paymentService->createSession($type, $payment, $orderData, $customer);
@@ -80,10 +80,13 @@ class OrderService
             return;
         }
 
-        DB::transaction(function () use($order){
-            $order->update(['status' => OrderStatus::ReadyToSend]);
-            OrderReadyToSend::dispatch($order);
-        });
+        if ($this->paymentService->confirmSession($data['id'])) {
+            DB::transaction(function () use($order) {
+                $order->update(['status' => OrderStatus::ReadyToSend]);
+                OrderReadyToSend::dispatch($order);
+            });
+        }
+  
     }
 
     private function createOrder(array $attributes): Order

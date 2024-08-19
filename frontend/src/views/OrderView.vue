@@ -1,8 +1,73 @@
 <script setup>
 import CartItem from "@/components/cart/CartItem.vue";
+import { useEasyPayCheckoutPopup } from "@/composables/easyPayCheckoutPopup";
 import { useCartStore } from "@/stores/cartStore";
+import axios from "axios";
+import { onMounted } from "vue";
+import { ref } from "vue";
 
 const cartStore = useCartStore();
+
+const paymentMethodId = ref();
+const paymentMethods = ref([]);
+
+// const paymentData = ref({
+//     "addressId": '',
+//     "shippingMethodId": '',
+//     "paymentMethodId": '',
+//     "details": ''
+// });
+
+let uponReceivingMethodId;
+
+const easyPayCheckoutPopup = useEasyPayCheckoutPopup();
+
+onMounted(async () => {
+    const response = await axios.get('/paymentMethods');
+    paymentMethods.value = response.data;
+    uponReceivingMethodId = paymentMethods.value.find( method => method.name === 'Upon Receiving').id;
+});
+
+function getPaymentData()
+{
+    const details = cartStore.items.map(item => ({
+        'bookId': item.bookId,
+        'bookFormat': item.bookFormat,
+        'quantity': item.quantity
+    }));
+
+    return {
+        "addressId": 2,
+        "shippingMethodId": 2,
+        "paymentMethodId": paymentMethodId.value,
+        "details": details
+    };
+}
+
+function createOrder()
+{
+    if (cartStore.items.length === 0) {
+        console.log('cart is empty');
+        return;
+    }
+
+    if (paymentMethodId.value === undefined) {
+        console.log('select payment method');
+        return;
+    }
+
+    if (paymentMethodId === uponReceivingMethodId) {
+        createUponReceivingOrder();
+    } else {
+        easyPayCheckoutPopup.createOnlinePaymentOrder(getPaymentData());
+    }
+}
+
+async function createUponReceivingOrder()
+{
+    const response = await axios.post('/orders', getPaymentData());
+    console.log(response);
+}
 
 </script>
 
@@ -111,6 +176,23 @@ const cartStore = useCartStore();
                     </div>
                 </section>
 
+                <hr/>
+                <section class="mt-3">
+                    <h6>Payment Methods</h6>
+                    <div>
+                        <template v-for="method in paymentMethods" :key="method.id">
+                            <input 
+                                type="radio" 
+                                :id="'payment_method_' + method.id" 
+                                name="payment_method" 
+                                :value="method.id"
+                                @change="e => paymentMethodId = e.target.value"
+                                class="me-2"
+                            >
+                            <label :for="'payment_method_' + method.id">{{method.name}}</label><br>
+                        </template>
+                    </div>
+                </section>
             </form>
 
             <div class="order_details">
@@ -128,7 +210,7 @@ const cartStore = useCartStore();
 
                 <div class="mt-3">
                     <div>Total Price {{ cartStore.totalPrice }}</div>
-                    <button class="btn btn-success w-100">Accept</button>
+                    <button class="btn btn-success w-100" @click="createOrder">Accept</button>
                 </div>
             </div>
         </div>

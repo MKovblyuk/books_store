@@ -24,8 +24,16 @@ class EasyPayPaymentService implements PaymentServiceInterface
         ])->json();
     }
 
-    public function confirmSession($id)
+    public function confirmSession($id): bool
     {
+        $response = Http::withHeaders([
+            'AccountId' => env('EASY_PAY_ACCOUNT_ID'),
+            'ApiKey' => env('EASY_PAY_API_KEY'),
+            'Content-Type' => 'application/json',
+        ])->get(env('EASY_PAY_API_URL') . `/single/$id`);
+
+        // return $response->status() === 200;
+
         return true;
     }
 }

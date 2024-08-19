@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\Books\FragmentController;
 use App\Http\Controllers\Api\V1\Books\PublisherController;
 use App\Http\Controllers\Api\V1\Books\ReviewController;
 use App\Http\Controllers\Api\V1\Orders\OrderController;
+use App\Http\Controllers\Api\V1\Orders\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Orders\ShippingMethodController;
 use App\Http\Controllers\Api\V1\Users\UserController;
 use App\Http\Controllers\AuthController;
@@ -67,6 +68,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::get('orders/{order}/details', [OrderController::class, 'showDetails'])->missing(fn() => notFoundJsonResponse());
         Route::post('orders/createOnlinePaymentOrder', [OrderController::class, 'createOnlinePaymentOrder']);
         Route::post('orders/confirmOnlinePaymentOrder', [OrderController::class, 'confirmOnlinePaymentOrder']);
+        Route::get('paymentMethods', [PaymentMethodController::class, 'index']);
     });
 
     Route::group(['namespace' => 'Users'], function(){

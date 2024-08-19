@@ -55,6 +55,7 @@ class OrderController extends Controller
         try {
             $this->authorize('create', Order::class);
 
+            // TODO prohibit simultaneous access to data
             return $service->createOnlinePaymentOrder($request->validated());
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
