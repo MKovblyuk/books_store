@@ -23,7 +23,7 @@ class OrderController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum', ['except' => ['confirmOnlinePaymentOrder', 'store']]);
+        $this->middleware('auth:sanctum', ['except' => ['confirmOnlinePaymentOrder', 'store', 'createOnlinePaymentOrder']]);
         $this->middleware(GuestUserHandling::class)->only(['store', 'createOnlinePaymentOrder']);
     }
 
