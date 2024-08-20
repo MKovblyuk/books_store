@@ -7,6 +7,7 @@ use App\Actions\Orders\CreateOrderAction;
 use App\Actions\Orders\GetAllOrdersWithPaginateAction;
 use App\Exceptions\Orders\IncorrectPaymentMethodException;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\GuestUserHandling;
 use App\Http\Requests\V1\Orders\ConfirmOnlinePaymentRequest;
 use App\Http\Requests\V1\Orders\StoreOrderRequest;
 use App\Http\Requests\V1\Orders\UpdateOrderRequest;
@@ -22,7 +23,8 @@ class OrderController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum', ['except' => ['confirmOnlinePaymentOrder']]);
+        $this->middleware('auth:sanctum', ['except' => ['confirmOnlinePaymentOrder', 'store']]);
+        $this->middleware(GuestUserHandling::class)->only(['store', 'createOnlinePaymentOrder']);
     }
 
     public function index(GetAllOrdersWithPaginateAction $action)

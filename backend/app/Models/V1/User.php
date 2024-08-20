@@ -40,15 +40,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'role' => UserRole::class,
     ];
-
-    // protected function role(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn (string $role) => UserRole::from($role),
-    //         set: fn (UserRole $role) => $role->value
-    //     );
-    // }
 
     // protected function phoneNumber(): Attribute
     // {
@@ -83,17 +76,22 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return UserRole::from($this->role) === UserRole::Admin;
+        return $this->role === UserRole::Admin;
     }
 
     public function isEditor(): bool
     {
-        return UserRole::from($this->role) === UserRole::Editor;
+        return $this->role === UserRole::Editor;
     }
 
     public function isCustomer(): bool
     {
-        return UserRole::from($this->role) === UserRole::Customer;
+        return $this->role === UserRole::Customer;
+    }
+
+    public function isGuest(): bool
+    {
+        return $this->role === UserRole::Guest;
     }
 
     public function getElectronicBooks(): Collection

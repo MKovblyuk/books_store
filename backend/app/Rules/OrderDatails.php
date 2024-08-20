@@ -6,6 +6,7 @@ use App\Enums\BookFormat;
 use App\Models\V1\Books\Book;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -32,6 +33,9 @@ class OrderDatails implements ValidationRule
             if (!$this->quantityAvailable($data)) {
                 $fail('The ' . $data['quantity'] . ' books not availble for book with id: ' . $data['book_id'] . 
                     ' and format ' . $data['book_format']);
+            }
+            if (Auth::user()->isGuest() && BookFormat::from($data['book_format']) !== BookFormat::Paper) {
+                $fail('Register to buy electronic versions of books');
             }
         }
     }

@@ -35,11 +35,6 @@ class StoreOrderRequest extends FormRequest
         if (isset(request()->user()->id)) {
             $this->merge(['user_id' => request()->user()->id]);
         }
-        else {
-            // TODO change to guest user
-            $this->merge(['user_id' => '1']);
-        }
-
         if (isset($this->addressId)) {
             $this->merge(['address_id' => $this->addressId ]);
         }
