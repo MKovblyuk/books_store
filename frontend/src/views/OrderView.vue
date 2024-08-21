@@ -109,10 +109,10 @@ function createOrder()
         return;
     }
 
-    // if (addressId.value == undefined || addressId.value == '') {
-    //     alert('Select address');
-    //     return;
-    // }
+    if (addressId.value == undefined || addressId.value == '') {
+        alert('Select address');
+        return;
+    }
 
     if (paymentMethodId.value == uponReceivingMethodId) {
         createUponReceivingOrder();
