@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\V1\Users\LoginUserRequest;
 use App\Http\Requests\V1\Users\StoreUserRequest;
 use App\Models\V1\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -12,6 +13,11 @@ class AuthController extends Controller
     public function login(LoginUserRequest $request)
     {        
         if (Auth::attempt($request->validated())) {
+
+            if (isset($request->session)) {
+                $request->session()->regenerate();
+            }
+
             $user = Auth::user();
             $customerToken = $user->createToken('customer_token_' . $user->id);
 
@@ -49,9 +55,14 @@ class AuthController extends Controller
 
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::user()->tokens()->delete();
+
+        if (isset($request->session)) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
         
         return response()->json(['message' => 'User logged out'], 200);
     }
