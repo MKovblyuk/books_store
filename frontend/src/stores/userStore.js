@@ -12,11 +12,7 @@ export const useUserStore = defineStore('user', () => {
         loading.value = true;
 
         const userId = localStorage.getItem('userId');
-        const response = await axios.get('users/' + userId, {
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
-            }
-        })
+        const response = await axios.get('users/' + userId);
 
         user.value = response.data.data;
         loading.value = false;
@@ -24,21 +20,22 @@ export const useUserStore = defineStore('user', () => {
         authorized.value = true;
     }
 
-    // const login = async () => {
-    //     const response = await axios.post('http://localhost/api/login', loginData.value);
+    async function login (credentials) {
+        const response = await axios.post('http://localhost/api/login', credentials);
 
-    //     localStorage.setItem('userId', response.data.userId);
-    //     localStorage.setItem('userToken', response.data.token);
-    // }
+        localStorage.setItem('userId', response.data.userId);
+        fetchUser();
+    }
 
-    function logout() 
+    async function logout() 
     {
-        localStorage.removeItem('userToken');
+        const response = await axios.post('http://localhost/api/logout');
         localStorage.removeItem('userId');
+
 
         authorized.value = false;
         user.value = null;
     }
 
-    return {logout, fetchUser, user, authorized}
+    return {logout, fetchUser, login, user, authorized}
 });

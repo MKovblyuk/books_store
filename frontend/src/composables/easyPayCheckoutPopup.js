@@ -1,26 +1,33 @@
 import { startCheckout } from "@easypaypt/checkout-sdk";
 import axios from "axios";
+import { ref } from "vue";
 
 export function useEasyPayCheckoutPopup() {
     let checkoutInstance;
-    let successfulPaymentInteraction = false
+    const successfulPaymentInteraction = ref(false);
+    const errors = ref();
 
     async function getCheckoutManifest(paymentData)
     {
-        const response = await axios.post('/orders/createOnlinePaymentOrder', paymentData);
-        initEasypayCheckoutSDK(response.data);
+        try {
+            const response = await axios.post('/orders/createOnlinePaymentOrder', paymentData);
+            initEasypayCheckoutSDK(response.data);
+        } catch(e) {
+            if (e.response.status == 422) {
+                errors.value = e.response.data.errors;
+            }
+        }
     }
 
     function onCheckoutClose()
     {
-        if (successfulPaymentInteraction) {
+        if (successfulPaymentInteraction.value) {
             checkoutInstance.unmount()
         }
     }
 
     function onCheckoutSuccess(successInfo) {
-        successfulPaymentInteraction = true
-        alert('Checkout success.')
+        successfulPaymentInteraction.value = true
     }
 
     function onCheckoutError()
@@ -83,5 +90,5 @@ export function useEasyPayCheckoutPopup() {
         }
     }
 
-    return {createOnlinePaymentOrder}
+    return {createOnlinePaymentOrder, errors, successfulPaymentInteraction}
 }

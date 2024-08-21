@@ -3,12 +3,14 @@ import CartItem from "@/components/cart/CartItem.vue";
 import { useEasyPayCheckoutPopup } from "@/composables/easyPayCheckoutPopup";
 import { useCartStore } from "@/stores/cartStore";
 import axios from "axios";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { ref } from "vue";
 import UISelectWithLabel from "@/components/ui/UISelectWithLabel.vue";
 import router from "@/router";
+import { useUserStore } from "@/stores/userStore";
 
 const cartStore = useCartStore();
+const userStore = useUserStore();
 
 let uponReceivingMethodId;
 const paymentMethodId = ref();
@@ -27,11 +29,16 @@ const email = ref();
 
 const easyPayCheckoutPopup = useEasyPayCheckoutPopup();
 
+const errors = ref({});
+
 onMounted(() => {
     fetchPaymentMethods();
     fetchCountries();
 });
 
+watch(easyPayCheckoutPopup.errors, value => errors.value = value);
+watch(easyPayCheckoutPopup.successfulPaymentInteraction, isSuccessful => isSuccessful && closeOrderView());
+ 
 async function fetchCountries() {
     const response = await axios.get('/countries');
     countries.value = response.data.data;
@@ -70,12 +77,24 @@ function getPaymentData()
         'quantity': item.quantity
     }));
 
-    return {
+    let paymentData = {
         "addressId": 2,
         "shippingMethodId": 2,
         "paymentMethodId": paymentMethodId.value,
         "details": details
-    };
+    }
+
+    if (!userStore.authorized) {
+        paymentData.guestDetails = {
+            "firstName": firstName.value,
+            "lastName": lastName.value,
+            "phoneNumber": phoneNumber.value,
+            "email": email.value
+        }
+    }
+
+    console.log(paymentData);
+    return paymentData;
 }
 
 function createOrder()
@@ -90,10 +109,10 @@ function createOrder()
         return;
     }
 
-    if (addressId.value == undefined || addressId.value == '') {
-        alert('Select address');
-        return;
-    }
+    // if (addressId.value == undefined || addressId.value == '') {
+    //     alert('Select address');
+    //     return;
+    // }
 
     if (paymentMethodId.value == uponReceivingMethodId) {
         createUponReceivingOrder();
@@ -104,12 +123,19 @@ function createOrder()
 
 async function createUponReceivingOrder()
 {
-    const response = await axios.post('/orders', getPaymentData());
-
-    if (response.status == 201) {
-        cartStore.$reset();
-        router.push('home');
+    try {
+        await axios.post('/orders', getPaymentData());
+        closeOrderView();
+    } catch (e) {
+        errors.value = e.response.data.errors;
     }
+}
+
+function closeOrderView() 
+{
+    alert('Order successfully created!');
+    router.push('home');
+    cartStore.$reset();
 }
 
 </script>
@@ -121,8 +147,8 @@ async function createUponReceivingOrder()
             <form class="order_contacts">
                 <h5>Placing an order</h5>
 
-                <hr/>
-                <section class="mt-3">
+                <section class="mt-3" v-if="!userStore.authorized">
+                    <hr/>
                     <h6>Contact data</h6>
 
                     <div class="row mt-3">
@@ -137,8 +163,14 @@ async function createUponReceivingOrder()
                                 aria-label="First name"
                                 id="first_name"
                                 required
-                                :value="firstName"
+                                v-model="firstName"
                             >
+                             <div 
+                                v-if="errors['guestDetails.firstName']?.length > 0" 
+                                class="error_message"
+                            >
+                                Please choose a first name.
+                            </div>
                         </div>
                         <div class="col-6">
                             <label for="last_name">
@@ -151,8 +183,14 @@ async function createUponReceivingOrder()
                                 aria-label="Last name"
                                 id="last_name"
                                 required
-                                :value="lastName"
+                                v-model="lastName"
                             >
+                            <div 
+                                v-if="errors['guestDetails.lastName']?.length > 0" 
+                                class="error_message"
+                            >
+                                Please choose a last name.
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -167,8 +205,14 @@ async function createUponReceivingOrder()
                                 aria-label="Phone number"
                                 id="phone_number"
                                 required
-                                :value="phoneNumber"
+                                v-model="phoneNumber"
                             >
+                            <div 
+                                v-if="errors['guestDetails.phoneNumber']?.length > 0" 
+                                class="error_message"
+                            >
+                                Incorrect phone number.
+                            </div>
                         </div>
                         <div class="col-6">
                             <label for="email">
@@ -181,8 +225,14 @@ async function createUponReceivingOrder()
                                 aria-label="Email"
                                 id="email"
                                 required
-                                :value="email"
+                                v-model="email"
                             >
+                            <div 
+                                v-if="errors['guestDetails.email']?.length > 0" 
+                                class="error_message"
+                            >
+                                Incorrect email.
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -307,5 +357,9 @@ async function createUponReceivingOrder()
 
     .required_asteriks {
         color: red;
+    }
+
+    .error_message {
+        color: rgb(248, 47, 47);
     }
 </style>

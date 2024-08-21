@@ -20,14 +20,8 @@ const router = useRouter();
 
 const login = async () => {
     try {        
-        const response = await axios.post('http://localhost/api/login', loginData.value);
-
-        localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('userToken', response.data.token);
-
-        userStore.fetchUser();
-        
-        router.push('/1');
+        userStore.login(loginData.value);
+        router.push('home');
     } catch(e) {
         if (e.response.status === 422) {
             errors.value = e.response.data.errors;
