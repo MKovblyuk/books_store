@@ -16,6 +16,6 @@ class PhoneNumber implements ValidationRule
 
     public function isPhoneNumber($value): bool
     {
-        return preg_match("/(\+38)?0\d{9}$/", $value);
+        return preg_match('/^[0-9]{10}+$/', $value);
     }
 }

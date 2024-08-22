@@ -9,7 +9,6 @@ use App\Enums\UserRole;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\Review;
 use App\Models\V1\Orders\Order;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -42,14 +41,6 @@ class User extends Authenticatable
         'password' => 'hashed',
         'role' => UserRole::class,
     ];
-
-    // protected function phoneNumber(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn (string $number) => $number,
-    //         set: fn (string $number) => preg_match("/\+380\d{9}$/", $number) ? $number : "+38".$number
-    //     );
-    // }
 
     public function orders(): HasMany
     {

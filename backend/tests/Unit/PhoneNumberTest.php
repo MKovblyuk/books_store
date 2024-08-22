@@ -15,7 +15,7 @@ class PhoneNumberTest extends TestCase
         $phoneNumberRule = new PhoneNumber();
 
         $this->assertTrue($phoneNumberRule->isPhoneNumber('0975265277'));
-        $this->assertTrue($phoneNumberRule->isPhoneNumber('+380975265277'));
+        $this->assertTrue($phoneNumberRule->isPhoneNumber('0000065272'));
         $this->assertFalse($phoneNumberRule->isPhoneNumber('asdsa'));
         $this->assertFalse($phoneNumberRule->isPhoneNumber('09752652771'));
     }

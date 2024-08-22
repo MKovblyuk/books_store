@@ -26,12 +26,15 @@ class GuestUserHandling
             $guestData = $request->validate([
                 'guestDetails.firstName' => ['required', 'max:75'],
                 'guestDetails.lastName' => ['required', 'max:75'],
-                'guestDetails.phoneNumber' => ['required', 'max:30', new PhoneNumber()],
+                'guestDetails.phoneNumber' => ['required', new PhoneNumber()],
                 'guestDetails.email' => ['required', 'email'],
             ])['guestDetails'];
 
             $user = User::firstOrCreate(
-                ['email' => $guestData['email']],
+                [
+                    'email' => $guestData['email'],
+                    'phone_number' => $guestData['phoneNumber'],
+                ],
                 [
                     'first_name' => $guestData['firstName'],
                     'last_name' => $guestData['lastName'],
