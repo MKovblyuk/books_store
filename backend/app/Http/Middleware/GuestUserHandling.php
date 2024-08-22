@@ -31,10 +31,7 @@ class GuestUserHandling
             ])['guestDetails'];
 
             $user = User::firstOrCreate(
-                [
-                    'email' => $guestData['email'],
-                    'phone_number' => $guestData['phoneNumber'],
-                ],
+                ['email' => $guestData['email']],
                 [
                     'first_name' => $guestData['firstName'],
                     'last_name' => $guestData['lastName'],
