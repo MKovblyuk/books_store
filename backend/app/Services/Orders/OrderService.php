@@ -11,6 +11,7 @@ use App\Exceptions\Orders\IncorrectPaymentMethodException;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Orders\Order;
 use App\Models\V1\Orders\PaymentMethod;
+use App\Models\V1\User;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
@@ -59,9 +60,14 @@ class OrderService
     
             $order = $this->createOrder($attributes);
 
+            $user = User::find($attributes['user_id']);
             $customer = [
-                'email' => 'some@email.com',
+                'name' => $user->first_name . ' ' . $user->last_name,
+                'email' => $user->email,
+                'phone' => $user->phone_number,
+                'phone_indicative' => '+380',
             ];
+
             $type = 'single';
             $orderData = [
                 'key' => $order->id,
