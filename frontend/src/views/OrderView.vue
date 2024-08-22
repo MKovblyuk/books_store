@@ -206,6 +206,7 @@ function closeOrderView()
                                 id="phone_number"
                                 required
                                 v-model="phoneNumber"
+                                maxlength="10"
                             >
                             <div 
                                 v-if="errors['guestDetails.phoneNumber']?.length > 0" 
