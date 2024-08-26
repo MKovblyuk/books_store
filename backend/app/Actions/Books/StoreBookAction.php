@@ -12,23 +12,20 @@ use Illuminate\Support\Facades\DB;
 
 class StoreBookAction 
 {
-    private DirectoryNameGenerator $generator;
+    private DirectoryNameGenerator $dirNamegenerator;
 
     public function __construct(DirectoryNameGenerator $generator)
     {
-        $this->generator = $generator;
+        $this->dirNamegenerator = $generator;
     }
 
     public function execute(array $attributes): int
     {
-        $generator = $this->generator;
-
-        return DB::transaction(function () use($attributes, $generator) {
-
+        return DB::transaction(function () use($attributes) {
             $book = Book::create($attributes);
             $book->authors()->saveMany(Author::find($attributes['authors_ids']));
 
-            $path = $generator->generate($book->id, $book->name);
+            $path = $this->dirNamegenerator->generate($book->id, $book->name);
 
             if (isset($attributes['formats']['paper'])) {
                 $book->paperFormat()->save(new PaperFormat($attributes['formats']['paper']));

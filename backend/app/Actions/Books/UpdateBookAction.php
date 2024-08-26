@@ -10,7 +10,7 @@ class UpdateBookAction
 {
     public function execute(Book $book, array $attributes): bool
     {
-        DB::transaction(function () use($book, $attributes) {
+        return DB::transaction(function () use($book, $attributes) {      
             $book->update($attributes);
             $book->authors()->sync(Author::find($attributes['authors_ids']));
 
@@ -23,8 +23,8 @@ class UpdateBookAction
             if (isset($attributes['formats']['electronic'])) {
                 $book->electronicFormat->update($attributes['formats']['electronic']);
             }
-        });
 
-        return true;
+            return true;
+        });
     }
 }

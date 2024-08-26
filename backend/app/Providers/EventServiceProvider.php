@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\Books\BookDeleted;
 use App\Events\Books\FragmentDeleted;
 use App\Events\Orders\OrderCreated;
 use App\Events\Orders\OrderUpdated;
+use App\Listeners\Books\DeleteBookCoverImage;
 use App\Listeners\Books\DeleteFragmentFromStorage;
 use App\Listeners\SendNotification;
 use App\Models\V1\Orders\Order;
@@ -27,7 +29,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         FragmentDeleted::class => [
             DeleteFragmentFromStorage::class,
-        ]
+        ],
+        BookDeleted::class => [
+            DeleteBookCoverImage::class,
+        ],
     ];
 
     /**

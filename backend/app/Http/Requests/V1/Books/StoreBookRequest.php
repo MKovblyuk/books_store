@@ -3,6 +3,7 @@
 namespace App\Http\Requests\V1\Books;
 
 use App\Rules\BookFormats;
+use Illuminate\Validation\Rules\File;
 
 class StoreBookRequest extends BookRequest
 {
@@ -18,7 +19,6 @@ class StoreBookRequest extends BookRequest
             'description' => ['required', 'string', 'min:10', 'max:1200'],
             'publication_year' => ['required', 'integer', 'min:0', 'max:' . now()->year],
             'language' => ['required', 'string', 'max:50'],
-            'cover_image_url' => ['sometimes', 'nullable', 'url'],
             'publisher_id' => ['required', 'exists:publishers,id'],
             'category_id' => ['required', 'exists:categories,id'],
             'published_at' => ['sometimes', 'nullable', 'date'],

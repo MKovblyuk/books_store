@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
+use App\Actions\Books\DeleteBookCoverImageAction;
 use App\Actions\Books\GetAllBooksWithPaginateAction;
 use App\Actions\Books\StoreBookAction;
 use App\Actions\Books\UpdateBookAction;
+use App\Actions\Books\UpdateBookCoverImageAction;
 use App\Enums\BookFormat;
 use App\Exceptions\General\FileExistException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StoreBookRequest;
 use App\Http\Requests\V1\Books\UpdateBookRequest;
 use App\Http\Requests\V1\Books\UploadAudioBookRequest;
+use App\Http\Requests\V1\Books\UploadCoverImageRequest;
 use App\Http\Requests\V1\Books\UploadElectronicBookRequest;
 use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Books\BookResource;
@@ -132,6 +135,27 @@ class BookController extends Controller
         return new FragmentCollection($book->fragments);
     }
 
+    public function uploadCoverImage(UploadCoverImageRequest $request, Book $book, UpdateBookCoverImageAction $action)
+    {
+        try {
+            $this->authorize('uploadFiles', Book::class);
+            $action->execute($book, $request->validated('image'));
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+    }
+
+    public function deleteCoverImage(Book $book, DeleteBookCoverImageAction $action) {
+        try {
+            $this->authorize('uploadFiles', Book::class);
+
+            return $action->execute($book) 
+                ? response()->noContent()
+                : response()->json(['message' => 'Cover image not deleted'], 400);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+    }
 
     public function downloadElectronicBook(Book $book, string $extension)
     {

@@ -5,6 +5,7 @@ namespace App\Http\Resources\V1\Books;
 use App\Traits\AllowedIncludes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class BookResource extends JsonResource
 {
@@ -22,7 +23,7 @@ class BookResource extends JsonResource
             'description' => $this->description,
             'publicationYear' => $this->publication_year,
             'language' => $this->language,
-            'coverImageUrl' => $this->cover_image_url,
+            'coverImageUrl' => Storage::disk('preview_fragments')->url($this->cover_image_path),
             'publishedAt' => $this->published_at,
             'audioFormat' => new AudioFormatResource($this->audioFormat),
             'electronicFormat' => new ElectronicFormatResource($this->electronicFormat),

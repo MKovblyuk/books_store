@@ -3,6 +3,7 @@
 namespace App\Models\V1\Books;
 
 use App\Enums\BookFormat;
+use App\Events\Books\BookDeleted;
 use App\Models\V1\Orders\Order;
 use App\Models\V1\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,10 +23,14 @@ class Book extends Model
         'description',
         'publication_year',
         'language',
-        'cover_image_url',
+        'cover_image_path',
         'published_at',
         'publisher_id',
         'category_id',
+    ];
+
+    protected $dispatchesEvents = [
+        'deleted' => BookDeleted::class,
     ];
 
     public function authors(): BelongsToMany
