@@ -9,6 +9,10 @@ class DeleteBookCoverImageAction
 {
     public function execute(Book $book): bool
     {
-        return Storage::disk('preview_fragments')->delete($book->cover_image_path);
+        if ($book->cover_image_path) {
+            Storage::disk('preview_fragments')->delete($book->cover_image_path);
+        }
+        
+        return $book->update(['cover_image_path' => null]);
     }
 }
