@@ -14,6 +14,7 @@ use App\Http\Requests\V1\Books\UploadAudioBookRequest;
 use App\Http\Requests\V1\Books\UploadElectronicBookRequest;
 use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Books\BookResource;
+use App\Http\Resources\V1\Books\FragmentCollection;
 use App\Http\Resources\V1\Books\ReviewCollection;
 use App\Models\V1\Books\Book;
 use App\Services\Books\AudioBookStorageService;
@@ -33,7 +34,9 @@ class BookController extends Controller
         $this->electronicStorageService = new ElectronicBookStorageService();
         $this->audioStorageService = new AudioBookStorageService();
 
-        $this->middleware('auth:sanctum', ['except' => ['index', 'show', 'getReviews']]);
+        $this->middleware('auth:sanctum', [
+            'except' => ['index', 'show', 'getReviews', 'getPreviewFragments']
+        ]);
     }
 
     public function index(GetAllBooksWithPaginateAction $action)
@@ -122,6 +125,11 @@ class BookController extends Controller
         $reviews = $book->reviews()->paginate($per_page);
 
         return new ReviewCollection($reviews);
+    }
+
+    public function getPreviewFragments(Book $book)
+    {
+        return new FragmentCollection($book->fragments);
     }
 
 

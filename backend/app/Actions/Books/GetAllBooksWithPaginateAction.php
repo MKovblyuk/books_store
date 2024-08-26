@@ -58,6 +58,7 @@ class GetAllBooksWithPaginateAction
                 'category',
                 'authors',
                 'reviews',
+                'fragments',
             ])
             ->paginate($per_page);
     }

@@ -49,6 +49,10 @@ class BookResource extends JsonResource
             $this->mergeWhen($this->fieldIsIncluded('reviews', $request),
                 ['reviews' => new ReviewCollection($this->reviews)]
             ),
+
+            $this->mergeWhen($this->fieldIsIncluded('fragments', $request), 
+                ['fragments' => new FragmentCollection($this->fragments)]
+            ),
         ];
     }
 
