@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\V1\Books;
 
+use Illuminate\Validation\Rules\File;
+
 class UpdateFragmentRequest extends FragmentRequest
 {
     public function authorize(): bool
@@ -17,16 +19,16 @@ class UpdateFragmentRequest extends FragmentRequest
     protected function putRules(): array
     {
         return [
-            'url' => ['required', 'url', 'max:255'],
             'book_id' => ['required', 'exists:books,id'],
+            'file' => ['required', File::types(['jpg', 'png', 'jpeg'])],
         ];
     }
 
     protected function patchRules(): array
     {
         return [
-            'url' => ['url', 'max:255'],
             'book_id' => ['exists:books,id'],
+            'file' => [File::types(['jpg', 'png', 'jpeg'])],
         ];
     }
 }    

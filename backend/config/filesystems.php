@@ -42,6 +42,14 @@ return [
             'throw' => false,
         ],
 
+        'preview_fragments' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/preview_fragments'),
+            'throw' => false,
+            'url' => env('APP_URL').'/storage/preview',
+            'visibility' => 'public',
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),

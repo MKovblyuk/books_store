@@ -4,6 +4,7 @@ namespace App\Http\Resources\V1\Books;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class FragmentResource extends JsonResource
 {
@@ -16,7 +17,7 @@ class FragmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'url' => $this->url,
+            'url' => Storage::disk('preview_fragments')->url($this->path),
             'bookId' => $this->book_id,
         ];
     }

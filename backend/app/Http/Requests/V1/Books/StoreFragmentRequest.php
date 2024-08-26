@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\V1\Books;
 
+use Illuminate\Validation\Rules\File;
+
 class StoreFragmentRequest extends FragmentRequest
 {
     public function authorize(): bool
@@ -12,8 +14,8 @@ class StoreFragmentRequest extends FragmentRequest
     public function rules(): array
     {
         return [
-            'url' => ['required', 'url', 'max:255'],
             'book_id' => ['required', 'exists:books,id'],
+            'file' => ['required', File::types(['jpg', 'png', 'jpeg'])],
         ];
     }
 }

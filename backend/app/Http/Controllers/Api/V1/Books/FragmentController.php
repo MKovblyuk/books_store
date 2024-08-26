@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
+use App\Helpers\FileNameGenerator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StoreFragmentRequest;
 use App\Http\Requests\V1\Books\UpdateFragmentRequest;
@@ -9,6 +10,7 @@ use App\Http\Resources\V1\Books\FragmentCollection;
 use App\Http\Resources\V1\Books\FragmentResource;
 use App\Models\V1\Books\Fragment;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Storage;
 
 class FragmentController extends Controller
 {
@@ -22,11 +24,21 @@ class FragmentController extends Controller
         return new FragmentCollection(Fragment::all());
     }
 
-    public function store(StoreFragmentRequest $request)
+    public function store(StoreFragmentRequest $request, FileNameGenerator $generator)
     {
         try {
             $this->authorize('create', Fragment::class);
-            Fragment::create($request->validated());
+
+            $bookId = $request->validated('book_id');
+            $file = $request->validated('file');
+
+            $path = $generator->generate($bookId, 'image');
+            Storage::disk('preview_fragments')->put($path, $file->get());
+
+            Fragment::create([
+                'book_id' => $bookId,
+                'path' => $path,
+            ]);
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
@@ -43,6 +55,12 @@ class FragmentController extends Controller
     {
         try {
             $this->authorize('update', $fragment);
+
+            if ($request->validated('file')) {
+                Storage::disk('preview_fragments')->delete($fragment->path);
+                Storage::disk('preview_fragments')->put($fragment->path, $request->validated('file')->get());
+            }
+
             $fragment->update($request->validated());
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);

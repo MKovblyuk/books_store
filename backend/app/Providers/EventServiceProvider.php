@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\Books\FragmentDeleted;
 use App\Events\Orders\OrderCreated;
 use App\Events\Orders\OrderUpdated;
+use App\Listeners\Books\DeleteFragmentFromStorage;
 use App\Listeners\SendNotification;
 use App\Models\V1\Orders\Order;
 use App\Observers\OrderObserver;
@@ -23,12 +25,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        OrderCreated::class => [
-            SendNotification::class,
-        ],
-        OrderUpdated::class => [
-            SendNotification::class,
-        ],
+        FragmentDeleted::class => [
+            DeleteFragmentFromStorage::class,
+        ]
     ];
 
     /**
