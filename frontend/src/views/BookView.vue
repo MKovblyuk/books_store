@@ -64,7 +64,6 @@ function buy()
         <div class="d-flex p-2">
             <BookPreview 
                 class="book_preview px-2" 
-                :coverImageUrl="bookStore.book.coverImageUrl"
                 @to_cart="addToCart"
                 @buy="buy"
             />

@@ -35,7 +35,7 @@ function buy()
 <template>
     <div class="card" style="width: 14rem;">
         <img 
-            src="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg" 
+            :src="book.coverImageUrl" 
             class="card-img-top" 
             alt="..."
         >
@@ -43,7 +43,7 @@ function buy()
             <h5 class="card-title">{{book.name}}</h5>
             <div v-if="selectedFormatData.discount > 0">
                 <p class="text-decoration-line-through" >{{selectedFormatData.price}}</p>
-                <p>{{selectedFormatData.price - selectedFormatData.discount}}</p>
+                <p>{{selectedFormatData.price - (selectedFormatData.price * selectedFormatData.discount / 100)}}</p>
             </div>
             <div v-else>
                 <p>{{selectedFormatData.price}}</p>

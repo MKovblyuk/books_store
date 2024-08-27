@@ -1,9 +1,10 @@
 <script setup>
 
 import Carousel from "@/components/widgets/Carousel.vue";
+import { useBookStore } from "@/stores/bookStore";
 
-const props = defineProps(['coverImageUrl'])
-const lastUrl = "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg";
+
+const bookStore = useBookStore();
 
 </script>
 
@@ -11,18 +12,31 @@ const lastUrl = "https://img.freepik.com/free-photo/painting-mountain-lake-with-
     <div>
         <button class="btn btn-outline-primary mb-2">Like</button>
         <img
-            :src="lastUrl"
+            :src="bookStore.book.coverImageUrl"
             class="w-100 mb-2"
             alt="book_preview_image"
         >
-        <button type="button" class="btn btn-success w-100 mb-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button 
+            type="button" 
+            class="btn btn-success w-100 mb-2" 
+            data-bs-toggle="modal" 
+            data-bs-target="#staticBackdrop"
+        >
             Preview
         </button>
 
-        <button type="button" class="btn btn-primary w-100 mb-2" @click="$emit('to_cart')">
+        <button 
+            type="button" 
+            class="btn btn-primary w-100 mb-2" 
+            @click="$emit('to_cart')"
+        >
             To Cart
         </button>
-        <button type="button" class="btn btn-primary w-100 mb-2" @click="$emit('buy')">
+        <button 
+            type="button" 
+            class="btn btn-primary w-100 mb-2" 
+            @click="$emit('buy')"
+        >
             Buy
         </button>
 
@@ -34,7 +48,9 @@ const lastUrl = "https://img.freepik.com/free-photo/painting-mountain-lake-with-
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <Carousel/>
+                        <Carousel 
+                            :image-urls="bookStore.book?.fragments?.map(item => item.url)"
+                        />
                     </div>
                 </div>
             </div>

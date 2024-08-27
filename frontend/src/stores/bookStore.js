@@ -63,7 +63,7 @@ export const useBookStore = defineStore('book', () => {
 
         if (id !== current_book_id) {
             bookIsLoaded.value = false;
-            const response = await axios.get(`books/${id}?include=publisher,category,authors`);
+            const response = await axios.get(`books/${id}?include=publisher,category,authors,fragments`);
             book.value = response.data.data;
             bookIsLoaded.value = true;
             current_book_id = id;

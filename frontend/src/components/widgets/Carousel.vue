@@ -1,5 +1,7 @@
 <script setup>
 
+const props = defineProps(['imageUrls'])
+
 </script>
 
 <template>
@@ -10,23 +12,9 @@
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
-            <div class="carousel-item active">
+            <div class="carousel-item active" v-for="imageUrl in imageUrls">
                 <img
-                    src="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg"
-                    class="d-block w-100"
-                    alt="book_preview_image"
-                >
-            </div>
-            <div class="carousel-item">
-                <img
-                    src="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg"
-                    class="d-block w-100"
-                    alt="book_preview_image"
-                >
-            </div>
-            <div class="carousel-item">
-                <img
-                    src="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg"
+                    :src="imageUrl"
                     class="d-block w-100"
                     alt="book_preview_image"
                 >
