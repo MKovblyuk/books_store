@@ -4,6 +4,7 @@ namespace App\Actions\Books;
 
 use App\Filters\FilterBooksByAuthors;
 use App\Filters\FilterBooksByFormats;
+use App\Filters\FilterBooksByPrice;
 use App\Helpers\DirectoryNameGenerator;
 use App\Models\V1\Books\AudioFormat;
 use App\Models\V1\Books\Author;
@@ -25,7 +26,7 @@ class GetAllBooksWithPaginateAction
                 AllowedFilter::exact('id'),
                 AllowedFilter::custom('author_id', new FilterBooksByAuthors()),
                 AllowedFilter::custom('format', new FilterBooksByFormats()),
-                // AllowedFilter::custom('price_range', new FilterBooksByPrice()),
+                AllowedFilter::custom('price_range', new FilterBooksByPrice()),
                 AllowedFilter::exact('publisher_id'),
                 AllowedFilter::exact('category_id'),
                 'name',
