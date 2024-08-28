@@ -45,6 +45,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::apiResource('categories', CategoryController::class)->missing(fn() => notFoundJsonResponse());
         Route::post('categories/{parentCategory}', [CategoryController::class, 'storeForParent'])->missing(fn() => notFoundJsonResponse());
 
+        Route::get('books/languages', [BookController::class, 'getLanguages']);
         Route::apiResource('books', BookController::class)->missing(fn() => notFoundJsonResponse());
         Route::delete('books/{book}/coverImage', [BookController::class, 'deleteCoverImage'])->missing(fn() => notFoundJsonResponse());
         Route::delete('books/{book}/{format}', [BookController::class, 'deleteFormat'])->missing(fn() => notFoundJsonResponse());

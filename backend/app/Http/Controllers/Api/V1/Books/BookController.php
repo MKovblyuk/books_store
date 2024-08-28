@@ -26,6 +26,7 @@ use App\Services\Books\ElectronicBookStorageService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -38,7 +39,7 @@ class BookController extends Controller
         $this->audioStorageService = new AudioBookStorageService();
 
         $this->middleware('auth:sanctum', [
-            'except' => ['index', 'show', 'getReviews', 'getPreviewFragments']
+            'except' => ['index', 'show', 'getReviews', 'getPreviewFragments', 'getLanguages']
         ]);
     }
 
@@ -212,5 +213,11 @@ class BookController extends Controller
         } catch (FileExistException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
         }
+    }
+
+    public function getLanguages() 
+    {
+        $languages = DB::table('books')->select('language')->distinct()->get()->map(fn($item) => $item->language);
+        return response()->json(['data' => $languages]);
     }
 }
