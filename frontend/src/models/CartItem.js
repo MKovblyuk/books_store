@@ -1,4 +1,5 @@
 import { useBook } from "@/composables/book";
+import { usePriceCalculator } from "@/composables/priceCalculator";
 import { BookFormats } from "@/enums/bookFormats";
 
 export class CartItem {
@@ -66,13 +67,12 @@ export class CartItem {
 
     getPrice() 
     {
-        console.log('try to get price');
         return (this.price * this.quantity).toFixed(2);
     }
 
     getPriceWithDiscount() 
     {
-        return (this.price * this.quantity * this.discount).toFixed(2);
+        return (this.quantity * usePriceCalculator().calculate(this.price, this.discount)).toFixed(2);
     }
 
     setDiscount(discount) 

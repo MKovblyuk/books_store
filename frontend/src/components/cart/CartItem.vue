@@ -43,9 +43,9 @@ function decreaseQuantity()
                 Remove
             </a>
             <div>
-                <button class="me-2 btn btn-outline-dark" @click="decreaseQuantity()">-</button>
+                <button class="me-2 btn btn-outline-dark" @click="decreaseQuantity">-</button>
                 {{item.getQuantity()}}
-                <button class="ms-2 btn btn-outline-dark" @click="increaseQuantity()">+</button>
+                <button class="ms-2 btn btn-outline-dark" @click="increaseQuantity">+</button>
             </div>
         </div>
     </div>

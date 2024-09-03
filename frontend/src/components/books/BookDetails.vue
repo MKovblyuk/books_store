@@ -54,7 +54,7 @@ authors = authors.substring(0, authors.length - 2);
                     {{formatData.discount > 0 ? formatData.price : ''}}
                 </div>
                 <div>
-                    {{formatData.discount > 0 ? priceCalculator.calculate(formatData.price, formatData.discount) : formatData.price }}
+                    {{formatData.discount > 0 ? priceCalculator.calculateToFixed(formatData.price, formatData.discount) : formatData.price }}
                 </div>
             </div>
         </div>

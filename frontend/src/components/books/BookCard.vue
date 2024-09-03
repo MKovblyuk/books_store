@@ -115,7 +115,7 @@ function buy()
                 </div>
 
                 <BookCardFormatItem 
-                    :new-price="formatData.discount > 0 ? priceCalculator.calculate(formatData.price, formatData.discount) : formatData.price"
+                    :new-price="formatData.discount > 0 ? priceCalculator.calculateToFixed(formatData.price, formatData.discount) : formatData.price"
                     :old-price="formatData.discount > 0 ? formatData.price : ''"
                     :format-name="selectedFormat"
                     class="card_format_item"
