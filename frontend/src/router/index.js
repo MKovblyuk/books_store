@@ -41,7 +41,8 @@ const router = createRouter({
 		  path: 'book/:id',
 		  components: {
 			base_content: BookView
-		  }
+		  },
+		  props: true,
 		},
 		{
 		  path: 'author',

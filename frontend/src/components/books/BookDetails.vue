@@ -4,13 +4,14 @@ import BookCharacteristicsList from "@/components/books/BookCharacteristicsList.
 import { useBook } from "@/composables/book";
 import { usePriceCalculator } from "@/composables/priceCalculator";
 import { BookFormats } from "@/enums/bookFormats";
+import { computed } from "vue";
 
 const props = defineProps(['book', 'selectedFormat']);
 
 const { getFormatData } = useBook(props.book);
 const priceCalculator = usePriceCalculator();
 
-const formatData = getFormatData(props.selectedFormat);
+const formatData = computed(() => getFormatData(props.selectedFormat));
 
 let authors = '';
 props.book.authors.forEach(author => authors+=author.firstName + " " + author.lastName + ", ");
@@ -20,7 +21,7 @@ authors = authors.substring(0, authors.length - 2);
 
 <template>
     <div>
-        <h3>{{props.book.name}}</h3>
+        <h3>{{book.name}}</h3>
         <h4>{{authors}}</h4>
 
         <div class="mt-2">
@@ -92,7 +93,7 @@ authors = authors.substring(0, authors.length - 2);
             </div>
         </div>
 
-        <div class="mt-3">{{props.book.description}}</div>
+        <div class="mt-3">{{book.description}}</div>
 
         <BookCharacteristicsList/>
 

@@ -5,43 +5,46 @@ import BookDetails from "@/components/books/BookDetails.vue";
 import InlineBookList from "@/components/books/InlineBookList.vue";
 import ReviewsSection from "@/components/reviews/ReviewsSection.vue";
 import {useBookStore} from "@/stores/bookStore.js";
-import {useRoute, useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import {useReviewStore} from "@/stores/reviewStore.js";
 import { useCartStore } from "@/stores/cartStore";
 import { CartItem } from "@/models/CartItem";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useBook } from "@/composables/book";
 
 const bookStore = useBookStore();
 const reviewStore = useReviewStore();
 const cartStore = useCartStore();
 
-const route = useRoute();
 const router = useRouter();
 const reviews_per_page = 2;
 
 const selectedFormat = ref();
 
+const props = defineProps(['id']);
+
 onMounted(() => {
-    fetchData(route.params.id);
+    fetchData(props.id);
 });
+
+watch(() => props.id, fetchData, { immediate: true});
 
 async function fetchData(book_id)
 {
-    await bookStore.fetchBook(book_id);
+    bookStore.fetchBook(book_id).then(selectedFormat.value = useBook(bookStore.book).getAvailableFormat());
     await bookStore.fetchRelatedBooks();
-    await reviewStore.fetchReviews(route.params.id, 1, reviews_per_page);
+    await reviewStore.fetchReviews(book_id, 1, reviews_per_page);
 }
 
 function bookCardClickHandler(book_id)
 {
     router.push('/book/' + book_id);
-    fetchData(book_id);
+    selectedFormat.value = null;
 }
 
 async function reviewPageChangedHandler(page) 
 {
-    await reviewStore.fetchReviews(route.params.id, page, reviews_per_page);
+    await reviewStore.fetchReviews(props.id, page, reviews_per_page);
 }
 
 function addToCart() 
