@@ -1,6 +1,5 @@
 <script setup>
 
-
 import { defineEmits } from 'vue'; 
 
 const emit = defineEmits(['page_changed'])
@@ -37,7 +36,7 @@ const page_click_handler = (page) => {
                     <div @click="page_click_handler(1)" class="page-link active">1</div>
                 </li>
 
-                <li class="page-item">
+                <li v-if="meta.current_page + 1 <= meta.last_page" class="page-item">
                     <div @click="page_click_handler(meta.current_page + 1)" class="page-link">{{ meta.current_page + 1}}</div>
                 </li>
 
