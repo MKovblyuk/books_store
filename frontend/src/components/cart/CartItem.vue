@@ -1,4 +1,5 @@
 <script setup>
+import { useDefaultAssests } from '@/composables/defaultAssets';
 import { useCartStore } from '@/stores/cartStore';
 
 const props = defineProps(['item']);
@@ -18,8 +19,12 @@ function decreaseQuantity()
 
 <template>
     <div class="cart_item">
-        <div class="d-flex">
-            <img class="cart_item_img" :src="item.getCoverImageUrl()">
+        <div class="cart_item_left_block">
+            <img 
+                class="cart_item_img" 
+                :src="item.getCoverImageUrl()"
+                @error="e => e.target.src = useDefaultAssests().defaultImageSrc"
+            >
             <div class="ps-1">
                 <div class="cart_item_title">{{item.getBookName()}}</div>
                 <div> {{ item.getBookFormat() }}</div>
@@ -42,10 +47,10 @@ function decreaseQuantity()
             <a href="#" class="text-end" @click="cartStore.removeItem(item)">
                 Remove
             </a>
-            <div>
-                <button class="me-2 btn btn-outline-dark" @click="decreaseQuantity">-</button>
-                {{item.getQuantity()}}
-                <button class="ms-2 btn btn-outline-dark" @click="increaseQuantity">+</button>
+            <div class="d-flex align-items-center justify-content-between">
+                <button class="btn btn-outline-dark" @click="decreaseQuantity">-</button>
+                <div class="p-1"> {{item.getQuantity()}}</div>
+                <button class="btn btn-outline-dark" @click="increaseQuantity">+</button>
             </div>
         </div>
     </div>
@@ -59,16 +64,25 @@ function decreaseQuantity()
         padding: 0.5rem;
         display: flex;
         justify-content: space-between;
+        font-size: 12px;
     }
     .cart_item_title {
         font-weight: 500;
+        width: 100%;
     }
     .cart_item_img {
-        width: 3rem;
+        width: 30%;
     }
 
     .old_price {
         text-decoration: line-through;
         color: red;
     }
+
+    .cart_item_left_block {
+        width: 75%;
+        overflow: hidden;
+        display: flex;
+    }
+
 </style>
