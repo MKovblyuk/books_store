@@ -10,6 +10,7 @@ export const useBookStore = defineStore('book', () => {
     const relatedBooks = ref([]);
     const book = ref({});
     const bookIsLoaded = ref(false);
+    const perPage = ref(4);
 
     // milliseconds
     // there is 30 minutes
@@ -20,7 +21,7 @@ export const useBookStore = defineStore('book', () => {
 
     const filterStore = useFilterStore();
 
-    async function fetchBooks(page, per_page) {
+    async function fetchBooks(page = 1, per_page = perPage.value) {
         let params = {
             page,
             per_page,

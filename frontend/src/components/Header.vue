@@ -4,9 +4,13 @@ import {RouterLink} from "vue-router";
 import CartRightSideMenu from "@/components/cart/CartRightSideMenu.vue";
 import { useCartStore } from "@/stores/cartStore";
 import { useUserStore } from "@/stores/userStore";
+import { useFilterStore } from "@/stores/filterStore";
+import { useBookStore } from "@/stores/bookStore";
 
 const cartStore = useCartStore();
 const userStore = useUserStore();
+const filterStore = useFilterStore();
+const bookStore = useBookStore();
 
 </script>
 
@@ -24,8 +28,21 @@ const userStore = useUserStore();
         </RouterLink>
     </div>
     <div class="input-group w-50">
-        <input type="text" class="form-control" placeholder="Search" aria-label="Search">
-        <button class="btn btn-success" type="submit">Search</button>
+        <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Search" 
+            aria-label="Search"
+            v-model="filterStore.bookName"
+            @keydown.enter="bookStore.fetchBooks"
+        >
+        <button 
+            class="btn btn-success" 
+            type="submit"
+            @click="bookStore.fetchBooks"
+        >
+            Search
+        </button>
     </div>
 
     <div>
