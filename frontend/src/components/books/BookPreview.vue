@@ -1,10 +1,11 @@
 <script setup>
 
 import Carousel from "@/components/widgets/Carousel.vue";
+import { useDefaultAssests } from "@/composables/defaultAssets";
 import { useBookStore } from "@/stores/bookStore";
 
-
 const bookStore = useBookStore();
+const { defaultImageSrc } = useDefaultAssests();
 
 </script>
 
@@ -15,6 +16,7 @@ const bookStore = useBookStore();
             :src="bookStore.book.coverImageUrl"
             class="w-100 mb-2"
             alt="book_preview_image"
+            @error="e => e.target.src = defaultImageSrc"
         >
         <button 
             type="button" 

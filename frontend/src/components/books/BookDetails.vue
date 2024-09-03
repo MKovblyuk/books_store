@@ -1,39 +1,16 @@
 <script setup>
 
 import BookCharacteristicsList from "@/components/books/BookCharacteristicsList.vue";
+import { useBook } from "@/composables/book";
+import { usePriceCalculator } from "@/composables/priceCalculator";
 import { BookFormats } from "@/enums/bookFormats";
-import {onMounted, ref} from 'vue';
-
-// const props = defineProps({
-//     book: {
-//         authors: {
-//             type: Array,
-//             required: true
-//         },
-//         paperFormat: Object,
-//         audioFormat: Object,
-//         electronicFormat: Object,
-//         language: {
-//             type: String,
-//             required: true
-//         },
-//         publicationYear: {
-//             type: Number,
-//             required: true
-//         },
-//         description: {
-//             type: String,
-//             required: true
-//         },
-//         publisher: {
-//             type: Object,
-//             required: true
-//         }
-//     }
-// });
 
 const props = defineProps(['book', 'selectedFormat']);
 
+const { getFormatData } = useBook(props.book);
+const priceCalculator = usePriceCalculator();
+
+const formatData = getFormatData(props.selectedFormat);
 
 let authors = '';
 props.book.authors.forEach(author => authors+=author.firstName + " " + author.lastName + ", ");
@@ -51,31 +28,33 @@ authors = authors.substring(0, authors.length - 2);
                 <button 
                     v-if="book.paperFormat" 
                     :class="'btn btn-outline-primary me-1' + (selectedFormat===BookFormats.Paper ? ' active' : '')"
-                    @click="$emit('select_format', BookFormats.Paper)"
+                    @click="$emit('change_selected_format', BookFormats.Paper)"
                 >
                     Paper
                 </button>
                 <button 
                     v-if="book.electronicFormat" 
                     :class="'btn btn-outline-primary me-1' + (selectedFormat===BookFormats.Electronic ? ' active' : '')"
-                    @click="$emit('select_format', BookFormats.Electronic)"
+                    @click="$emit('change_selected_format', BookFormats.Electronic)"
                 >
                     Electronic
                 </button>
                 <button 
                     v-if="book.audioFormat"
                     :class="'btn btn-outline-primary' + (selectedFormat===BookFormats.Audio ? ' active' : '')"
-                    @click="$emit('select_format', BookFormats.Audio)"
+                    @click="$emit('change_selected_format', BookFormats.Audio)"
                 >
                     Audio
                 </button>
             </div>
 
             <div class="mt-2">
-                Price 
-                <template v-if="selectedFormat===BookFormats.Paper">{{ props.book.paperFormat.price }}</template>
-                <template v-if="selectedFormat===BookFormats.Audio">{{ props.book.audioFormat.price }}</template>
-                <template v-if="selectedFormat===BookFormats.Electronic">{{ props.book.electronicFormat.price }}</template>
+                <div class="text-decoration-line-through">
+                    {{formatData.discount > 0 ? formatData.price : ''}}
+                </div>
+                <div>
+                    {{formatData.discount > 0 ? priceCalculator.calculate(formatData.price, formatData.discount) : formatData.price }}
+                </div>
             </div>
         </div>
 

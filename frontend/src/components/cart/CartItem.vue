@@ -19,7 +19,7 @@ function decreaseQuantity()
 <template>
     <div class="cart_item">
         <div class="d-flex">
-            <img class="cart_item_img" src="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg">
+            <img class="cart_item_img" :src="item.getCoverImageUrl()">
             <div class="ps-1">
                 <div class="cart_item_title">{{item.getBookName()}}</div>
                 <div> {{ item.getBookFormat() }}</div>

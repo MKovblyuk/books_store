@@ -2,7 +2,6 @@ import {defineStore} from "pinia";
 import {ref} from "vue";
 import axios from "axios";
 import { useFilterStore } from "./filterStore";
-import { BookFormats } from "@/enums/bookFormats";
 
 export const useBookStore = defineStore('book', () => {
     const books = ref([]);
@@ -25,22 +24,10 @@ export const useBookStore = defineStore('book', () => {
         let params = {
             page,
             per_page,
-        }
-
-        if (filterStore.options) {
-            params = {
-                ...params,
-                "filter[language]": filterStore.options.languages?.join(','),
-                "filter[publisher_id]": filterStore.options.publishers?.join(','),
-                "filter[author_id]": filterStore.options.authors?.join(','),
-                "filter[format]": filterStore.options.formats?.join(','),
-                "filter[price_from]": filterStore.options.price_from,
-                "filter[price_to]": filterStore.options.price_to,
-            }
+            ...filterStore.queryParamsObject,
         }
 
         console.log(params);
-
 
         // if (books.value.length === 0 || current_page !== page || Date.now() - last_fetch_time > NO_FETCH_TIME) {
             const response = await axios.get('books', {params});
@@ -70,7 +57,6 @@ export const useBookStore = defineStore('book', () => {
 
             console.log("fetch single book");
         }
-
     }
 
     return { 

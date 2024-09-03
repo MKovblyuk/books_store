@@ -8,6 +8,7 @@ export class CartItem {
         this.bookName = book.name;
         this.bookFormat = bookFormat;
         this.quantity = 1;
+        this.bookCoverImageUrl = book.coverImageUrl;
 
         const selectedFormatData = useBook(book).getFormatData(bookFormat);
         this.price = selectedFormatData.price;
@@ -76,8 +77,8 @@ export class CartItem {
 
     setDiscount(discount) 
     {
-        if (discount > 1 || discount < 0) {
-            throw new Error('Discount should be in [0,1] range');
+        if (discount > 100 || discount < 0) {
+            throw new Error('Discount should be in [0,100] range');
         }
 
         this.discount = discount;
@@ -92,5 +93,7 @@ export class CartItem {
         return this.bookFormat;
     }
 
-
+    getCoverImageUrl() {
+        return this.bookCoverImageUrl;
+    }
 }

@@ -8,7 +8,7 @@ import {useRoute, useRouter} from "vue-router";
 
 
 const store = useBookStore();
-const per_page = 1;
+const per_page = 4;
 
 const route = useRoute();
 const router = useRouter();

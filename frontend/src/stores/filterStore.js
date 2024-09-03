@@ -1,51 +1,30 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 
 export const useFilterStore = defineStore('filter', () => {
-    // const languages = ref([]);
-
-    // const addLanguage = (language) => {
-
-    // }
-
-    // const removeLanguage = (language) => {
-
-    // }
-
-
-    // more detailed read in form input bindings section in vue documentation
-
-    const options = ref({
-        book_types: [],
-        publishers: [],
-        authors: [],
-        languages: [],
-        formats: [],
-        price_from: null,
-        price_to: null,
-    });
-
-    const addOptionValue = (name, value) => options.value[name].push(value);
+    const publishers = ref([]);
+    const authors = ref([]);
+    const languages = ref([]);
+    const formats = ref([]);
+    const priceFrom = ref();
+    const priceTo = ref();
     
 
-    const removeOptionValue = (name, value) => {
-        const index = options.value[name].indexOf(value);
-        if (index > -1) {
-            options.value[name].splice(index,1);
-        }
-    }
-
     const setPriceFrom = (value) => {
-        if (value > 0) {
-            options.value.price_from = value;
+        if (value < 0) {
+            throw new Error('Value should be > 0');
         }
+
+        priceFrom.value = value;
     }
 
     const setPriceTo = (value) => {
-        if (value > 0) {
-            options.value.price_to = value;
+        if (value < 0) {
+            throw new Error('Value should be > 0');
         }
+
+        priceTo.value = value;
     }
 
     const setPrices = (from, to) => {
@@ -53,32 +32,36 @@ export const useFilterStore = defineStore('filter', () => {
         setPriceTo(to);
     }
 
-    const getPriceFrom = () => options.value.price_from;
+    const queryParamsObject = computed(() => {
+        let priceRangeParam = priceFrom.value;
 
-    const getPriceTo = () => options.value.price_to;
+        if (priceTo.value != null && priceTo.value != '') {
+            priceFrom.value != null && priceFrom.value != ''
+                ? priceRangeParam = priceFrom.value + ',' + priceTo.value
+                : priceRangeParam = '0,' + priceTo.value;
+        }
 
-    const isCheckedOptionValue = (name, value) => {
-        // console.log('try check');
-        // console.log('arr = ', options.value[name]);
-        // console.log('index = ', options.value[name].indexOf(value));
-        // console.log('name = ', name);
-        // console.log('value = ', value);
-        // console.log(options.value[name].indexOf(value) > -1);
+        const params = {
+            "filter[language]": languages.value?.join(','),
+            "filter[publisher_id]": publishers.value?.join(','),
+            "filter[author_id]": authors.value?.join(','),
+            "filter[format]": formats.value?.join(','),
+            "filter[price_range]": priceRangeParam,
+        };
 
-
-        return options.value[name].indexOf(value) > -1
-    }
-
+        return Object.fromEntries(Object.entries(params).filter(([key, value]) => value != null && value !== ""));
+    })
     
     return {
-        options, 
-        addOptionValue, 
-        removeOptionValue, 
-        isCheckedOptionValue,
+        publishers,
+        authors,
+        languages,
+        formats,
+        priceFrom,
+        priceTo,
         setPriceFrom,
         setPriceTo,
-        getPriceFrom,
-        getPriceTo,
         setPrices,
+        queryParamsObject,
     };
 });
