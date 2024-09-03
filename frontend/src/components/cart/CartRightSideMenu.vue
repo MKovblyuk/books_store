@@ -27,7 +27,13 @@ const cartStore = useCartStore();
 
             <div class="mt-3">
                  <div>Total Price {{ cartStore.totalPrice }}</div>
-                <RouterLink to="/order" class="btn btn-primary w-100">To Order</RouterLink>
+                <RouterLink 
+                    to="/order" 
+                    class="btn btn-primary w-100"
+                    :class="{disabled: cartStore.items.length <= 0}"
+                >
+                    To Order
+                </RouterLink>
             </div>
         </div>
     </div>
