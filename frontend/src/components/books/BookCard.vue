@@ -152,4 +152,9 @@ function buy()
     height: 3rem;
 }
 
+.card-title {
+    height: 3rem;
+    overflow: hidden;
+}
+
 </style>
