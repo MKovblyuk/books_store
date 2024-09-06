@@ -1,9 +1,15 @@
 <script setup>
 import CartItem from "@/components/cart/CartItem.vue";
 import { useCartStore } from "@/stores/cartStore";
-
+import { useRouter } from "vue-router";
 
 const cartStore = useCartStore();
+const router = useRouter();
+
+function openOrderView() {
+    document.getElementById('cart_menu_close_btn').click();
+    router.push('/order');
+}
 
 </script>
 
@@ -11,7 +17,13 @@ const cartStore = useCartStore();
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
             <h5 id="offcanvasRightLabel">Cart Items</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button 
+                type="button" 
+                class="btn-close text-reset" 
+                data-bs-dismiss="offcanvas" 
+                aria-label="Close" 
+                id="cart_menu_close_btn"
+            ></button>
         </div>
         <div class="offcanvas-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -27,13 +39,13 @@ const cartStore = useCartStore();
 
             <div class="mt-3">
                  <div>Total Price {{ cartStore.totalPrice }}</div>
-                <RouterLink 
-                    to="/order" 
-                    class="btn btn-primary w-100"
+                 <button 
+                    class="btn btn-primary w-100" 
                     :class="{disabled: cartStore.items.length <= 0}"
+                    @click="openOrderView"
                 >
                     To Order
-                </RouterLink>
+                 </button>
             </div>
         </div>
     </div>

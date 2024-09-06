@@ -28,7 +28,7 @@ export const useBookStore = defineStore('book', () => {
             ...filterStore.queryParamsObject,
         }
 
-        console.log(params);
+        // console.log(params);
 
         // if (books.value.length === 0 || current_page !== page || Date.now() - last_fetch_time > NO_FETCH_TIME) {
             const response = await axios.get('books', {params});

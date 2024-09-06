@@ -3,7 +3,7 @@ import CartItem from "@/components/cart/CartItem.vue";
 import { useEasyPayCheckoutPopup } from "@/composables/easyPayCheckoutPopup";
 import { useCartStore } from "@/stores/cartStore";
 import axios from "axios";
-import { onMounted, watch } from "vue";
+import { onMounted, onUnmounted, watch } from "vue";
 import { ref } from "vue";
 import UISelectWithLabel from "@/components/ui/UISelectWithLabel.vue";
 import router from "@/router";
@@ -34,6 +34,11 @@ const errors = ref({});
 onMounted(() => {
     fetchPaymentMethods();
     fetchCountries();
+    console.log('OrderView Mounted');
+});
+
+onUnmounted(() => {
+    console.log('OrderView Unmounted');
 });
 
 watch(easyPayCheckoutPopup.errors, value => errors.value = value);
@@ -142,7 +147,7 @@ function closeOrderView()
 
 <template>
     <div class="p-3">
-        <RouterLink to="/1" class="btn btn-outline-primary">Home</RouterLink>
+        <RouterLink to="home" class="btn btn-outline-primary">Home</RouterLink>
         <div class="d-flex mt-4">
             <form class="order_contacts">
                 <h5>Placing an order</h5>
