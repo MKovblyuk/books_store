@@ -3,7 +3,7 @@ import CartItem from "@/components/cart/CartItem.vue";
 import { useEasyPayCheckoutPopup } from "@/composables/easyPayCheckoutPopup";
 import { useCartStore } from "@/stores/cartStore";
 import axios from "axios";
-import { onMounted, onUnmounted, watch } from "vue";
+import { onMounted, watch } from "vue";
 import { ref } from "vue";
 import UISelectWithLabel from "@/components/ui/UISelectWithLabel.vue";
 import router from "@/router";
@@ -34,11 +34,6 @@ const errors = ref({});
 onMounted(() => {
     fetchPaymentMethods();
     fetchCountries();
-    console.log('OrderView Mounted');
-});
-
-onUnmounted(() => {
-    console.log('OrderView Unmounted');
 });
 
 watch(easyPayCheckoutPopup.errors, value => errors.value = value);

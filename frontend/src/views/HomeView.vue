@@ -3,7 +3,7 @@
 import SideMenu from "@/components/side_menu/SideMenu.vue";
 import BookList from "@/components/books/BookList.vue";
 import {useBookStore} from "@/stores/bookStore.js";
-import {onMounted, onUnmounted, ref} from "vue";
+import {onMounted} from "vue";
 import {useRoute, useRouter} from "vue-router";
 
 const store = useBookStore();
@@ -12,13 +12,7 @@ const router = useRouter();
 
 onMounted(() => {
     fetchData(route.params.page);
-    console.log('HomeView MOunted');
 });
-
-onUnmounted(() => {
-    console.log('HomeView Unmounted');
-});
-
 
 const pageChangedHandler = (page) => {
     router.push('/' + page);

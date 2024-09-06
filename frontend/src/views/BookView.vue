@@ -31,7 +31,7 @@ watch(() => props.id, fetchData, { immediate: true});
 
 async function fetchData(book_id)
 {
-    bookStore.fetchBook(book_id).then(selectedFormat.value = useBook(bookStore.book).getAvailableFormat());
+    bookStore.fetchBook(book_id).then(() => selectedFormat.value = useBook(bookStore.book).getAvailableFormat());
     await bookStore.fetchRelatedBooks();
     await reviewStore.fetchReviews(book_id, 1, reviews_per_page);
 }
