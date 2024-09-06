@@ -11,8 +11,10 @@ use App\Models\V1\Books\Author;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\ElectronicFormat;
 use App\Models\V1\Books\PaperFormat;
+use App\Sorts\BooksSellingCountSort;
 use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class GetAllBooksWithPaginateAction 
@@ -45,6 +47,13 @@ class GetAllBooksWithPaginateAction
                 'publisher_id',
                 'category_id',
             ])
+            ->allowedIncludes([
+                'publisher',
+                'category',
+                'authors',
+                'reviews',
+                'fragments',
+            ])
             ->allowedSorts([
                 'id',
                 'name',
@@ -52,14 +61,8 @@ class GetAllBooksWithPaginateAction
                 'language',
                 'published_at',
                 'publisher_id',
-                'category_id'
-            ])
-            ->allowedIncludes([
-                'publisher',
-                'category',
-                'authors',
-                'reviews',
-                'fragments',
+                'category_id',
+                AllowedSort::custom('selling_count', new BooksSellingCountSort()),
             ])
             ->paginate($per_page);
     }
