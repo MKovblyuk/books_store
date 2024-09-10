@@ -19,7 +19,7 @@ class SortBooksByPrice implements Sort
         $sqlFunctionBody = '';
 
         foreach ($this->getFilteringFormats() as $format_table) {
-            $sqlFunctionBody .= 'COALESCE((SELECT `price` FROM `'.$format_table.'` WHERE `'.$format_table.'`.`book_id` = `books`.`id`),'.$defaultValue.'),';
+            $sqlFunctionBody .= 'COALESCE((SELECT `price` - (`price` * `discount` / 100) FROM `'.$format_table.'` WHERE `'.$format_table.'`.`book_id` = `books`.`id`),'.$defaultValue.'),';
         }
 
         $query->addSelect(DB::raw(
