@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {ref} from "vue";
 import axios from "axios";
 import { useFilterStore } from "./filterStore";
+import { useSortingStore } from "./sortingStore";
 
 export const useBookStore = defineStore('book', () => {
     const books = ref([]);
@@ -20,12 +21,14 @@ export const useBookStore = defineStore('book', () => {
     let current_book_id = null;
 
     const filterStore = useFilterStore();
+    const sortingStore = useSortingStore();
 
     async function fetchBooks(page = 1, per_page = perPage.value) {
         let params = {
             page,
             per_page,
             ...filterStore.queryParamsObject,
+            'sort': sortingStore.param
         }
 
         // console.log(params);

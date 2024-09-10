@@ -1,13 +1,23 @@
 <script setup>
+import { useBookStore } from '@/stores/bookStore';
+import { useSortingStore } from '@/stores/sortingStore';
+
+const sortingStore = useSortingStore();
+const bookStore = useBookStore();
 
 </script>
 
 <template>
-    <select class="form-select" aria-label="Default select example">
-        <option value="bestsellers" selected>Bestsellers</option>
-        <option value="most_liked">Most liked</option>
-        <option value="from_cheapest">From the cheapest</option>
-        <option value="from_expensive">From expensive</option>
+    <select 
+        class="form-select" 
+        aria-label="Default select example" 
+        v-model="sortingStore.param"
+        @change="bookStore.fetchBooks"
+    >
+        <option :value="sortingStore.SELLING_COUNT">Bestsellers</option>
+        <option :value="sortingStore.LIKES">Most liked</option>
+        <option :value="sortingStore.PRICE">From the cheapest</option>
+        <option :value="sortingStore.PRICE_DESC">From expensive</option>
     </select>
 </template>
 
