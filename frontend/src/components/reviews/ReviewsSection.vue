@@ -5,7 +5,6 @@ import PaginationBar from "@/components/PaginationBar.vue";
 
 const props = defineProps(['reviews' , 'meta']);
 
-
 </script>
 
 <template>
@@ -13,6 +12,7 @@ const props = defineProps(['reviews' , 'meta']);
         <h6 class="mb-2">Reviews</h6>
         <ReviewList :reviews/>
         <PaginationBar 
+            v-if="reviews.length > 0"
             :meta 
             @page_changed="(page) => $emit('page_changed',page)"
         />

@@ -6,7 +6,6 @@ import SortWidget from "@/components/widgets/SortWidget.vue";
 
 const props = defineProps(['books', 'meta', 'totalBooksCount']);
 
-
 </script>
 
 <template>
@@ -25,6 +24,7 @@ const props = defineProps(['books', 'meta', 'totalBooksCount']);
         </div>
 
         <PaginationBar 
+            v-if="books.length > 0"
             :meta 
             @page_changed="(page) => $emit('page_changed', page)"
         />
