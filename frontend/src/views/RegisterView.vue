@@ -37,7 +37,7 @@ const register = async () => {
     try {
         const response = await axios.post('http://localhost/api/register', data);
         userStore.setToken(response.data.token);
-        router.push('/1');
+        router.push('home');
     } catch (e){
         if (e.response.status == 422) {
             console.log(e.response);
@@ -63,7 +63,7 @@ const register = async () => {
                 <div class="card border-0 shadow rounded-3 my-5">
                     <div class="card-body p-4 p-sm-5">
                         <div class="d-flex justify-content-between mb-3">
-                            <RouterLink to="/">Back</RouterLink>
+                            <RouterLink to="home">Home</RouterLink>
                             <RouterLink to="/login">Sign In</RouterLink>
                         </div>
                         <h5 class="card-title text-center mb-5 fw-light fs-5">Sign Up</h5>
@@ -171,15 +171,6 @@ const register = async () => {
                                     @click.prevent="register"
                                 >
                                     Sign up
-                                </button>
-                            </div>
-                            <hr class="my-4">
-                            <div class="d-grid mb-2">
-                                <button 
-                                    class="btn btn-google btn-login text-uppercase fw-bold" 
-                                    type="submit"
-                                >
-                                    <i class="fab fa-google me-2"></i> Sign up with Google
                                 </button>
                             </div>
                         </form>

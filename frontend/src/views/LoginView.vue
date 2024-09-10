@@ -46,7 +46,7 @@ const login = async () => {
                 <div class="card border-0 shadow rounded-3 my-5">
                     <div class="card-body p-4 p-sm-5">
                         <div class="d-flex justify-content-between mb-3">
-                            <RouterLink to="/">Back</RouterLink>
+                            <RouterLink to="home">Home</RouterLink>
                             <RouterLink to="/register">Sign Up</RouterLink>
                         </div>
                         <h5 class="card-title text-center mb-5 fw-light fs-5">Sign In</h5>
@@ -85,7 +85,7 @@ const login = async () => {
                             <div class="form-check mb-3">
                                 <input class="form-check-input" type="checkbox" value="" id="rememberPasswordCheck">
                                 <label class="form-check-label" for="rememberPasswordCheck">
-                                    Remember password
+                                    Remember me
                                 </label>
                             </div>
                             <div class="d-grid">
@@ -95,12 +95,6 @@ const login = async () => {
                                     @click.prevent="login"
                                 >
                                     Sign in
-                                </button>
-                            </div>
-                            <hr class="my-4">
-                            <div class="d-grid mb-2">
-                                <button class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
-                                    <i class="fab fa-google me-2"></i> Sign in with Google
                                 </button>
                             </div>
                         </form>
