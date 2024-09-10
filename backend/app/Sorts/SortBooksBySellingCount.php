@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\Sorts\Sort;
 
-class BooksSellingCountSort implements Sort
+class SortBooksBySellingCount implements Sort
 {
     public function __invoke(Builder $query, bool $descending, string $property)
     {

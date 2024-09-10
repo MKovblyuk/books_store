@@ -11,7 +11,9 @@ use App\Models\V1\Books\Author;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\ElectronicFormat;
 use App\Models\V1\Books\PaperFormat;
-use App\Sorts\BooksSellingCountSort;
+use App\Sorts\SortBooksByLikes;
+use App\Sorts\SortBooksByPrice;
+use App\Sorts\SortBooksBySellingCount;
 use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
@@ -62,7 +64,9 @@ class GetAllBooksWithPaginateAction
                 'published_at',
                 'publisher_id',
                 'category_id',
-                AllowedSort::custom('selling_count', new BooksSellingCountSort()),
+                AllowedSort::custom('selling_count', new SortBooksBySellingCount()),
+                AllowedSort::custom('likes', new SortBooksByLikes()),
+                AllowedSort::custom('price', new SortBooksByPrice()),
             ])
             ->paginate($per_page);
     }
