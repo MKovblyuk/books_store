@@ -57,14 +57,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Book::class, 'liked_books');
     }
 
-    public function likeBook(Book $book): void
-    {
-        DB::table('liked_books')->insert([
-            'user_id' => $this->id,
-            'book_id' => $book->id,
-        ]);
-    }
-
     public function isAdmin(): bool
     {
         return $this->role === UserRole::Admin;

@@ -81,5 +81,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::get('users/{user}/electronicBooks', [UserController::class, 'getElectronicBooks'])->missing(fn() => notFoundJsonResponse());
         Route::get('users/{user}/audioBooks', [UserController::class, 'getAudioBooks'])->missing(fn() => notFoundJsonResponse());
         Route::get('users/{user}/likedBooks', [UserController::class, 'getLikedBooks'])->missing(fn() => notFoundJsonResponse());
+        Route::post('users/{user}/like/{book}', [UserController::class, 'likeBook'])->missing(fn() => notFoundJsonResponse());
+        Route::post('users/{user}/unlike/{book}', [UserController::class, 'unlikeBook'])->missing(fn() => notFoundJsonResponse());
     });
 });

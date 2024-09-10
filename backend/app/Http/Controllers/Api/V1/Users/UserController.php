@@ -9,8 +9,10 @@ use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Orders\OrderCollection;
 use App\Http\Resources\V1\Users\UserCollection;
 use App\Http\Resources\V1\Users\UserResource;
+use App\Models\V1\Books\Book;
 use App\Models\V1\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -116,6 +118,30 @@ class UserController extends Controller
         try {
             $this->authorize('getLikedBooks', $user);
             return new BookCollection($user->likedBooks);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+    }
+
+    public function likeBook(User $user, Book $book)
+    {
+        try {
+            $this->authorize('update', $user);
+            $user->likedBooks()->attach($book->id);
+            return response('', 200);
+        } catch (UniqueConstraintViolationException $e) {
+            return response()->json(['message' => 'Book already liked'], 400);
+        } catch (AuthorizationException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
+        }
+    }
+
+    public function unlikeBook(User $user, Book $book)
+    {
+        try {
+            $this->authorize('update', $user);
+            $user->likedBooks()->detach($book->id);
+            return response('', 200);
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }

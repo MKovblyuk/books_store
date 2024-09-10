@@ -14,7 +14,6 @@ class UserPolicy
 
     public function viewAny(User $user): bool
     {
-        
         return false;
     }
 
