@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Books;
 
 use App\Actions\Books\DeleteBookCoverImageAction;
 use App\Actions\Books\GetAllBooksWithPaginateAction;
+use App\Actions\Books\GetRelatedBooksAction;
 use App\Actions\Books\StoreBookAction;
 use App\Actions\Books\UpdateBookAction;
 use App\Actions\Books\UpdateBookCoverImageAction;
@@ -39,7 +40,14 @@ class BookController extends Controller
         $this->audioStorageService = new AudioBookStorageService();
 
         $this->middleware('auth:sanctum', [
-            'except' => ['index', 'show', 'getReviews', 'getPreviewFragments', 'getLanguages']
+            'except' => [
+                'index', 
+                'show', 
+                'getReviews', 
+                'getPreviewFragments', 
+                'getLanguages', 
+                'getRelatedBooks'
+            ]
         ]);
     }
 
@@ -219,5 +227,11 @@ class BookController extends Controller
     {
         $languages = DB::table('books')->select('language')->distinct()->get()->map(fn($item) => $item->language);
         return response()->json(['data' => $languages]);
+    }
+
+    public function getRelatedBooks(Book $book, GetRelatedBooksAction $action)
+    {
+        $relatedBooks = $action->execute($book);
+        return response()->json(['data' => $relatedBooks]);
     }
 }

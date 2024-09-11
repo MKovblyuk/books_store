@@ -51,6 +51,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::delete('books/{book}/{format}', [BookController::class, 'deleteFormat'])->missing(fn() => notFoundJsonResponse());
         Route::get('books/{book}/reviews', [BookController::class, 'getReviews'])->missing(fn() => notFoundJsonResponse());
         Route::get('books/{book}/fragments', [BookController::class, 'getPreviewFragments'])->missing(fn() => notFoundJsonResponse());
+        Route::get('books/{book}/related', [BookController::class, 'getRelatedBooks'])->missing(fn() => notFoundJsonResponse());
 
         Route::get('books/electronic/{book}/download/{extension}', [BookController::class, 'downloadElectronicBook'])->missing(fn() => notFoundJsonResponse());
         Route::get('books/audio/{book}/download/{extension}', [BookController::class, 'downloadAudioBook'])->missing(fn() => notFoundJsonResponse());
