@@ -134,7 +134,7 @@ class BookController extends Controller
     public function getReviews(Book $book)
     {
         $per_page = request()->get('per_page', 10);
-        $reviews = $book->reviews()->paginate($per_page);
+        $reviews = $book->reviews()->orderBy('updated_at', 'desc')->paginate($per_page);
 
         return new ReviewCollection($reviews);
     }
