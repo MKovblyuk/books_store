@@ -6,7 +6,7 @@ const props = defineProps(['review']);
     <div class="review_list_item p-2">
         <div class="review_header d-flex justify-content-between">
             <div>
-                <div>Author</div>
+                <div>{{ props.review.userFirstName + ' ' + props.review.userLastName }}</div>
                 <div>{{props.review.updatedAt}}</div>
             </div>
             <div>
