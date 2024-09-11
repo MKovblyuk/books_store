@@ -8,10 +8,10 @@ export const useReviewStore = defineStore('review', () => {
     const links = ref([]);
     const meta = ref([]);
     const reviewsIsLoaded = ref(false);
+    const perPage = ref(2);
 
-    async function fetchReviews(book_id, page, per_page) {
+    async function fetchReviews(book_id, page = 1, per_page = perPage.value) {
         reviewsIsLoaded.value = false;
-
         const response = await axios.get(`books/${book_id}/reviews?page=${page}&per_page=${per_page}`);
         reviews.value = response.data.data;
         links.value = response.data.links;
