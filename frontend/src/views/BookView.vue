@@ -11,10 +11,13 @@ import { useCartStore } from "@/stores/cartStore";
 import { CartItem } from "@/models/CartItem";
 import { onMounted, ref, watch } from "vue";
 import { useBook } from "@/composables/book";
+import { useUserStore } from "@/stores/userStore";
+import AddReviewForm from "@/components/reviews/AddReviewForm.vue";
 
 const bookStore = useBookStore();
 const reviewStore = useReviewStore();
 const cartStore = useCartStore();
+const userStore = useUserStore();
 
 const router = useRouter();
 const reviews_per_page = 2;
@@ -90,6 +93,11 @@ function buy()
             :reviews="reviewStore.reviews" 
             :meta="reviewStore.meta"
             @page_changed="reviewPageChangedHandler"
+        />
+
+        <AddReviewForm 
+            v-if="userStore.authorized"
+            :bookId="id"
         />
     </div>
 </template>
