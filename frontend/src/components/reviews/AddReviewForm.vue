@@ -13,9 +13,12 @@ function addReviewHandler() {
         'bookId': props.bookId,
         'review': review.value,
         'rating': rating.value,
+    }).then(() => {
+        reviewStore.fetchReviews(props.bookId);
+    }).catch(error => {
+        console.log('error in adding review:', error);
     });
 
-    reviewStore.fetchReviews(props.bookId);
     review.value = '';
 }
 
