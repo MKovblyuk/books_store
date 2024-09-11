@@ -1,5 +1,8 @@
 <script setup>
 const props = defineProps(['review']);
+
+const date = new Date(props.review.updatedAt);
+
 </script>
 
 <template>
@@ -7,7 +10,7 @@ const props = defineProps(['review']);
         <div class="review_header d-flex justify-content-between">
             <div>
                 <div>{{ props.review.userFirstName + ' ' + props.review.userLastName }}</div>
-                <div>{{props.review.updatedAt}}</div>
+                <div>{{ date.toDateString() + ' - ' + date.toLocaleTimeString() }}</div>
             </div>
             <div>
                 Rating: {{props.review.rating}}
