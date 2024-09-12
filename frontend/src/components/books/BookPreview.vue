@@ -2,16 +2,53 @@
 
 import Carousel from "@/components/widgets/Carousel.vue";
 import { useDefaultAssests } from "@/composables/defaultAssets";
+import { useNumberFormatter } from "@/composables/numberFormatter";
 import { useBookStore } from "@/stores/bookStore";
+import { useUserStore } from "@/stores/userStore";
+import axios from "axios";
+import { computed } from "vue";
 
 const bookStore = useBookStore();
+const userStore = useUserStore();
 const { defaultImageSrc } = useDefaultAssests();
+const { formatToString } = useNumberFormatter();
+
+const isLikedByUser = computed(() => bookStore.book.likedUsersIds?.includes(userStore.user.id));
+
+function likeBook() {
+    axios.post('users/'+ userStore.user.id +'/like/' + bookStore.book.id);
+    bookStore.book.likedUsersIds.push(userStore.user.id);
+}
+
+function unlikeBook() {
+    axios.post('users/'+ userStore.user.id +'/unlike/' + bookStore.book.id);
+    bookStore.book.likedUsersIds.splice(bookStore.book.likedUsersIds.indexOf(userStore.user.id),1);
+}
 
 </script>
 
 <template>
     <div>
-        <button class="btn btn-outline-primary mb-2">Like</button>
+        <div class="d-flex justify-content-start align-items-center pb-2">
+            <div>
+                {{ formatToString(bookStore.book.likedUsersIds?.length) }}
+            </div>
+            <div 
+                v-if="userStore.authorized"
+                @click="isLikedByUser ? unlikeBook() : likeBook()"
+            >
+                <img 
+                    v-if="isLikedByUser" 
+                    src="@/assets/icons/heart-liked.svg" 
+                    class="likeImg"
+                >
+                <img v-else 
+                    src="@/assets/icons/heart-unliked.svg" 
+                    class="likeImg"
+                >
+            </div>
+        </div>
+
         <img
             :src="bookStore.book.coverImageUrl"
             class="w-100 mb-2"
@@ -61,5 +98,15 @@ const { defaultImageSrc } = useDefaultAssests();
 </template>
 
 <style scoped>
+
+.likeImg {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-left: 0.2rem;
+}
+
+.likeImg:hover {
+    transform: scale(1.2);
+}
 
 </style>
