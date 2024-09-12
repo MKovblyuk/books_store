@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1\Books;
 
 use App\Actions\Books\DeleteBookCoverImageAction;
 use App\Actions\Books\GetAllBooksWithPaginateAction;
-use App\Actions\Books\GetRelatedBooksAction;
+use App\Actions\Books\GetRelatedBooksWithPaginateAction;
 use App\Actions\Books\StoreBookAction;
 use App\Actions\Books\UpdateBookAction;
 use App\Actions\Books\UpdateBookCoverImageAction;
@@ -229,8 +229,8 @@ class BookController extends Controller
         return response()->json(['data' => $languages]);
     }
 
-    public function getRelatedBooks(Book $book, GetRelatedBooksAction $action)
+    public function getRelatedBooks(Book $book, GetRelatedBooksWithPaginateAction $action)
     {
-        return new BookCollection($action->execute($book));
+        return new BookCollection($action->execute($book, request('per_page') ?? 10));
     }
 }
