@@ -29,6 +29,7 @@ class BookResource extends JsonResource
             'electronicFormat' => new ElectronicFormatResource($this->electronicFormat),
             'paperFormat' => new PaperFormatResource($this->paperFormat),
             'likes' => $this->likedByUsers->count(),
+            'likedUsersIds' => $this->likedByUsers()->pluck('id'),
 
             $this->mergeWhen($this->fieldIsNotIncluded('publisher', $request),
                 ['publisherId' => $this->publisher_id]
@@ -92,6 +93,9 @@ class BookResource extends JsonResource
             ),
             $this->mergeWhen(in_array('likes', $fields),
                 ['likes' => $this->likedByUsers->count()]
+            ),
+            $this->mergeWhen(in_array('liked_users_ids', $fields), 
+                ['likedUsersIds' => $this->likedByUsers()->pluck('id')]
             ),
         ];
     }
