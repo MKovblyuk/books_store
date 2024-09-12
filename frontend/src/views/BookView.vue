@@ -21,9 +21,9 @@ const userStore = useUserStore();
 
 const router = useRouter();
 const reviews_per_page = 2;
+const relatedBooksPerPage = 10;
 
 const selectedFormat = ref();
-
 const props = defineProps(['id']);
 
 onMounted(() => {
@@ -35,7 +35,7 @@ watch(() => props.id, fetchData, { immediate: true});
 async function fetchData(book_id)
 {
     bookStore.fetchBook(book_id).then(() => selectedFormat.value = useBook(bookStore.book).getAvailableFormat());
-    await bookStore.fetchRelatedBooks();
+    await bookStore.fetchRelatedBooks(book_id, 1, relatedBooksPerPage);
     await reviewStore.fetchReviews(book_id, 1, reviews_per_page);
 }
 

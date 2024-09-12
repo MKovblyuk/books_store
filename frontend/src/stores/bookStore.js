@@ -45,8 +45,13 @@ export const useBookStore = defineStore('book', () => {
         // }
     }
 
-    async function fetchRelatedBooks() {
-        const response = await axios.get('books');
+    async function fetchRelatedBooks(bookId, page, per_page) {
+        const params = {
+            page, per_page
+        }
+        const response = await axios.get('books/' + bookId + '/related', params);
+        console.log(response.data.data);
+
         relatedBooks.value = response.data.data;
     }
 

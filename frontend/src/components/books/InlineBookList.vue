@@ -4,12 +4,10 @@ import BookCard from "@/components/books/BookCard.vue";
 
 const props = defineProps(['books']);
 
-
-
 </script>
 
 <template>
-    <ul class="list-group list-group-horizontal list-group-flush">
+    <ul v-if="books.length > 0" class="list-group list-group-horizontal list-group-flush">
         <li v-for="book in books" :key="book.id" class="list-group-item">
             <BookCard :book @click="$emit('book_card_click', book.id)"/>
         </li>
