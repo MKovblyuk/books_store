@@ -231,7 +231,6 @@ class BookController extends Controller
 
     public function getRelatedBooks(Book $book, GetRelatedBooksAction $action)
     {
-        $relatedBooks = $action->execute($book);
-        return response()->json(['data' => $relatedBooks]);
+        return new BookCollection($action->execute($book));
     }
 }
