@@ -49,7 +49,7 @@ export const useFilterStore = defineStore('filter', () => {
             "filter[format]": formats.value?.join(','),
             "filter[price_range]": priceRangeParam,
             "filter[name]": bookName.value,
-            "filter[category_id]": category.value,
+            "filter[category_with_children]": category.value,
         };
 
         return Object.fromEntries(Object.entries(params).filter(([key, value]) => value != null && value !== ""));
