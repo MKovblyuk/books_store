@@ -47,6 +47,12 @@ function unlikeBook() {
                     class="likeImg"
                 >
             </div>
+            <div v-else>
+                <img 
+                    src="@/assets/icons/heart-liked.svg" 
+                    class="likeImg"
+                >
+            </div>
         </div>
 
         <img
