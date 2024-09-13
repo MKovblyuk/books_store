@@ -5,6 +5,7 @@ import BookList from "@/components/books/BookList.vue";
 import {useBookStore} from "@/stores/bookStore.js";
 import {onMounted} from "vue";
 import {useRoute, useRouter} from "vue-router";
+import InlineCategoriesList from "@/components/categories/InlineCategoriesList.vue";
 
 const store = useBookStore();
 const route = useRoute();
@@ -32,6 +33,7 @@ const fetchData = async (page) => {
             @filter_options_changed="fetchData(1)"
         />
         <div class="content">
+            <InlineCategoriesList/>
             <BookList
                 :books="store.books"
                 :meta="store.meta"

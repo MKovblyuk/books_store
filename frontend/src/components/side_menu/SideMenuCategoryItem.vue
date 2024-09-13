@@ -1,6 +1,14 @@
 <script setup>
 
 import CategoriesList from "@/components/categories/CategoriesList.vue";
+import { useCategoryStore } from "@/stores/categoryStore";
+import { onMounted } from "vue";
+
+const categoryStore = useCategoryStore();
+
+onMounted(() => {
+    categoryStore.fetchCategories();
+});
 </script>
 
 <template>
@@ -15,7 +23,7 @@ import CategoriesList from "@/components/categories/CategoriesList.vue";
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-                <CategoriesList/>
+                <CategoriesList :categories="categoryStore.categories"/>
             </div>
         </div>
     </div>

@@ -10,6 +10,7 @@ export const useFilterStore = defineStore('filter', () => {
     const priceFrom = ref();
     const priceTo = ref();
     const bookName = ref();
+    const category = ref();
 
     const setPriceFrom = (value) => {
         if (value < 0) {
@@ -48,6 +49,7 @@ export const useFilterStore = defineStore('filter', () => {
             "filter[format]": formats.value?.join(','),
             "filter[price_range]": priceRangeParam,
             "filter[name]": bookName.value,
+            "filter[category_id]": category.value,
         };
 
         return Object.fromEntries(Object.entries(params).filter(([key, value]) => value != null && value !== ""));
@@ -64,6 +66,7 @@ export const useFilterStore = defineStore('filter', () => {
         setPriceTo,
         setPrices,
         queryParamsObject,
-        bookName
+        bookName,
+        category,
     };
 });
