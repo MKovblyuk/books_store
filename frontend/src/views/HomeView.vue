@@ -3,13 +3,20 @@
 import SideMenu from "@/components/side_menu/SideMenu.vue";
 import BookList from "@/components/books/BookList.vue";
 import {useBookStore} from "@/stores/bookStore.js";
-import {onMounted} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import InlineCategoriesList from "@/components/categories/InlineCategoriesList.vue";
+import CategoriesBreadcrumb from "@/components/categories/CategoriesBreadcrumb.vue";
+import { useFilterStore } from "@/stores/filterStore";
+import { useCategoryStore } from "@/stores/categoryStore";
 
 const store = useBookStore();
 const route = useRoute();
 const router = useRouter();
+
+const filterStore = useFilterStore();
+const subcategories = ref([]);
+const selectedCategory = ref();
 
 onMounted(() => {
     fetchData(route.params.page);
@@ -24,6 +31,16 @@ const fetchData = async (page) => {
     await store.fetchBooks(page);
 }
 
+watch(() => filterStore.category, async newCategoryId => {
+    selectedCategory.value = useCategoryStore().getCategoryById(newCategoryId);
+    subcategories.value = selectedCategory.value?.children;
+});
+
+function categoryChangedHandler(id) {
+    filterStore.category = id;
+    fetchData(1);
+}
+
 </script>
 
 <template>
@@ -33,7 +50,14 @@ const fetchData = async (page) => {
             @filter_options_changed="fetchData(1)"
         />
         <div class="content">
-            <InlineCategoriesList/>
+            <CategoriesBreadcrumb 
+                :category="selectedCategory"
+                @category_changed="categoryChangedHandler"
+            />
+            <InlineCategoriesList
+                :categories="subcategories"
+                @category_changed="categoryChangedHandler"
+            />
             <BookList
                 :books="store.books"
                 :meta="store.meta"

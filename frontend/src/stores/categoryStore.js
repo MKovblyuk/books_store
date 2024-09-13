@@ -22,6 +22,30 @@ export const useCategoryStore = defineStore('category', () => {
         return getById(categories.value, id);
     }
 
+    function getParentsById(id) {
+        if (!isFetched.value) {
+            fetchCategories();
+        }
+
+        let parents = [];
+        let parent = getParentCategory(getCategoryById(id));
+
+        while (parent) {
+            parents.push(parent);
+            parent = getParentCategory(parent);
+        }
+
+        return parents;
+    }
+
+    function getParentCategory(category) {
+        if (category == null || category.parentId === 1) {
+            return null;
+        }
+
+        return getCategoryById(category.parentId);
+    }
+
     function getById(categories, id) {
         for (let category of categories) {
             if (category.id === id) {
@@ -35,5 +59,13 @@ export const useCategoryStore = defineStore('category', () => {
         }
     }
 
-    return {categories, isFetched, fetchCategories, getCategoryById}
+    return {
+        categories, 
+        isFetched, 
+        fetchCategories, 
+        getCategoryById, 
+        getParentsById,
+        getParentCategory,
+        getParentsById
+    }
 });
