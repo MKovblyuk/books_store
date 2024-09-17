@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Orders;
 use App\Actions\Orders\ConfirmOrderPaymentAction;
 use App\Actions\Orders\CreateOrderAction;
 use App\Actions\Orders\GetAllOrdersWithPaginateAction;
+use App\Exceptions\General\IncorrectDataException;
 use App\Exceptions\Orders\IncorrectPaymentMethodException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\GuestUserHandling;
@@ -49,6 +50,8 @@ class OrderController extends Controller
             return response()->json(['message' => $e->getMessage()], 403);
         } catch (IncorrectPaymentMethodException $e) {
             return response()->json(['message' => $e->getMessage()], 400);
+        } catch (IncorrectDataException $e) {
+            return response()->json(['message' => 'The number of available books has been exceeded'], 422);
         }
     }
 
@@ -57,12 +60,13 @@ class OrderController extends Controller
         try {
             $this->authorize('create', Order::class);
 
-            // TODO prohibit simultaneous access to data
             return $service->createOnlinePaymentOrder($request->validated());
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         } catch (IncorrectPaymentMethodException $e) {
             return response()->json(['message' => $e->getMessage()], 400);
+        } catch (IncorrectDataException $e) {
+            return response()->json(['message' => 'The number of available books has been exceeded'], 422);
         }
     }
 

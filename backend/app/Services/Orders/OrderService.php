@@ -8,7 +8,7 @@ use App\Enums\PaymentMethods;
 use App\Events\Orders\OrderReadyToSend;
 use App\Events\Orders\UponReceivingOrderCreated;
 use App\Exceptions\Orders\IncorrectPaymentMethodException;
-use App\Models\V1\Books\Book;
+use App\Models\V1\Books\PaperFormat;
 use App\Models\V1\Orders\Order;
 use App\Models\V1\Orders\PaymentMethod;
 use App\Models\V1\User;
@@ -19,6 +19,8 @@ class OrderService
     private PaymentServiceInterface $paymentService;
     private PriceCalculatorService $priceCalculator;
 
+    private const DEADLOCK_ATTEMPTS = 10;
+
     public function __construct(PaymentServiceInterface $paymentService, PriceCalculatorInterface $priceCalculator)
     {
         $this->paymentService = $paymentService;
@@ -27,19 +29,23 @@ class OrderService
 
     public function createUponReceivingOrder(array $attributes): bool
     {
-        $attributes['total_price'] = $this->priceCalculator->calculate($attributes);
-        $paymentMethod = PaymentMethod::find($attributes['payment_method_id'])->method;
-
-        if ($paymentMethod !== PaymentMethods::UponReceiving) {
-            throw new IncorrectPaymentMethodException('Incorrect payment method');
-        }
-
-        DB::transaction(function () use($attributes){
+        return DB::transaction(function () use ($attributes) {
+            $attributes['total_price'] = $this->priceCalculator->calculate($attributes);
+            $paymentMethod = PaymentMethod::find($attributes['payment_method_id'])->method;
+    
+            if ($paymentMethod !== PaymentMethods::UponReceiving) {
+                throw new IncorrectPaymentMethodException('Incorrect payment method');
+            }
+    
             $order = $this->createOrder($attributes);
-            UponReceivingOrderCreated::dispatch($order);
-        });
-
-        return true;
+            
+            if ($order) {
+                UponReceivingOrderCreated::dispatch($order);
+                return true;
+            }
+    
+            return false;
+        }, self::DEADLOCK_ATTEMPTS);
     }
 
     public function createOnlinePaymentOrder(array $attributes) 
@@ -75,7 +81,7 @@ class OrderService
             ];
         
             return $this->paymentService->createSession($type, $payment, $orderData, $customer);
-        });
+        }, self::DEADLOCK_ATTEMPTS);
     }
 
     public function confirmOnlinePaymentOrder($data)
@@ -103,7 +109,7 @@ class OrderService
             $order->books()->attach($detail['book_id'], $detail);
 
             if ($detail['book_format'] === BookFormat::Paper->value) {
-                Book::find($detail['book_id'])->paperFormat->decreaseQuantity($detail['quantity']);
+                PaperFormat::lockForUpdate()->where('book_id', $detail['book_id'])->first()->decreaseQuantity($detail['quantity']);
             }
         }
 
