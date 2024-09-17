@@ -8,6 +8,7 @@ use App\Enums\PaymentMethods;
 use App\Events\Orders\OrderReadyToSend;
 use App\Events\Orders\UponReceivingOrderCreated;
 use App\Exceptions\Orders\IncorrectPaymentMethodException;
+use App\Jobs\ProcessPendingOrder;
 use App\Models\V1\Books\PaperFormat;
 use App\Models\V1\Orders\Order;
 use App\Models\V1\Orders\PaymentMethod;
@@ -65,6 +66,7 @@ class OrderService
             ];
     
             $order = $this->createOrder($attributes);
+            ProcessPendingOrder::dispatch($order)->delay(now()->addMinutes(30));
 
             $user = User::find($attributes['user_id']);
             $customer = [
