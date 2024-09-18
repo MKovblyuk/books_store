@@ -101,7 +101,7 @@ class User extends Authenticatable
                 'description', 
                 'publication_year', 
                 'language', 
-                'cover_image_url', 
+                'cover_image_path', 
                 'published_at',
                 'publisher_id',
                 'category_id'

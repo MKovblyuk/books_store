@@ -79,7 +79,7 @@ class BookResource extends JsonResource
                 ['language' => $this->language]
             ),
             $this->mergeWhen(in_array('cover_image_url', $fields),
-                ['coverImageUrl' => $this->cover_image_url]
+                ['coverImageUrl' => Storage::disk('preview_fragments')->url($this->cover_image_path)]
             ),
             $this->mergeWhen(in_array('published_at', $fields),
                 ['publishedAt' => $this->published_at]
