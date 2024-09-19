@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Users;
 
+use App\Enums\BookFormat;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Users\StoreUserRequest;
 use App\Http\Requests\V1\Users\UpdateUserRequest;
@@ -97,7 +98,9 @@ class UserController extends Controller
     {
         try {
             $this->authorize('getElectronicBooks', $user);
-            return new BookCollection($user->getElectronicBooks());
+            return new BookCollection(
+                Book::withFormatForUser(BookFormat::Electronic, $user)->paginate(request('per_page'))
+            );
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
@@ -107,7 +110,9 @@ class UserController extends Controller
     {
         try {
             $this->authorize('getAudioBooks', $user);
-            return new BookCollection($user->getAudioBooks());
+            return new BookCollection(
+                Book::withFormatForUser(BookFormat::Audio, $user)->paginate(request('per_page'))
+            );
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }

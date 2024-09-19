@@ -6,12 +6,14 @@ use App\Enums\BookFormat;
 use App\Events\Books\BookDeleted;
 use App\Models\V1\Orders\Order;
 use App\Models\V1\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection as SupportCollection;
 
 class Book extends Model
@@ -123,5 +125,19 @@ class Book extends Model
     public function likesCount(): int
     {
         return $this->likedByUsers()->count();
+    }
+
+    public function scopeWithFormatForUser(Builder $query, BookFormat $format, User $user): void
+    {
+        $query->whereIn('id', function (QueryBuilder $query) use ($format, $user) {
+            $query->select('book_id')
+                ->from('book_order')
+                ->where('book_format', $format)
+                ->whereIn('order_id', function (QueryBuilder $query) use ($user) {
+                    $query->select('id')
+                        ->from('orders')
+                        ->where('user_id', $user->id);
+                });
+        });
     }
 }
