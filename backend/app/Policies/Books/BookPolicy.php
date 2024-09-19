@@ -2,6 +2,7 @@
 
 namespace App\Policies\Books;
 
+use App\Enums\BookFormat;
 use App\Models\V1\Books\Book;
 use App\Models\V1\User;
 use Illuminate\Auth\Access\Response;
@@ -55,12 +56,12 @@ class BookPolicy
 
     public function downloadElectronicBook(User $user, Book $book): bool
     {
-        return $user->getElectronicBooks()->contains($book);
+        return Book::withFormatForUser(BookFormat::Electronic, $user)->get()->contains($book);
     }
 
     public function downloadAudioBook(User $user, Book $book): bool
     {
-        return $user->getAudioBooks()->contains($book);
+        return Book::withFormatForUser(BookFormat::Audio, $user)->get()->contains($book);
     }
 
     public function uploadFiles(): bool
