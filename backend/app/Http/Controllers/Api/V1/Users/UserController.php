@@ -88,7 +88,7 @@ class UserController extends Controller
     {
         try {
             $this->authorize('getOrders', $user);
-            return new OrderCollection($user->orders);
+            return new OrderCollection($user->orders()->paginate(request('per_page')));
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
