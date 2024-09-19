@@ -122,7 +122,7 @@ class UserController extends Controller
     {
         try {
             $this->authorize('getLikedBooks', $user);
-            return new BookCollection($user->likedBooks);
+            return new BookCollection($user->likedBooks()->paginate(request('per_page')));
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
