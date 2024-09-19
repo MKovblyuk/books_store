@@ -23,7 +23,7 @@ class BookResource extends JsonResource
             'description' => $this->description,
             'publicationYear' => $this->publication_year,
             'language' => $this->language,
-            'coverImageUrl' => Storage::disk('preview_fragments')->url($this->cover_image_path),
+            'coverImageUrl' => $this->cover_image_path ? Storage::disk('preview_fragments')->url($this->cover_image_path) : null,
             'publishedAt' => $this->published_at,
             'audioFormat' => new AudioFormatResource($this->audioFormat),
             'electronicFormat' => new ElectronicFormatResource($this->electronicFormat),
@@ -79,7 +79,7 @@ class BookResource extends JsonResource
                 ['language' => $this->language]
             ),
             $this->mergeWhen(in_array('cover_image_url', $fields),
-                ['coverImageUrl' => Storage::disk('preview_fragments')->url($this->cover_image_path)]
+                ['coverImageUrl' => $this->cover_image_path ? Storage::disk('preview_fragments')->url($this->cover_image_path) : null,]
             ),
             $this->mergeWhen(in_array('published_at', $fields),
                 ['publishedAt' => $this->published_at]
