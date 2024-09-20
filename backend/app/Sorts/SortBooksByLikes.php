@@ -11,14 +11,12 @@ class SortBooksByLikes implements Sort
     public function __invoke(Builder $query, bool $descending, string $property)
     {
         $q = $query->getQuery();
-        $asterisk = empty($q->bindings['select']) && empty($q->columns) ? '* ,' : '';
+        $asterisk = empty($q->bindings['select']) && empty($q->columns) ? 'books.* ,' : '';
 
-        $query->addSelect(DB::raw($asterisk . 
-            '(SELECT COUNT(*) 
-            FROM `liked_books` 
-            WHERE `liked_books`.`book_id` = `books`.`id` 
-            ) as `likes_count`'
-        ))
-        ->orderBy('likes_count', $descending ? 'desc' : 'asc');
+        $query->leftJoin('liked_books', 'books.id', '=', 'liked_books.book_id')
+            ->addSelect(DB::raw($asterisk . ' COUNT(liked_books.book_id) as likes_count'))
+            ->groupBy('books.id')
+            ->orderBy('likes_count', $descending ? 'desc' : 'asc')
+            ->orderBy('books.id');
     }
 }
