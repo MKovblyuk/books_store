@@ -19,16 +19,12 @@ const subcategories = ref([]);
 const selectedCategory = ref();
 
 onMounted(() => {
-    fetchData(route.params.page);
+    store.fetchBooks(route.params.page);
 });
 
 const pageChangedHandler = (page) => {
     router.push('/' + page);
-    fetchData(page);
-}
-
-const fetchData = async (page) => {
-    await store.fetchBooks(page);
+    store.fetchBooks(page);
 }
 
 watch(() => filterStore.category, async newCategoryId => {
@@ -38,7 +34,7 @@ watch(() => filterStore.category, async newCategoryId => {
 
 function categoryChangedHandler(id) {
     filterStore.category = id;
-    fetchData(1);
+    store.fetchBooks(1);
 }
 
 </script>
@@ -47,7 +43,7 @@ function categoryChangedHandler(id) {
     <div class="d-flex flex-grow-1">
         <SideMenu 
             class="side_menu"
-            @filter_options_changed="fetchData(1)"
+            @filter_options_changed="store.fetchBooks(1)"
         />
         <div class="content">
             <CategoriesBreadcrumb 

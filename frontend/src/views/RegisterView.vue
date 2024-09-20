@@ -1,6 +1,6 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore';
-import axios from 'axios';
+// import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -35,12 +35,10 @@ const register = async () => {
     };
 
     try {
-        const response = await axios.post('http://localhost/api/register', data);
-        userStore.setToken(response.data.token);
+        await userStore.register(data);
         router.push('home');
     } catch (e){
         if (e.response.status == 422) {
-            console.log(e.response);
             errors.value = {
                 firstName: e.response.data.errors.first_name,
                 lastName: e.response.data.errors.last_name,
@@ -64,7 +62,7 @@ const register = async () => {
                     <div class="card-body p-4 p-sm-5">
                         <div class="d-flex justify-content-between mb-3">
                             <RouterLink to="home">Home</RouterLink>
-                            <RouterLink to="/login">Sign In</RouterLink>
+                            <RouterLink to="login">Sign In</RouterLink>
                         </div>
                         <h5 class="card-title text-center mb-5 fw-light fs-5">Sign Up</h5>
                         <form>

@@ -20,22 +20,34 @@ export const useUserStore = defineStore('user', () => {
         authorized.value = true;
     }
 
+    async function register(data) {
+        const response = await axios.post('http://localhost/api/register', data);
+        localStorage.setItem('userId', response.data.userId);
+        fetchUser();
+    }
+
     async function login (credentials) {
         const response = await axios.post('http://localhost/api/login', credentials);
-
         localStorage.setItem('userId', response.data.userId);
         fetchUser();
     }
 
     async function logout() 
     {
-        const response = await axios.post('http://localhost/api/logout');
+        await axios.post('http://localhost/api/logout');
+
         localStorage.removeItem('userId');
-
-
         authorized.value = false;
         user.value = null;
     }
 
-    return {logout, fetchUser, login, user, authorized}
+    return {
+        logout, 
+        fetchUser, 
+        login, 
+        user, 
+        authorized,
+        register,
+        loading,
+    }
 });

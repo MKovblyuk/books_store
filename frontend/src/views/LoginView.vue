@@ -1,6 +1,5 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore';
-import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -20,7 +19,7 @@ const router = useRouter();
 
 const login = async () => {
     try {        
-        userStore.login(loginData.value);
+        await userStore.login(loginData.value);
         router.push('home');
     } catch(e) {
         if (e.response.status === 422) {
@@ -30,7 +29,7 @@ const login = async () => {
             errors.value.password = [e.response.data.message, ...errors.value.password];
         }
         else {
-            console.log('error', e);
+            console.log('Error in login', e);
         }
     }
 }

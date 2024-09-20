@@ -20,8 +20,8 @@ const cartStore = useCartStore();
 const userStore = useUserStore();
 
 const router = useRouter();
-const reviews_per_page = 2;
-const relatedBooksPerPage = 10;
+const REVIEWS_PER_PAGE = 2;
+const RELATED_BOOKS_PER_PAGE = 10;
 
 const selectedFormat = ref();
 const props = defineProps(['id']);
@@ -35,8 +35,8 @@ watch(() => props.id, fetchData, { immediate: true});
 async function fetchData(book_id)
 {
     bookStore.fetchBook(book_id).then(() => selectedFormat.value = useBook(bookStore.book).getAvailableFormat());
-    await bookStore.fetchRelatedBooks(book_id, 1, relatedBooksPerPage);
-    await reviewStore.fetchReviews(book_id, 1, reviews_per_page);
+    await bookStore.fetchRelatedBooks(book_id, 1, RELATED_BOOKS_PER_PAGE);
+    await reviewStore.fetchReviews(book_id, 1, REVIEWS_PER_PAGE);
 }
 
 function bookCardClickHandler(book_id)
@@ -47,7 +47,7 @@ function bookCardClickHandler(book_id)
 
 async function reviewPageChangedHandler(page) 
 {
-    await reviewStore.fetchReviews(props.id, page, reviews_per_page);
+    await reviewStore.fetchReviews(props.id, page, REVIEWS_PER_PAGE);
 }
 
 function addToCart() 
