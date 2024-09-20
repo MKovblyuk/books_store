@@ -1,9 +1,8 @@
 <script setup>
 import { BookExtensions } from '@/enums/bookExtensions';
 
-
 const props = defineProps(['book']);
-const emit = defineEmits(['read', 'download']);
+const emit = defineEmits(['listen', 'download']);
 
 </script>
 
@@ -17,8 +16,8 @@ const emit = defineEmits(['read', 'download']);
         <div class="p-3 d-flex flex-column justify-content-between h-100">
             <h5 class="card-title">{{book.name}}</h5>
             <div class="d-flex justify-content-between">
-                <button class="btn btn-success card-btn" @click.stop="emit('read', book, BookExtensions.PDF)">Read</button>
-                <button class="btn btn-primary card-btn" @click.stop="emit('download', book, BookExtensions.PDF)">Download</button>
+                <button class="btn btn-success card-btn" @click.stop="emit('listen', book, BookExtensions.MP3)">Listen</button>
+                <button class="btn btn-primary card-btn" @click.stop="emit('download', book, BookExtensions.MP3)">Download</button>
             </div>
         </div>
     </div>

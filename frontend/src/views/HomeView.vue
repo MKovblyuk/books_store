@@ -1,7 +1,6 @@
 <script setup>
 
 import SideMenu from "@/components/side_menu/SideMenu.vue";
-import BookList from "@/components/books/BookList.vue";
 import {useBookStore} from "@/stores/bookStore.js";
 import {onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
@@ -9,6 +8,7 @@ import InlineCategoriesList from "@/components/categories/InlineCategoriesList.v
 import CategoriesBreadcrumb from "@/components/categories/CategoriesBreadcrumb.vue";
 import { useFilterStore } from "@/stores/filterStore";
 import { useCategoryStore } from "@/stores/categoryStore";
+import BooksSection from "@/components/books/BooksSection.vue";
 
 const store = useBookStore();
 const route = useRoute();
@@ -58,7 +58,7 @@ function categoryChangedHandler(id) {
                 :categories="subcategories"
                 @category_changed="categoryChangedHandler"
             />
-            <BookList
+            <BooksSection
                 :books="store.books"
                 :meta="store.meta"
                 :totalBooksCount="store.meta.total"

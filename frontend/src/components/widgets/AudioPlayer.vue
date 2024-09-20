@@ -1,11 +1,18 @@
 <script setup>
-    const props = defineProps(['audioSrc', 'imageSrc']);
+import { ref } from 'vue';
+
+
+const props = defineProps(['audioSrc', 'imageSrc']);
+
+const player = ref(null);
+
+defineExpose({player});
 </script>
 
 <template>
     <div class="audio-body">
         <img :src="imageSrc" class="w-50 h-50 mb-2"/>
-        <audio controls v-if="audioSrc">
+        <audio controls v-if="audioSrc" ref="player">
             <source :src=audioSrc type="audio/mpeg">
         </audio>
     </div>

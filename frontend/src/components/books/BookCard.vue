@@ -2,7 +2,7 @@
 import { useBook } from "@/composables/book";
 import { CartItem } from "@/models/CartItem";
 import { useCartStore } from "@/stores/cartStore";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from 'vue-router'
 import BookCardFormatItem from "./BookCardFormatItem.vue";
 import { BookFormats } from "@/enums/bookFormats";
@@ -37,7 +37,7 @@ function buy()
     <div class="card" style="width: 14rem;">
         <div class="d-flex justify-content-center">
             <img 
-                :src="book.coverImageUrl" 
+                :src="book.coverImageUrl ?? defaultImageSrc" 
                 class="card-img-top" 
                 alt="not found image"
                 @error="e => e.target.src = defaultImageSrc"
