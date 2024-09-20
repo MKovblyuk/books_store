@@ -4,10 +4,8 @@ import RegisterView from "@/views/RegisterView.vue";
 import BookView from "@/views/BookView.vue";
 import BaseView from "@/views/BaseView.vue";
 import HomeView from "@/views/HomeView.vue";
-import AuthorView from "@/views/AuthorView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import OrderView from "@/views/OrderView.vue";
-import ReviewsSection from '@/components/reviews/ReviewsSection.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,12 +41,6 @@ const router = createRouter({
 			base_content: BookView
 		  },
 		  props: true,
-		},
-		{
-		  path: 'author',
-		  components: {
-			base_content: AuthorView
-		  }
 		},
 		{
 		  path: 'profile',
