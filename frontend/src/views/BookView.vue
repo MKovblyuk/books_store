@@ -26,9 +26,6 @@ const RELATED_BOOKS_PER_PAGE = 10;
 const selectedFormat = ref();
 const props = defineProps(['id']);
 
-onMounted(() => {
-    fetchData(props.id);
-});
 
 watch(() => props.id, fetchData, { immediate: true});
 

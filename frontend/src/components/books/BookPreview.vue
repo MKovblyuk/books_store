@@ -56,7 +56,7 @@ function unlikeBook() {
         </div>
 
         <img
-            :src="bookStore.book.coverImageUrl"
+            :src="bookStore.book.coverImageUrl ?? defaultImageSrc"
             class="w-100 mb-2"
             alt="book_preview_image"
             @error="e => e.target.src = defaultImageSrc"

@@ -13,12 +13,9 @@ export const useBookStore = defineStore('book', () => {
     const bookIsLoaded = ref(false);
     const perPage = ref(4);
 
-    // milliseconds
-    // there is 30 minutes
-    const NO_FETCH_TIME = 1000 * 60 * 30;
-    let last_fetch_time = Date.now();
-    let current_page = 0;
-    let current_book_id = null;
+    const booksIsFetched = ref(false);
+    let currentPage = 0;
+    let currentBookId = null;
 
     const filterStore = useFilterStore();
     const sortingStore = useSortingStore();
@@ -31,40 +28,35 @@ export const useBookStore = defineStore('book', () => {
             'sort': sortingStore.param
         }
 
-        // console.log(params);
-
-        // if (books.value.length === 0 || current_page !== page || Date.now() - last_fetch_time > NO_FETCH_TIME) {
+        if (!booksIsFetched.value || currentPage !== page) {
             const response = await axios.get('books', {params});
             books.value = response.data.data;
             links.value = response.data.links;
             meta.value = response.data.meta;
 
-            last_fetch_time = Date.now();
-            current_page = page;
-            console.log('fetch books');
-        // }
+            currentPage = page;
+            booksIsFetched.value = true;
+        }
     }
 
     async function fetchRelatedBooks(bookId, page, per_page) {
         const params = {
             page, per_page
         }
-        const response = await axios.get('books/' + bookId + '/related', params);
-        console.log(response.data.data);
 
+        const response = await axios.get('books/' + bookId + '/related', params);
         relatedBooks.value = response.data.data;
     }
 
     async function fetchBook(id) {
-
-        if (id !== current_book_id) {
+        if (id !== currentBookId) {
             bookIsLoaded.value = false;
+
             const response = await axios.get(`books/${id}?include=publisher,category,authors,fragments`);
             book.value = response.data.data;
-            bookIsLoaded.value = true;
-            current_book_id = id;
 
-            console.log("fetch single book");
+            bookIsLoaded.value = true;
+            currentBookId = id;
         }
     }
 
