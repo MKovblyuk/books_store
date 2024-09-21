@@ -2,7 +2,6 @@
 
 namespace App\Services\Orders;
 
-use App\Enums\PaymentMethods;
 use Illuminate\Support\Facades\Http;
 
 class EasyPayPaymentService implements PaymentServiceInterface
@@ -30,10 +29,8 @@ class EasyPayPaymentService implements PaymentServiceInterface
             'AccountId' => env('EASY_PAY_ACCOUNT_ID'),
             'ApiKey' => env('EASY_PAY_API_KEY'),
             'Content-Type' => 'application/json',
-        ])->get(env('EASY_PAY_API_URL') . `/single/$id`);
+        ])->get(env('EASY_PAY_API_URL') . '/single/' . $id);
 
-        // return $response->status() === 200;
-
-        return true;
+        return $response->status() === 200;
     }
 }

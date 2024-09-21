@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 class OrderService
 {
     private PaymentServiceInterface $paymentService;
-    private PriceCalculatorService $priceCalculator;
+    private PriceCalculatorInterface $priceCalculator;
 
     private const DEADLOCK_ATTEMPTS = 10;
 
