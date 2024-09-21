@@ -52,7 +52,6 @@ export class CartItem {
 
     getQuantity()
     {
-        console.log('try to get quanityt,', this.quantity);
         return this.quantity;
     }
 

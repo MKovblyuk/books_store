@@ -1,13 +1,15 @@
 <script setup>
 import CartItem from "@/components/cart/CartItem.vue";
 import { useCartStore } from "@/stores/cartStore";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const cartStore = useCartStore();
 const router = useRouter();
+const closeBtnRef = ref(null);
 
 function openOrderView() {
-    document.getElementById('cart_menu_close_btn').click();
+    closeBtnRef.value.click();
     router.push('/order');
 }
 
@@ -23,6 +25,7 @@ function openOrderView() {
                 data-bs-dismiss="offcanvas" 
                 aria-label="Close" 
                 id="cart_menu_close_btn"
+                ref="closeBtnRef"
             ></button>
         </div>
         <div class="offcanvas-body">

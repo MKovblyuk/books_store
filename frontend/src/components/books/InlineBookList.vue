@@ -15,13 +15,13 @@ const props = defineProps(['books']);
 </template>
 
 <style scoped>
-    .list-group{
-        overflow-y: hidden;
-    }
-    .list-group-item{
-        padding: 0;
-    }
-    .list-group > *:not(:last-child) {
-        margin-right: 15px;
-    }
+.list-group{
+    overflow-y: hidden;
+}
+.list-group-item{
+    padding: 0;
+}
+.list-group > *:not(:last-child) {
+    margin-right: 15px;
+}
 </style>

@@ -10,8 +10,6 @@ import { computed } from "vue";
 
 const bookStore = useBookStore();
 const userStore = useUserStore();
-const { defaultImageSrc } = useDefaultAssests();
-const { formatToString } = useNumberFormatter();
 
 const isLikedByUser = computed(() => bookStore.book.likedUsersIds?.includes(userStore.user.id));
 
@@ -31,7 +29,7 @@ function unlikeBook() {
     <div>
         <div class="d-flex justify-content-start align-items-center pb-2">
             <div>
-                {{ formatToString(bookStore.book.likedUsersIds?.length) }}
+                {{ useNumberFormatter().formatToString(bookStore.book.likedUsersIds?.length) }}
             </div>
             <div 
                 v-if="userStore.authorized"
@@ -56,10 +54,10 @@ function unlikeBook() {
         </div>
 
         <img
-            :src="bookStore.book.coverImageUrl ?? defaultImageSrc"
+            :src="bookStore.book.coverImageUrl ?? useDefaultAssests().defaultImageSrc"
             class="w-100 mb-2"
             alt="book_preview_image"
-            @error="e => e.target.src = defaultImageSrc"
+            @error="e => e.target.src = useDefaultAssests().defaultImageSrc"
         >
         <button 
             type="button" 

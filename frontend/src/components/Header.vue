@@ -18,7 +18,7 @@ const bookStore = useBookStore();
 
 <header class="d-flex p-3 justify-content-between align-items-center">
     <div>
-        <RouterLink to="/1">
+        <RouterLink to="/home">
             <img
                 src="https://w7.pngwing.com/pngs/973/11/png-transparent-phoenix-logo-design-mark-phoenix-fire-thumbnail.png"
                 alt="logo"
@@ -55,7 +55,7 @@ const bookStore = useBookStore();
         </button>
         <template v-if="userStore.authorized">
             <RouterLink to="/profile" class="btn btn-primary ms-2">Profile</RouterLink>
-            <RouterLink to="/1" class="btn btn-primary ms-2" @click="userStore.logout">Logout</RouterLink>
+            <RouterLink to="/home" class="btn btn-primary ms-2" @click="userStore.logout">Logout</RouterLink>
         </template>
         <template v-else>
             <RouterLink to="/login" class="btn btn-primary ms-2">Sign In</RouterLink>

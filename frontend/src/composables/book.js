@@ -10,6 +10,8 @@ export function useBook(book) {
         } else if (book.audioFormat) {
             return BookFormats.Audio;
         }
+
+        throw new Error('Not found available format');
     }
 
     function getFormatData(formatName) {
@@ -19,9 +21,9 @@ export function useBook(book) {
             return book.electronicFormat;
         } else if (formatName === BookFormats.Paper) {
             return book.paperFormat;
-        } else {
-            throw new Error('Incorrect Format');
         }
+        
+        throw new Error('Incorrect Format');
     }
 
     return { getAvailableFormat, getFormatData }

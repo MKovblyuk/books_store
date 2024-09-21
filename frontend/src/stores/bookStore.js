@@ -12,9 +12,7 @@ export const useBookStore = defineStore('book', () => {
     const book = ref({});
     const bookIsLoaded = ref(false);
     const perPage = ref(4);
-
-    const booksIsFetched = ref(false);
-    let currentPage = 0;
+    const booksIsLoaded = ref(false);
     let currentBookId = null;
 
     const filterStore = useFilterStore();
@@ -28,15 +26,14 @@ export const useBookStore = defineStore('book', () => {
             'sort': sortingStore.param
         }
 
-        if (!booksIsFetched.value || currentPage !== page) {
-            const response = await axios.get('books', {params});
-            books.value = response.data.data;
-            links.value = response.data.links;
-            meta.value = response.data.meta;
+        booksIsLoaded.value = false;
 
-            currentPage = page;
-            booksIsFetched.value = true;
-        }
+        const response = await axios.get('books', {params});
+        books.value = response.data.data;
+        links.value = response.data.links;
+        meta.value = response.data.meta;
+
+        booksIsLoaded.value = true;
     }
 
     async function fetchRelatedBooks(bookId, page, per_page) {
@@ -69,6 +66,7 @@ export const useBookStore = defineStore('book', () => {
         fetchRelatedBooks, 
         book, 
         bookIsLoaded, 
-        fetchBook
+        fetchBook,
+        booksIsLoaded,
     };
 });

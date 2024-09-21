@@ -1,12 +1,11 @@
 <script setup>
 import { ref } from 'vue';
 
-
 const props = defineProps(['audioSrc', 'imageSrc']);
-
 const player = ref(null);
 
 defineExpose({player});
+
 </script>
 
 <template>

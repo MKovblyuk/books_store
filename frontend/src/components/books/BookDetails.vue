@@ -9,8 +9,6 @@ import { computed } from "vue";
 const props = defineProps(['book', 'selectedFormat']);
 
 const { getFormatData } = useBook(props.book);
-const priceCalculator = usePriceCalculator();
-
 const formatData = computed(() => getFormatData(props.selectedFormat));
 
 let authors = '';
@@ -54,7 +52,7 @@ authors = authors.substring(0, authors.length - 2);
                     {{formatData.discount > 0 ? formatData.price : ''}}
                 </div>
                 <div>
-                    {{formatData.discount > 0 ? priceCalculator.calculateToFixed(formatData.price, formatData.discount) : formatData.price }}
+                    {{formatData.discount > 0 ? usePriceCalculator().calculateToFixed(formatData.price, formatData.discount) : formatData.price }}
                 </div>
             </div>
         </div>

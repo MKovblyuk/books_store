@@ -5,16 +5,6 @@ import { useCartStore } from '@/stores/cartStore';
 const props = defineProps(['item']);
 const cartStore = useCartStore();
 
-function increaseQuantity()
-{
-    props.item.increaseQuantity();
-}
-
-function decreaseQuantity()
-{
-    props.item.decreaseQuantity();
-}
-
 </script>
 
 <template>
@@ -22,7 +12,7 @@ function decreaseQuantity()
         <div class="cart_item_left_block">
             <img 
                 class="cart_item_img" 
-                :src="item.getCoverImageUrl()"
+                :src="item.getCoverImageUrl() ?? useDefaultAssests().defaultImageSrc"
                 @error="e => e.target.src = useDefaultAssests().defaultImageSrc"
             >
             <div class="ps-1">
@@ -48,41 +38,42 @@ function decreaseQuantity()
                 Remove
             </a>
             <div class="d-flex align-items-center justify-content-between">
-                <button class="btn btn-outline-dark" @click="decreaseQuantity">-</button>
+                <button class="btn btn-outline-dark" @click="item.decreaseQuantity">-</button>
                 <div class="p-1"> {{item.getQuantity()}}</div>
-                <button class="btn btn-outline-dark" @click="increaseQuantity">+</button>
+                <button class="btn btn-outline-dark" @click="item.increaseQuantity">+</button>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-    .cart_item {
-        border-radius: 8px;
-        border: 2px solid #a6a6a6;
-        background-color: #fdfdfd;
-        padding: 0.5rem;
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-    }
-    .cart_item_title {
-        font-weight: 500;
-        width: 100%;
-    }
-    .cart_item_img {
-        width: 30%;
-    }
 
-    .old_price {
-        text-decoration: line-through;
-        color: red;
-    }
+.cart_item {
+    border-radius: 8px;
+    border: 2px solid #a6a6a6;
+    background-color: #fdfdfd;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+.cart_item_title {
+    font-weight: 500;
+    width: 100%;
+}
+.cart_item_img {
+    width: 30%;
+}
 
-    .cart_item_left_block {
-        width: 75%;
-        overflow: hidden;
-        display: flex;
-    }
+.old_price {
+    text-decoration: line-through;
+    color: red;
+}
+
+.cart_item_left_block {
+    width: 75%;
+    overflow: hidden;
+    display: flex;
+}
 
 </style>
