@@ -10,13 +10,18 @@ class PriceCalculatorService implements PriceCalculatorInterface
     public function calculate(array $data): float
     {
         $details = $data['details'];
-        $price = 0;
+        $totalPrice = 0;
 
         for ($i = 0; $i < count($details); $i++) {
             $book = Book::find($details[$i]['book_id']);
-            $price += $book->getPrice(BookFormat::from($details[$i]['book_format'])) * $details[$i]['quantity'];
+            $format = BookFormat::from($details[$i]['book_format']);
+
+            $price = $book->getPrice($format);
+            $discount = $book->getDiscount($format);
+     
+            $totalPrice += ($price - ($price * $discount / 100)) * $details[$i]['quantity'];
         }
 
-        return $price;
+        return $totalPrice;
     }
 }
