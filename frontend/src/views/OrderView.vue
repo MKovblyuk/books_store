@@ -93,7 +93,6 @@ function getPaymentData()
         }
     }
 
-    console.log(paymentData);
     return paymentData;
 }
 
