@@ -122,6 +122,11 @@ class Book extends Model
         return $this->getFormat($format)->price;
     }
 
+    public function getDiscount(BookFormat $format): float
+    {
+        return $this->getFormat($format)->discount;
+    }
+
     public function likesCount(): int
     {
         return $this->likedByUsers()->count();
