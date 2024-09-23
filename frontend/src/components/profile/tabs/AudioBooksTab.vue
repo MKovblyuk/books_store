@@ -7,7 +7,7 @@ import * as bootstrap from 'bootstrap';
 import { onMounted, ref } from "vue";
 import MimeTypeExtensions from "@/helpers/MimeTypeExtensions";
 import AudioPlayer from "@/components/widgets/AudioPlayer.vue";
-import PaginationBar from "@/components/PaginationBar.vue";
+import PaginationBar from "@/components/widgets/PaginationBar.vue";
 import { useDefaultAssests } from "@/composables/defaultAssets";
 
 const defaultAssets  = useDefaultAssests();

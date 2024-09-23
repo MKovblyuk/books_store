@@ -1,7 +1,7 @@
 <script setup>
 
 import OrderTable from "@/components/orders/OrderTable.vue";
-import PaginationBar from "@/components/PaginationBar.vue";
+import PaginationBar from "@/components/widgets/PaginationBar.vue";
 import { useUserStore } from "@/stores/userStore";
 import axios from "axios";
 import { onMounted, ref } from "vue";

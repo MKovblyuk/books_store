@@ -1,7 +1,7 @@
 <script setup>
 
 import ReviewList from "@/components/reviews/ReviewList.vue";
-import PaginationBar from "@/components/PaginationBar.vue";
+import PaginationBar from "@/components/widgets/PaginationBar.vue";
 
 const props = defineProps(['reviews' , 'meta']);
 

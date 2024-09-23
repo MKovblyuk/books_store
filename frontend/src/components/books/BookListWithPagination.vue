@@ -1,6 +1,6 @@
 <script setup>
 
-import PaginationBar from '../PaginationBar.vue';
+import PaginationBar from '../widgets/PaginationBar.vue';
 import BookList from './BookList.vue';
 
 const props = defineProps(['books', 'meta']);

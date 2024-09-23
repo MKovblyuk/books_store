@@ -5,7 +5,7 @@ import { useUserStore } from "@/stores/userStore";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import MimeTypeExtensions from "@/helpers/MimeTypeExtensions";
-import PaginationBar from "@/components/PaginationBar.vue";
+import PaginationBar from "@/components/widgets/PaginationBar.vue";
 
 const userStore = useUserStore();
 const electronicBooks = ref([]);
