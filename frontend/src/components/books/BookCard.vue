@@ -20,10 +20,18 @@ const { defaultImageSrc } = useDefaultAssests();
 const selectedFormat = ref(getAvailableFormat());
 const formatData = computed(() => getFormatData(selectedFormat.value));
 
+const canBuy = computed(() => selectedFormat.value !== BookFormats.Paper || props.book.paperFormat?.quantity > 0);
+
 function addToCart() 
 {
-    const cartItem = new CartItem(props.book, selectedFormat.value);
-    cartStore.addItem(cartItem);
+    if (canBuy) {
+        try {
+            const cartItem = new CartItem(props.book, selectedFormat.value);
+            cartStore.addItem(cartItem);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }
 
 function buy()
@@ -122,8 +130,20 @@ function buy()
                 />
 
                 <div class="d-flex justify-content-between mt-2">
-                    <button class="btn btn-danger card-btn" @click.stop="addToCart">To Cart</button>
-                    <button class="btn btn-success card-btn" @click.stop="buy">Buy</button>
+                    <button 
+                        class="btn btn-danger card-btn" 
+                        @click.stop="addToCart"
+                        :disabled="!canBuy"
+                    >
+                        To Cart
+                    </button>
+                    <button 
+                        class="btn btn-success card-btn" 
+                        @click.stop="buy"
+                        :disabled="!canBuy"
+                    >
+                        Buy
+                    </button>
                 </div>
             </div>
         </div>

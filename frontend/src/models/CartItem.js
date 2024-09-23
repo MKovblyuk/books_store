@@ -12,6 +12,11 @@ export class CartItem {
         this.bookCoverImageUrl = book.coverImageUrl;
 
         const selectedFormatData = useBook(book).getFormatData(bookFormat);
+
+        if (bookFormat === BookFormats.Paper && selectedFormatData.quantity <= 0) {
+            throw new Error('Count of books <= 0');
+        }
+
         this.price = selectedFormatData.price;
         this.discount = selectedFormatData.discount;
         this.maxQuantity = selectedFormatData.quantity ?? 1;        
