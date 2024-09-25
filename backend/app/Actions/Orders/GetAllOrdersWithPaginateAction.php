@@ -15,18 +15,15 @@ class GetAllOrdersWithPaginateAction
                 'id',
                 'status',
                 'user_id',
-                'address_id',
-                'shipping_method_id',
                 'created_at',
                 'updated_at',
                 'details',
-                // 'address',
+                'delivery_place_id',
             ])
             ->allowedFilters([
                 AllowedFilter::exact('id'),
                 AllowedFilter::exact("user_id"),
-                AllowedFilter::exact('address_id'),
-                AllowedFilter::exact('shipping_method_id'),
+                AllowedFilter::exact('delivery_place_id'),
                 AllowedFilter::exact('created_at'),
                 AllowedFilter::exact('updated_at'),
                 'status',
@@ -38,9 +35,9 @@ class GetAllOrdersWithPaginateAction
             ])
             ->allowedIncludes([
                 'user',
-                'shippingMethod',
                 'books',
                 'details',
+                'deliveryPlace',
             ])
             ->paginate($per_page);
     }

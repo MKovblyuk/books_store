@@ -23,9 +23,8 @@ class UpdateOrderRequest extends FormRequest
     public function putRules(): array
     {
         return [
-            'address_id' => ['required', 'exists:addresses,id'],
             'user_id' => ['required', 'exists:users,id'],
-            'shipping_method_id' => ['required', 'exists:shipping_methods,id'],
+            'delivery_place_id' => ['required', 'exists:delivery_places,id'],
             'status' => ['required', Rule::enum(OrderStatus::class)],
         ];
     }
@@ -33,9 +32,8 @@ class UpdateOrderRequest extends FormRequest
     public function patchRules(): array
     {
         return [
-            'address_id' => ['sometimes', 'exists:addresses,id'],
             'user_id' => ['sometimes', 'exists:users,id'],
-            'shipping_method_id' => ['sometimes', 'exists:shipping_methods,id'],
+            'delivery_place_id' => ['exists:delivery_places,id'],
             'status' => ['sometimes', Rule::enum(OrderStatus::class)],
         ];
     }
@@ -47,16 +45,11 @@ class UpdateOrderRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if (isset($this->addressId)) {
-            $this->merge(['address_id' => $this->addressId ]);
-        }
-
         if (isset($this->userId)) {
             $this->merge(['user_id' => $this->userId]);
         }
-        
-        if (isset($this->shippingMethodId)) {
-            $this->merge(['shipping_method_id' => $this->shippingMethodId]);
+        if (isset($this->deliveryPlaceId)) {
+            $this->merge(['delivery_place_id' => $this->deliveryPlaceId]);
         }
     }
 }

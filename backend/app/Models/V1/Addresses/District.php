@@ -21,8 +21,8 @@ class District extends Model
         return $this->belongsTo(Region::class);
     }
 
-    public function addresses(): HasMany
+    public function settlements(): HasMany
     {
-        return $this->hasMany(Address::class);
+        return $this->hasMany(Settlement::class);
     }
 }

@@ -6,8 +6,10 @@ namespace App\Providers;
 
 use App\Models\V1\Addresses\Address;
 use App\Models\V1\Addresses\Country;
+use App\Models\V1\Addresses\DeliveryPlace;
 use App\Models\V1\Addresses\District;
 use App\Models\V1\Addresses\Region;
+use App\Models\V1\Addresses\Settlement;
 use App\Models\V1\Books\Author;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\Category;
@@ -19,8 +21,10 @@ use App\Models\V1\Orders\ShippingMethod;
 use App\Models\V1\User;
 use App\Policies\Addresses\AddressPolicy;
 use App\Policies\Addresses\CountryPolicy;
+use App\Policies\Addresses\DeliveryPlacePolicy;
 use App\Policies\Addresses\DistrictPolicy;
 use App\Policies\Addresses\RegionPolicy;
+use App\Policies\Addresses\SettlementPolicy;
 use App\Policies\Books\AuthorPolicy;
 use App\Policies\Books\BookPolicy;
 use App\Policies\Books\CategoryPolicy;
@@ -51,6 +55,8 @@ class AuthServiceProvider extends ServiceProvider
         Country::class => CountryPolicy::class,
         District::class => DistrictPolicy::class,
         Region::class => RegionPolicy::class,
+        Settlement::class => SettlementPolicy::class,
+        DeliveryPlace::class => DeliveryPlacePolicy::class,
 
         User::class => UserPolicy::class,
 

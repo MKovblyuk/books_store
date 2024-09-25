@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Api\V1\Addresses\AddressController;
 use App\Http\Controllers\Api\V1\Addresses\CountryController;
+use App\Http\Controllers\Api\V1\Addresses\DeliveryPlaceController;
 use App\Http\Controllers\Api\V1\Addresses\DistrictController;
 use App\Http\Controllers\Api\V1\Addresses\RegionController;
+use App\Http\Controllers\Api\V1\Addresses\SettlementController;
 use App\Http\Controllers\Api\V1\Books\AuthorController;
 use App\Http\Controllers\Api\V1\Books\BookController;
 use App\Http\Controllers\Api\V1\Books\CategoryController;
@@ -64,7 +66,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::apiResource('countries', CountryController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('regions', RegionController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('districts', DistrictController::class)->missing(fn() => notFoundJsonResponse());
-        Route::apiResource('addresses', AddressController::class)->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('settlements', SettlementController::class)->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('deliveryPlaces', DeliveryPlaceController::class)->missing(fn() => notFoundJsonResponse());
     });
 
     Route::group(['namespace' => 'Orders'], function(){

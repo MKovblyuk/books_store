@@ -2,12 +2,11 @@
 
 namespace App\Policies\Addresses;
 
-use App\Models\V1\Addresses\Address;
+use App\Models\V1\Addresses\DeliveryPlace;
 use App\Models\V1\User;
-use Illuminate\Auth\Access\Response;
 
-class AddressPolicy
-{
+
+class DeliveryPlacePolicy {
     public function before(User $user, string $ability): bool|null 
     {
         return $user->isAdmin() || $user->isEditor() ? true : null;
@@ -18,7 +17,7 @@ class AddressPolicy
         return true;
     }
 
-    public function view(User $user, Address $address): bool
+    public function view(User $user, DeliveryPlace $deliveryPlace): bool
     {
         return true;
     }
@@ -28,22 +27,22 @@ class AddressPolicy
         return false;
     }
 
-    public function update(User $user, Address $address): bool
+    public function update(User $user, DeliveryPlace $deliveryPlace): bool
     {
         return false;
     }
 
-    public function delete(User $user, Address $address): bool
+    public function delete(User $user, DeliveryPlace $deliveryPlace): bool
     {
         return false;
     }
 
-    public function restore(User $user, Address $address): bool
+    public function restore(User $user, DeliveryPlace $deliveryPlace): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, Address $address): bool
+    public function forceDelete(User $user, DeliveryPlace $deliveryPlace): bool
     {
         return false;
     }

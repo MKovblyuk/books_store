@@ -3,7 +3,7 @@
 namespace App\Models\V1\Orders;
 
 use App\Enums\OrderStatus;
-use App\Models\V1\Addresses\Address;
+use App\Models\V1\Addresses\DeliveryPlace;
 use App\Models\V1\Books\Book;
 use App\Models\V1\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,10 +21,9 @@ class Order extends Model
     protected $fillable = [
         'status',
         'user_id',
-        'address_id',
-        'shipping_method_id',
         'total_price',
         'payment_method_id',
+        'delivery_place_id',
     ];
 
     protected $casts = [
@@ -36,19 +35,14 @@ class Order extends Model
         return $this->belongsTo(PaymentMethod::class);
     }
 
-    public function shippingMethod(): BelongsTo
+    public function deliveryPlace(): BelongsTo
     {
-        return $this->belongsTo(ShippingMethod::class);
+        return $this->belongsTo(DeliveryPlace::class);
     }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function address(): BelongsTo
-    {
-        return $this->belongsTo(Address::class);
     }
 
     public function books(): BelongsToMany

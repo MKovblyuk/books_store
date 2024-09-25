@@ -17,9 +17,8 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'address_id' => ['required', 'exists:addresses,id'],
             'user_id' => ['required', 'exists:users,id'],
-            'shipping_method_id' => ['required', 'exists:shipping_methods,id'],
+            'delivery_place_id' => ['required', 'exists:delivery_places,id'],
             'payment_method_id' => ['required', 'exists:payment_methods,id'],
             'details' => ['required', 'array', new OrderDatails()],
         ];
@@ -35,16 +34,12 @@ class StoreOrderRequest extends FormRequest
         if (isset(request()->user()->id)) {
             $this->merge(['user_id' => request()->user()->id]);
         }
-        if (isset($this->addressId)) {
-            $this->merge(['address_id' => $this->addressId ]);
-        }
-        if (isset($this->shippingMethodId)) {
-            $this->merge(['shipping_method_id' => $this->shippingMethodId]);
+        if (isset($this->deliveryPlaceId)) {
+            $this->merge(['delivery_place_id' => $this->deliveryPlaceId]);
         }
         if (isset($this->details)) {
             $this->merge(['details' => $this->prepareDetailsForValidation($this->details)]);
         }
-
         if (isset($this->paymentMethodId)) {
             $this->merge(['payment_method_id' => $this->paymentMethodId]);
         }

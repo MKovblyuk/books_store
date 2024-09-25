@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources\V1\Orders;
 
-use App\Http\Resources\V1\Addresses\FullAddressResource;
+use App\Http\Resources\V1\Addresses\DeliveryPlaceResource;
 use App\Traits\AllowedIncludes;
 use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Users\UserResource;
-use App\Models\V1\Addresses\Address;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,14 +26,6 @@ class OrderResource extends JsonResource
             'updatedAt' => $this->updated_at,
             'totalPrice' => $this->total_price, 
 
-
-            $this->mergeWhen($this->fieldIsIncluded('address', $request),
-                ['address' => new FullAddressResource($this->getFullAddress($this->address))],
-            ),
-            $this->mergeWhen($this->fieldIsNotIncluded('address', $request),
-                ['addressId' => $this->address_id,]
-            ),
-
             $this->mergeWhen($this->fieldIsNotIncluded('user', $request), 
                 ['userId' => $this->user_id,]
             ),
@@ -42,12 +33,12 @@ class OrderResource extends JsonResource
                 ['user' => new UserResource($this->user)]
             ),
 
-            $this->mergeWhen($this->fieldIsNotIncluded('shippingMethod', $request), 
-                ['shippingMethodId' => $this->shipping_method_id]
-            ),
-            $this->mergeWhen($this->fieldIsIncluded('shippingMethod', $request), 
-                ['shippingMethod' => new ShippingMethodResource($this->shippingMethod)]
-            ),
+            $this->mergeWhen($this->fieldIsNotIncluded('deliveryPlace', $request), [
+                'deliveryPlaceId' => $this->delivery_place_id
+            ]),
+            $this->mergeWhen($this->fieldIsIncluded('deliveryPlace', $request), [
+                'deliveryPlace' => new DeliveryPlaceResource($this->deliveryPlace)
+            ]),
 
             $this->mergeWhen($this->fieldIsIncluded('books', $request),
                 ['books' => new BookCollection($this->books)]
@@ -73,12 +64,9 @@ class OrderResource extends JsonResource
             $this->mergeWhen(in_array('user_id', $fields), 
                 ['userId' => $this->user_id]
             ),
-            $this->mergeWhen(in_array('address_id', $fields), 
-                ['addressId' => $this->address_id]
-            ),
-            $this->mergeWhen(in_array('shipping_method_id', $fields), 
-                ['shippingMethodId' => $this->shipping_method_id]
-            ),
+            $this->mergeWhen(in_array('delivery_place_id', $fields), [
+                'deliveryPlaceId' => $this->deliveryPlace
+            ]),
             $this->mergeWhen(in_array('created_at', $fields), 
                 ['createdAt' => $this->created_at]
             ),
@@ -89,15 +77,5 @@ class OrderResource extends JsonResource
                 ['details' => $this->details()]
             ),
         ];
-    }
-
-    private function getFullAddress(Address $address)
-    {
-        $fullAddress = $address;
-        $fullAddress->districtName = $address->district->name;
-        $fullAddress->regionName = $address->district->region->name;
-        $fullAddress->countryName = $address->district->region->country->name;
-
-        return $fullAddress;
     }
 }

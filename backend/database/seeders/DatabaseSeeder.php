@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use Database\Seeders\Addresses\AddressSeeder;
 use Database\Seeders\Addresses\CountrySeeder;
 use Database\Seeders\Addresses\DistrictSeeder;
 use Database\Seeders\Addresses\RegionSeeder;
@@ -31,7 +30,6 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             RegionSeeder::class,
             DistrictSeeder::class,
-            AddressSeeder::class,
         ]);
 
         $this->call([
