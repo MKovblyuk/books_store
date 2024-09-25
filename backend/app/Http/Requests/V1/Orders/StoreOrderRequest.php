@@ -4,6 +4,7 @@ namespace App\Http\Requests\V1\Orders;
 
 use App\Exceptions\Http\FailedValidationHttpResponseException;
 use App\Rules\OrderDatails;
+use App\Rules\PaymentMethod;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -19,8 +20,8 @@ class StoreOrderRequest extends FormRequest
         return [
             'user_id' => ['required', 'exists:users,id'],
             'delivery_place_id' => ['required', 'exists:delivery_places,id'],
-            'payment_method_id' => ['required', 'exists:payment_methods,id'],
             'details' => ['required', 'array', new OrderDatails()],
+            'payment_method_id' => ['required', 'exists:payment_methods,id', new PaymentMethod($this->details)],
         ];
     }
 
