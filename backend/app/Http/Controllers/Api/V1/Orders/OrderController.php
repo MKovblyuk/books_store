@@ -32,7 +32,7 @@ class OrderController extends Controller
     {
         try {
             $this->authorize('viewAny', Order::class);
-            return new OrderCollection($action->execute(request()->get('per_page', 10)));
+            return new OrderCollection($action->execute(request('per_page') ?? 10));
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }

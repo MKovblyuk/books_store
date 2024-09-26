@@ -17,7 +17,6 @@ class GetAllOrdersWithPaginateAction
                 'user_id',
                 'created_at',
                 'updated_at',
-                'details',
                 'delivery_place_id',
             ])
             ->allowedFilters([
@@ -36,7 +35,6 @@ class GetAllOrdersWithPaginateAction
             ->allowedIncludes([
                 'user',
                 'books',
-                'details',
                 'deliveryPlace',
             ])
             ->paginate($per_page);
