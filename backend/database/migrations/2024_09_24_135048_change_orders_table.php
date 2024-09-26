@@ -18,6 +18,7 @@ return new class extends Migration
             $table->dropColumn(['address_id', 'shipping_method_id']);
 
             $table->foreignId('delivery_place_id')
+                ->nullable()
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
