@@ -2,11 +2,15 @@
 
 namespace App\Http\Requests\V1\Orders;
 
+// use App\Enums\BookFormat;
+
+use App\Enums\BookFormat;
 use App\Exceptions\Http\FailedValidationHttpResponseException;
 use App\Rules\OrderDatails;
 use App\Rules\PaymentMethod;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreOrderRequest extends FormRequest
 {
@@ -19,9 +23,12 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'user_id' => ['required', 'exists:users,id'],
-            'delivery_place_id' => ['required', 'exists:delivery_places,id'],
             'details' => ['required', 'array', new OrderDatails()],
             'payment_method_id' => ['required', 'exists:payment_methods,id', new PaymentMethod($this->details)],
+            'delivery_place_id' => [
+                Rule::requiredIf($this->deliveryPlaceIsRequired($this['details'])), 
+                'exists:delivery_places,id'
+            ],
         ];
     }
 
@@ -62,4 +69,14 @@ class StoreOrderRequest extends FormRequest
         return $details;
     }
 
+    private function deliveryPlaceIsRequired($booksDetails): bool
+    {
+        foreach ($booksDetails as $detail) {
+            if (BookFormat::from($detail['book_format']) === BookFormat::Paper) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
