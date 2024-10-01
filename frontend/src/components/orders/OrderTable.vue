@@ -3,39 +3,27 @@ import { ref } from 'vue';
 import OrderTableRow from './OrderTableRow.vue';
 import * as bootstrap from 'bootstrap';
 import axios from 'axios';
+import { useIdGenerator } from '@/composables/idGenerator';
 
 
 const props = defineProps(['orders']);
-const detailedOrder = ref({
-    'details': []
-});
+const detailsModal = ref(null);
+const orderDetails = ref([]);
 
 
-function showDetails(order) {
-    detailedOrder.value = order;
-    generateIds(detailedOrder.value.details);
-    fetchBookNames();
+async function showDetails(orderId) {
+    const response = await axios.get('orders/'+ orderId +'/details');
+    orderDetails.value = response.data.data;
 
-    const detailsModal = document.getElementById('detailsModal');
-    const modal = bootstrap.Modal.getOrCreateInstance(detailsModal);
-    modal.show();
-}
+    useIdGenerator().addIds(orderDetails.value);
 
-function generateIds(arr) {
-    for (let i = 0; i < arr.length; i++) {
-        arr[i].id = Date.now().toString() + i;
-    }
-}
-
-function fetchBookNames() {
-    detailedOrder.value.details.forEach(async detail => {
-        const response = await axios.get('books/' + detail.book_id + '?fields[books]=name');
-        detail.book_name = response.data.data.name;
+    const bookNamePromises = orderDetails.value.map(async (detail) => {
+      const bookResponse = await axios.get('books/' + detail.bookId + '?fields[books]=name');
+      return { ...detail, bookName: bookResponse.data.data.name };
     });
-}
 
-function getTotalPriceSum(details) {
-    return details?.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.total_price), 0);
+    orderDetails.value = await Promise.all(bookNamePromises);
+    bootstrap.Modal.getOrCreateInstance(detailsModal.value).show();
 }
 
 </script>
@@ -46,12 +34,12 @@ function getTotalPriceSum(details) {
             <thead>
                 <tr>
                     <th scope="col">Status</th>
+                    <th scope="col">Street Address</th>
                     <th scope="col">Settlement</th>
-                    <th scope="col">Street</th>
-                    <th scope="col">Street Number</th>
                     <th scope="col">District</th>
                     <th scope="col">Region</th>
                     <th scope="col">Shipping Method</th>
+                    <th scope="col">Total Price</th>
                     <th scope="col">Created</th>
                     <th scope="col">Details</th>
                 </tr>
@@ -70,22 +58,18 @@ function getTotalPriceSum(details) {
         </div>
 
 
-        <div class="modal" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel">
+        <div class="modal" ref="detailsModal" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div v-for="detail in detailedOrder.details" :key="detail.id">
-                            <div>Name: {{ detail.book_name }}</div>
-                            <div>Book Format: {{ detail.book_format }}</div>
+                        <div v-for="detail in orderDetails" :key="detail.id">
+                            <div>Name: {{ detail.bookName }}</div>
+                            <div>Book Format: {{ detail.bookFormat }}</div>
                             <div>Quantity: {{ detail.quantity }}</div>
-                            <div>Total Price: {{ detail.total_price }}</div>
                             <br>
-                        </div>
-                        <div>
-                            Total: {{ getTotalPriceSum(detailedOrder.details) }}
                         </div>
                     </div>
                 </div>

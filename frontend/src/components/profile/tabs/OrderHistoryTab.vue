@@ -18,9 +18,9 @@ async function fetchOrders(page = 1) {
             params: {
                 page,
                 per_page: PER_PAGE,
-                include: 'details,address,shippingMethod',
             }
         });
+        
         orders.value = response.data.data;
         meta.value = response.data.meta;
         isFetched.value = true;
