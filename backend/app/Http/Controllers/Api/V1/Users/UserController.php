@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Users\StoreUserRequest;
 use App\Http\Requests\V1\Users\UpdateUserRequest;
 use App\Http\Resources\V1\Books\BookCollection;
-use App\Http\Resources\V1\Orders\OrderCollection;
+use App\Http\Resources\V1\Orders\DetailedOrderCollection;
 use App\Http\Resources\V1\Users\UserCollection;
 use App\Http\Resources\V1\Users\UserResource;
 use App\Models\V1\Books\Book;
@@ -88,7 +88,7 @@ class UserController extends Controller
     {
         try {
             $this->authorize('getOrders', $user);
-            return new OrderCollection($user->orders()->paginate(request('per_page')));
+            return new DetailedOrderCollection($user->orders()->paginate(request('per_page')));
         } catch (AuthorizationException $e) {
             return response()->json(['message' => $e->getMessage()], 403);
         }
