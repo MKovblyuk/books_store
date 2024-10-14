@@ -9,7 +9,6 @@ use App\Http\Requests\V1\Addresses\UpdateDistrictRequest;
 use App\Http\Resources\V1\Addresses\DistrictCollection;
 use App\Http\Resources\V1\Addresses\DistrictResource;
 use App\Models\V1\Addresses\District;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class DistrictController extends Controller
 {
@@ -25,12 +24,8 @@ class DistrictController extends Controller
 
     public function store(StoreDistrictRequest $request)
     {
-        try {
-            $this->authorize('create', District::class);
-            District::create($request->validated());
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        }
+        $this->authorize('create', District::class);
+        District::create($request->validated());
 
         return response(['message' => 'District successfully create'], 201);
     }
@@ -42,12 +37,8 @@ class DistrictController extends Controller
 
     public function update(UpdateDistrictRequest $request, District $district)
     {
-        try {
-            $this->authorize('update', $district);
-            $district->update($request->validated());
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        }
+        $this->authorize('update', $district);
+        $district->update($request->validated());
 
         return response(['message' => 'District successfully updated'], 200);
     }

@@ -9,7 +9,6 @@ use App\Http\Requests\V1\Books\UpdateReviewRequest;
 use App\Http\Resources\V1\Books\ReviewCollection;
 use App\Http\Resources\V1\Books\ReviewResource;
 use App\Models\V1\Books\Review;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class ReviewController extends Controller
 {
@@ -25,12 +24,8 @@ class ReviewController extends Controller
 
     public function store(StoreReviewRequest $request)
     {
-        try {
-            $this->authorize('create', Review::class);
-            Review::create($request->validated());
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        }
+        $this->authorize('create', Review::class);
+        Review::create($request->validated());
 
         return response()->json(['message' => 'Review successfully created'], 201);
     }
@@ -42,26 +37,18 @@ class ReviewController extends Controller
 
     public function update(UpdateReviewRequest $request, Review $review)
     {
-        try {
-            $this->authorize('update', $review);
-            $review->update($request->validated());
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        }
+        $this->authorize('update', $review);
+        $review->update($request->validated());
 
         return response()->json(['message' => 'Review successfully updated'], 200);
     }
 
     public function destroy(Review $review)
     {
-        try {
-            $this->authorize('delete', $review);
+        $this->authorize('delete', $review);
 
-            return $review->delete()
-                ? response()->noContent()
-                : response()->json(['message' => 'Review not deleted'], 400);
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        }
+        return $review->delete()
+            ? response()->noContent()
+            : response()->json(['message' => 'Review not deleted'], 400);
     }
 }

@@ -9,7 +9,6 @@ use App\Actions\Books\StoreBookAction;
 use App\Actions\Books\UpdateBookAction;
 use App\Actions\Books\UpdateBookCoverImageAction;
 use App\Enums\BookFormat;
-use App\Exceptions\General\FileExistException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StoreBookRequest;
 use App\Http\Requests\V1\Books\UpdateBookRequest;
@@ -24,8 +23,6 @@ use App\Models\V1\Books\Book;
 use App\Services\Books\AudioBookStorageService;
 use App\Services\Books\BookStorageServiceInterface;
 use App\Services\Books\ElectronicBookStorageService;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -58,24 +55,18 @@ class BookController extends Controller
 
     public function store(StoreBookRequest $request, StoreBookAction $storeBookAction)
     {
-        try {
-            $this->authorize('create', Book::class);
+        $this->authorize('create', Book::class);
 
-            $book_id = $storeBookAction->execute($request->validated());
+        $book_id = $storeBookAction->execute($request->validated());
 
-            if ($book_id) {
-                return response()->json([
-                    'message' => 'Book successfully created',
-                    'id' => $book_id,
-                ], 201);
-            }
-
-            return response()->json(['message' => 'Book not created'], 400);
-
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
+        if ($book_id) {
+            return response()->json([
+                'message' => 'Book successfully created',
+                'id' => $book_id,
+            ], 201);
         }
 
+        return response()->json(['message' => 'Book not created'], 400);
     }
 
     public function show(Book $book)
@@ -85,15 +76,11 @@ class BookController extends Controller
 
     public function update(UpdateBookRequest $request, Book $book, UpdateBookAction $updateBookAction)
     {
-        try {
-            $this->authorize('update', $book);
+        $this->authorize('update', $book);
 
-            return $updateBookAction->execute($book, $request->validated())
-                ? response()->json(['message' => 'Book successfully updated'], 200)
-                : response()->json(['message' => 'Book not updated'], 400);
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        }
+        return $updateBookAction->execute($book, $request->validated())
+            ? response()->json(['message' => 'Book successfully updated'], 200)
+            : response()->json(['message' => 'Book not updated'], 400);
     }
 
     // TODO 
@@ -101,34 +88,26 @@ class BookController extends Controller
 
     public function destroy(Book $book)
     {
-        try {
-            $this->authorize('delete', $book);
+        $this->authorize('delete', $book);
 
-            return $book->delete()
-                ? response()->noContent()
-                : response()->json(['message' => 'Book not deleted'], 400);
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        }
+        return $book->delete()
+            ? response()->noContent()
+            : response()->json(['message' => 'Book not deleted'], 400);
     }
 
     public function deleteFormat(Book $book, string $format)
     {
-        try {
-            $this->authorize('deleteFormat', $book);
+        $this->authorize('deleteFormat', $book);
 
-            $format = ucfirst($format);
+        $format = ucfirst($format);
 
-            if (!BookFormat::tryFrom($format)) {
-                return response()->json(['message' => 'Incorrect format'], 400);
-            }
-
-            return $book->deleteFormat(BookFormat::from($format))
-                ? response()->noContent()
-                : response()->json(['message' => 'Format not deleted'], 400);
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
+        if (!BookFormat::tryFrom($format)) {
+            return response()->json(['message' => 'Incorrect format'], 400);
         }
+
+        return $book->deleteFormat(BookFormat::from($format))
+            ? response()->noContent()
+            : response()->json(['message' => 'Format not deleted'], 400);
     }
 
     public function getReviews(Book $book)
@@ -147,52 +126,31 @@ class BookController extends Controller
 
     public function uploadCoverImage(UploadCoverImageRequest $request, Book $book, UpdateBookCoverImageAction $action)
     {
-        try {
-            $this->authorize('uploadFiles', Book::class);
-            $action->execute($book, $request->validated('image'));
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        }
+        $this->authorize('uploadFiles', Book::class);
+        $action->execute($book, $request->validated('image'));
+
+        return response()->json(['message' => 'image successfully uploaded']);
     }
 
-    public function deleteCoverImage(Book $book, DeleteBookCoverImageAction $action) {
-        try {
-            $this->authorize('uploadFiles', Book::class);
+    public function deleteCoverImage(Book $book, DeleteBookCoverImageAction $action) 
+    {
+        $this->authorize('uploadFiles', Book::class);
 
-            return $action->execute($book) 
-                ? response()->noContent()
-                : response()->json(['message' => 'Cover image not deleted'], 400);
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        }
+        return $action->execute($book) 
+            ? response()->noContent()
+            : response()->json(['message' => 'Cover image not deleted'], 400);
     }
 
     public function downloadElectronicBook(Book $book, string $extension)
     {
-        try {
-            $this->authorize('downloadElectronicBook', $book);
-
-            return $this->electronicStorageService->download($book, $extension);
-
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        } catch (FileNotFoundException $e) {
-            return response()->json(['message' => $e->getMessage()], 404);
-        }
+        $this->authorize('downloadElectronicBook', $book);
+        return $this->electronicStorageService->download($book, $extension);
     }
 
     public function downloadAudioBook(Book $book, string $extension)
     {
-        try {
-            $this->authorize('downloadAudioBook', $book);
-
-            return $this->audioStorageService->download($book, $extension);
-
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        } catch (FileNotFoundException $e) {
-            return response()->json(['message' => $e->getMessage()], 404);
-        }
+        $this->authorize('downloadAudioBook', $book);
+        return $this->audioStorageService->download($book, $extension);
     }
 
 
@@ -208,20 +166,13 @@ class BookController extends Controller
 
     private function uploadFiles(Request $request, BookStorageServiceInterface $service)
     {
-        try {
-            $this->authorize('uploadFiles', Book::class);
+        $this->authorize('uploadFiles', Book::class);
 
-            $files = $request->validated('files');
-            $bookId = $request->validated('bookId');
+        $files = $request->validated('files');
+        $bookId = $request->validated('bookId');
 
-            $service->store(Book::find($bookId), $files);
-            return response()->json(['message' => 'files successfully stored'], 201);
-
-        } catch (AuthorizationException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        } catch (FileExistException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
-        }
+        $service->store(Book::find($bookId), $files);
+        return response()->json(['message' => 'files successfully stored'], 201);
     }
 
     public function getLanguages() 
