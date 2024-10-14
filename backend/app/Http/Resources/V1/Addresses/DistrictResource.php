@@ -2,11 +2,14 @@
 
 namespace App\Http\Resources\V1\Addresses;
 
+use App\Traits\AllowedIncludes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DistrictResource extends JsonResource
 {
+    use AllowedIncludes;
+
     public function toArray(Request $request): array
     {
         if (isset($request->fields)) {
@@ -41,15 +44,5 @@ class DistrictResource extends JsonResource
                 ['regionId' => $this->region_id]
             ),
         ];
-    }
-
-    private function fieldIsIncluded(string $field, Request $request): bool
-    {
-        return isset($request->include) && in_array($field, explode(',', $request->include));
-    }
-
-    private function fieldIsNotIncluded(string $field, Request $request): bool
-    {
-        return !$this->fieldIsIncluded($field, $request);
     }
 }

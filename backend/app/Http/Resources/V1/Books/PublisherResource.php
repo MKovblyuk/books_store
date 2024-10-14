@@ -16,20 +16,26 @@ class PublisherResource extends JsonResource
     {
 
         if (isset($request->fields)) {
-            return [
-                $this->mergeWhen(in_array('id', $request->fields),
-                    ['id' => $this->id],
-                ),
-    
-                $this->mergeWhen(in_array('name', $request->fields),
-                    ['name' => $this->name],
-                ),
-            ];
+            return $this->resourceWithSelectedFields($request);
         }
 
         return [
             'id' => $this->id,
             'name' => $this->name,
+        ];
+    }
+
+    public function resourceWithSelectedFields(Request $request): array
+    {
+        $fields = explode(',', $request->fields['publishers']);
+
+        return [
+            $this->mergeWhen(in_array('id', $fields), [
+                'id' => $this->id
+            ]),
+            $this->mergeWhen(in_array('name', $fields),[
+                'name' => $this->name
+            ]),
         ];
     }
 }

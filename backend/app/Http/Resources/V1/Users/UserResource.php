@@ -20,10 +20,6 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'role' => $this->role,
             'phoneNumber' => $this->phone_number,
-
-            // $this->mergeWhen($this->fieldIsIncluded('reviews', $request), 
-            //     ['reviews' => new ReviewCollection()]
-            // ),
         ];
     }
 
@@ -51,15 +47,5 @@ class UserResource extends JsonResource
                 ['phoneNumber' => $this->phone_number]
             ),
         ];
-    }
-
-    private function fieldIsIncluded(string $field, Request $request): bool
-    {
-        return isset($request->include) && in_array($field, explode(',', $request->include));
-    }
-
-    private function fieldIsNotIncluded(string $field, Request $request): bool
-    {
-        return !$this->fieldIsIncluded($field, $request);
     }
 }
