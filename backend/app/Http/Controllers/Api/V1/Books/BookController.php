@@ -28,8 +28,8 @@ use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
-    private BookStorageServiceInterface $electronicStorageService;
-    private BookStorageServiceInterface $audioStorageService;
+    private ElectronicBookStorageService $electronicStorageService;
+    private AudioBookStorageService $audioStorageService;
 
     public function __construct()
     {
@@ -53,11 +53,11 @@ class BookController extends Controller
         return new BookCollection($action->execute(request()->get('per_page', 10)));
     }
 
-    public function store(StoreBookRequest $request, StoreBookAction $storeBookAction)
+    public function store(StoreBookRequest $request, StoreBookAction $action)
     {
         $this->authorize('create', Book::class);
 
-        $book_id = $storeBookAction->execute($request->validated());
+        $book_id = $action->execute($request->validated());
 
         if ($book_id) {
             return response()->json([
@@ -74,11 +74,11 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
-    public function update(UpdateBookRequest $request, Book $book, UpdateBookAction $updateBookAction)
+    public function update(UpdateBookRequest $request, Book $book, UpdateBookAction $action)
     {
         $this->authorize('update', $book);
 
-        return $updateBookAction->execute($book, $request->validated())
+        return $action->execute($book, $request->validated())
             ? response()->json(['message' => 'Book successfully updated'], 200)
             : response()->json(['message' => 'Book not updated'], 400);
     }
