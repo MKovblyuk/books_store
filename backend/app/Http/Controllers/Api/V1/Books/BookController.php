@@ -133,8 +133,9 @@ class BookController extends Controller
 
     public function getReviews(Book $book)
     {
-        $per_page = request()->get('per_page', 10);
-        $reviews = $book->reviews()->orderBy('updated_at', 'desc')->paginate($per_page);
+        $reviews = $book->reviews()
+            ->orderBy('updated_at', 'desc')
+            ->paginate(request('per_page', 10));
 
         return new ReviewCollection($reviews);
     }
@@ -225,12 +226,17 @@ class BookController extends Controller
 
     public function getLanguages() 
     {
-        $languages = DB::table('books')->select('language')->distinct()->get()->map(fn($item) => $item->language);
+        $languages = DB::table('books')
+            ->select('language')
+            ->distinct()
+            ->get()
+            ->map(fn($item) => $item->language);
+
         return response()->json(['data' => $languages]);
     }
 
     public function getRelatedBooks(Book $book, GetRelatedBooksWithPaginateAction $action)
     {
-        return new BookCollection($action->execute($book, request('per_page') ?? 10));
+        return new BookCollection($action->execute($book, request('per_page', 10)));
     }
 }
