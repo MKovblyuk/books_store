@@ -24,10 +24,10 @@ class SettlementController extends Controller
 
     public function store(StoreSettlementRequest $request)
     {
-            $this->authorize('create', Settlement::class);
-            Settlement::create($request->validated());
+        $this->authorize('create', Settlement::class);
+        Settlement::create($request->validated());
 
-            return response()->json(['message' => 'Settlement successfully created'], 201);
+        return response()->json(['message' => 'Settlement successfully created'], 201);
     }
 
     public function show(Settlement $settlement)
@@ -37,10 +37,10 @@ class SettlementController extends Controller
 
     public function update(UpdateSettlementRequest $request, Settlement $settlement)
     {
-            $this->authorize('update', $settlement);
-            $settlement->update($request->validated());
+        $this->authorize('update', $settlement);
+        $settlement->update($request->validated());
 
-            return response()->json(['message' => 'Settlement successfully updated'], 200);
+        return response()->json(['message' => 'Settlement successfully updated'], 200);
     }
 
     public function destroy(Settlement $settlement)
