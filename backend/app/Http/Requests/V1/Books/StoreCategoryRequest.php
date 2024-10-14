@@ -2,11 +2,7 @@
 
 namespace App\Http\Requests\V1\Books;
 
-use App\Exceptions\Http\FailedValidationHttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreCategoryRequest extends FormRequest
+class StoreCategoryRequest extends CategoryRequest
 {
     public function authorize(): bool
     {
@@ -19,10 +15,5 @@ class StoreCategoryRequest extends FormRequest
             'name' => ['required', 'max:100'],
             'children' => ['array'],
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new FailedValidationHttpResponseException($validator);
     }
 }

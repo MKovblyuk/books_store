@@ -5,22 +5,9 @@ namespace App\Http\Requests\V1\Books;
 use App\Exceptions\Http\FailedValidationHttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\File;
 
-class UploadCoverImageRequest extends FormRequest
+class PublisherRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    public function rules(): array
-    {
-        return [
-            'image' => ['required', File::types(['jpg', 'png', 'jpeg'])],
-        ];
-    }
-
     protected function failedValidation(Validator $validator)
     {
         throw new FailedValidationHttpResponseException($validator);

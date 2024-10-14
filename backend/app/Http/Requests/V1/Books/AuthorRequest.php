@@ -13,11 +13,9 @@ class AuthorRequest extends FormRequest
         if (isset($this->firstName)) {
             $this->merge(['first_name' => $this->firstName]);
         }
-
         if (isset($this->lastName)) {
             $this->merge(['last_name' => $this->lastName]);
         }
-
         if (isset($this->photoUrl)) {
             $this->merge(['photo_url' => $this->photoUrl]);
         }

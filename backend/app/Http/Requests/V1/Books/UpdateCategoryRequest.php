@@ -2,11 +2,7 @@
 
 namespace App\Http\Requests\V1\Books;
 
-use App\Exceptions\Http\FailedValidationHttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateCategoryRequest extends FormRequest
+class UpdateCategoryRequest extends CategoryRequest
 {
     public function authorize(): bool
     {
@@ -30,10 +26,5 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => ['max:100'],
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new FailedValidationHttpResponseException($validator);
     }
 }

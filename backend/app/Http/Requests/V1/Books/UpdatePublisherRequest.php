@@ -2,11 +2,7 @@
 
 namespace App\Http\Requests\V1\Books;
 
-use App\Exceptions\Http\FailedValidationHttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdatePublisherRequest extends FormRequest
+class UpdatePublisherRequest extends PublisherRequest
 {
     public function authorize(): bool
     {
@@ -30,10 +26,5 @@ class UpdatePublisherRequest extends FormRequest
         return [
             'name' => ['sometimes', 'unique:publishers', 'max:255'],
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new FailedValidationHttpResponseException($validator);
     }
 }
