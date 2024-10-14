@@ -8,7 +8,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GetAllOrdersWithPaginateAction
 {
-    public function execute(int $per_page) 
+    public function execute(int $perPage) 
     {
         return QueryBuilder::for(Order::class)
             ->allowedFields([
@@ -37,6 +37,6 @@ class GetAllOrdersWithPaginateAction
                 'books',
                 'deliveryPlace',
             ])
-            ->paginate($per_page);
+            ->paginate($perPage);
     }
 }

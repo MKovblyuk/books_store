@@ -16,7 +16,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GetAllBooksWithPaginateAction 
 {
-    public function execute(int $per_page)
+    public function execute(int $perPage)
     {
         return QueryBuilder::for(Book::class)
             ->allowedFilters([
@@ -62,6 +62,6 @@ class GetAllBooksWithPaginateAction
                 AllowedSort::custom('likes', new SortBooksByLikes()),
                 AllowedSort::custom('price', new SortBooksByPrice()),
             ])
-            ->paginate($per_page);
+            ->paginate($perPage);
     }
 }
