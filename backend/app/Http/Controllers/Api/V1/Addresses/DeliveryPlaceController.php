@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Addresses;
 
+use App\Actions\Addresses\GetDeliveryPlacesWithPaginateAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Addresses\StoreDeliveryPlaceRequest;
 use App\Http\Requests\V1\Addresses\UpdateDeliveryPlaceRequest;
@@ -9,8 +10,6 @@ use App\Http\Resources\V1\Addresses\DeliveryPlaceCollection;
 use App\Http\Resources\V1\Addresses\DeliveryPlaceResource;
 use App\Models\V1\Addresses\DeliveryPlace;
 use Illuminate\Auth\Access\AuthorizationException;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class DeliveryPlaceController extends Controller
 {
@@ -19,34 +18,9 @@ class DeliveryPlaceController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['index','show']]);
     }
 
-    public function index()
+    public function index(GetDeliveryPlacesWithPaginateAction $action)
     {
-        $deliveryPlaces = QueryBuilder::for(DeliveryPlace::class)
-            ->allowedFields([
-                'id', 
-                'street_address', 
-                'settlement_id',
-                'shipping_method_id',
-            ])
-            ->allowedFilters([
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('settlement_id'),
-                AllowedFilter::exact('shipping_method_id'),
-                'street_address',
-            ])
-            ->allowedSorts([
-                'id',
-                'street_address',
-                'settlement_id',
-                'shipping_method_id',
-            ])
-            ->allowedIncludes([
-                'settlement',
-                'shippingMethod',
-            ])
-            ->paginate(request('per_page'));
-
-        return new DeliveryPlaceCollection($deliveryPlaces);
+        return new DeliveryPlaceCollection($action->execute(request('per_page', 15)));
     }
 
     public function store(StoreDeliveryPlaceRequest $request)

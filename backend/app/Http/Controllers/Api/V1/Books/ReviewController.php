@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
+use App\Actions\Books\GetReviewsWithPaginateAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StoreReviewRequest;
 use App\Http\Requests\V1\Books\UpdateReviewRequest;
@@ -9,8 +10,6 @@ use App\Http\Resources\V1\Books\ReviewCollection;
 use App\Http\Resources\V1\Books\ReviewResource;
 use App\Models\V1\Books\Review;
 use Illuminate\Auth\Access\AuthorizationException;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class ReviewController extends Controller
 {
@@ -19,23 +18,9 @@ class ReviewController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
     }
 
-    public function index()
+    public function index(GetReviewsWithPaginateAction $action)
     {
-        $per_page = request()->get('per_page', 10);
-
-        $reviews = QueryBuilder::for(Review::class)
-            ->allowedFields('id', 'rating', 'review', 'user_id', 'book_id', 'updated_at')
-            ->allowedFilters(
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('rating'),
-                AllowedFilter::exact('user_id'),
-                AllowedFilter::exact('book_id'),
-                'updated_at'
-            )
-            ->allowedSorts('id', 'rating', 'updated_at')
-            ->paginate($per_page);
-
-        return new ReviewCollection($reviews);
+        return new ReviewCollection($action->execute(request('per_page', 15)));
     }
 
     public function store(StoreReviewRequest $request)

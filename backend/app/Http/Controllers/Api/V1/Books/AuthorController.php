@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
+use App\Actions\Books\GetAuthorsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StoreAuthorRequest;
 use App\Http\Requests\V1\Books\UpdateAuthorRequest;
@@ -9,8 +10,6 @@ use App\Http\Resources\V1\Books\AuthorCollection;
 use App\Http\Resources\V1\Books\AuthorResource;
 use App\Models\V1\Books\Author;
 use Illuminate\Auth\Access\AuthorizationException;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class AuthorController extends Controller
 {
@@ -19,15 +18,9 @@ class AuthorController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
     }
 
-    public function index()
+    public function index(GetAuthorsAction $action)
     {
-        $authors = QueryBuilder::for(Author::class)
-            ->allowedFilters([AllowedFilter::exact('id'), 'first_name', 'last_name'])
-            ->allowedFields(['id', 'first_name', 'last_name', 'description', 'photo_url'])
-            ->allowedSorts(['id', 'first_name', 'last_name'])
-            ->get();
-
-        return new AuthorCollection($authors);
+        return new AuthorCollection($action->execute());
     }
 
     public function store(StoreAuthorRequest $request)

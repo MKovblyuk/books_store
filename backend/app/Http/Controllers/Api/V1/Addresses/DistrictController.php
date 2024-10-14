@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Addresses;
 
+use App\Actions\Addresses\GetDistrictsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Addresses\StoreDistrictRequest;
 use App\Http\Requests\V1\Addresses\UpdateDistrictRequest;
@@ -9,8 +10,6 @@ use App\Http\Resources\V1\Addresses\DistrictCollection;
 use App\Http\Resources\V1\Addresses\DistrictResource;
 use App\Models\V1\Addresses\District;
 use Illuminate\Auth\Access\AuthorizationException;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class DistrictController extends Controller
 {
@@ -19,16 +18,9 @@ class DistrictController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
     }
 
-    public function index()
+    public function index(GetDistrictsAction $action)
     {
-        $districts = QueryBuilder::for(District::class)
-            ->allowedFields('id', 'name', 'region_id')
-            ->allowedFilters('id', 'name', AllowedFilter::exact('region_id'))
-            ->allowedSorts('id', 'name', 'region_id')
-            ->allowedIncludes('region')
-            ->get();
-
-        return new DistrictCollection($districts);
+        return new DistrictCollection($action->execute());
     }
 
     public function store(StoreDistrictRequest $request)

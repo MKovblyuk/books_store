@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
+use App\Actions\Books\GetPublishersAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StorePublisherRequest;
 use App\Http\Requests\V1\Books\UpdatePublisherRequest;
@@ -9,8 +10,6 @@ use App\Http\Resources\V1\Books\PublisherCollection;
 use App\Http\Resources\V1\Books\PublisherResource;
 use App\Models\V1\Books\Publisher;
 use Illuminate\Auth\Access\AuthorizationException;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class PublisherController extends Controller
 {
@@ -19,15 +18,9 @@ class PublisherController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
     }
 
-    public function index()
+    public function index(GetPublishersAction $action)
     {
-        $publishers = QueryBuilder::for(Publisher::class)
-            ->allowedFilters([AllowedFilter::exact('id'), 'name'])
-            ->allowedFields(['id', 'name'])
-            ->allowedSorts(['id', 'name'])
-            ->get();
-
-        return new PublisherCollection($publishers);
+        return new PublisherCollection($action->execute());
     }
 
     public function store(StorePublisherRequest $request)

@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1\Addresses;
 
+use App\Actions\Addresses\GetCountriesAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Addresses\StoreCountryRequest;
 use App\Http\Requests\V1\Addresses\UpdateCountryRequest;
 use App\Http\Resources\V1\Addresses\CountryCollection;
 use App\Http\Resources\V1\Addresses\CountryResource;
 use App\Models\V1\Addresses\Country;
-use http\Env\Response;
 use Illuminate\Auth\Access\AuthorizationException;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class CountryController extends Controller
 {
@@ -19,16 +18,9 @@ class CountryController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
     }
 
-    public function index()
+    public function index(GetCountriesAction $action)
     {
-        $countries = QueryBuilder::for(Country::class)
-            ->allowedFields('id', 'name')
-            ->allowedFilters('id', 'name')
-            ->allowedSorts('id', 'name')
-            ->allowedIncludes('id', 'name')
-            ->get();
-
-        return new CountryCollection($countries);
+        return new CountryCollection($action->execute());
     }
 
     public function store(StoreCountryRequest $request)

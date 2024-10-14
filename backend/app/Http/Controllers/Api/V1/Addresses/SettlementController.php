@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Addresses;
 
+use App\Actions\Addresses\GetSettlementsWithPaginateAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Addresses\StoreSettlementRequest;
 use App\Http\Requests\V1\Addresses\UpdateSettlementRequest;
@@ -9,8 +10,6 @@ use App\Http\Resources\V1\Addresses\SettlementCollection;
 use App\Http\Resources\V1\Addresses\SettlementResource;
 use App\Models\V1\Addresses\Settlement;
 use Illuminate\Auth\Access\AuthorizationException;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class SettlementController extends Controller
 {
@@ -19,20 +18,9 @@ class SettlementController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
     }
 
-    public function index()
+    public function index(GetSettlementsWithPaginateAction $action)
     {
-        $settlements = QueryBuilder::for(Settlement::class)
-            ->allowedFields(['id', 'name', 'district_id'])
-            ->allowedFilters([
-                AllowedFilter::exact('id'), 
-                AllowedFilter::exact('district_id'),
-                'name'
-            ])
-            ->allowedSorts(['id', 'name', 'district_id'])
-            ->allowedIncludes('district')
-            ->paginate(request('per_page'));
-
-        return new SettlementCollection($settlements);
+        return new SettlementCollection($action->execute(request('per_page', 15)));
     }
 
     public function store(StoreSettlementRequest $request)
