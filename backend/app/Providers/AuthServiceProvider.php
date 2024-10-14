@@ -51,7 +51,6 @@ class AuthServiceProvider extends ServiceProvider
         Review::class => ReviewPolicy::class,
         Book::class => BookPolicy::class,
 
-        Address::class => AddressPolicy::class,
         Country::class => CountryPolicy::class,
         District::class => DistrictPolicy::class,
         Region::class => RegionPolicy::class,

@@ -40,9 +40,6 @@ trait FileStorage
                 }
             }
 
-            // TODO 
-            // optimize file before saving 
-
             $fileSystem->makeDirectory($dirName);
             $fileSystem->put($dirName, $newFile);
         }
