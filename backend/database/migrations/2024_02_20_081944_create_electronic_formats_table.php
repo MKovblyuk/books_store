@@ -11,11 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('electronic_formats', function (Blueprint $table) {
+        Schema::create('electronic_formats', function (Blueprint $table) {
+            $table->id();
+            $table->decimal('price')->default(0);
+            $table->decimal('discount')->default(0);
+            $table->integer('page_count');
+            $table->string('path');
             $table->foreignId('book_id')
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 
@@ -24,9 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('electronic_formats', function (Blueprint $table) {
-            $table->dropForeign('electronic_formats_book_id_foreign');
-            $table->dropColumn('book_id');
-        });
+        Schema::dropIfExists('electronic_formats');
     }
 };

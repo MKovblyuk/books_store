@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('description', 1200);
             $table->year('publication_year');
             $table->string('language', 50);
-            $table->string('cover_image_url')->nullable();
+            $table->string('cover_image_path')->nullable();
             $table->timestamp('published_at')->nullable();
 
             $table->foreignId('publisher_id')

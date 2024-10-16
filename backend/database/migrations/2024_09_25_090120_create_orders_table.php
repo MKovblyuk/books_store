@@ -14,15 +14,9 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('date');
             $table->string('status')->default(OrderStatus::Preparing->value);
 
             $table->foreignId('user_id')
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
-
-            $table->foreignId('address_id')
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
@@ -31,8 +25,22 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
+
+            $table->foreignId('payment_method_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+
+            $table->foreignId('delivery_place_id')
+                ->nullable()
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
                 
+            $table->decimal('total_price', unsigned: true)->default(0);
+    
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

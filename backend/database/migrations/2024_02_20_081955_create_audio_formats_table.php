@@ -16,7 +16,11 @@ return new class extends Migration
             $table->decimal('price')->default(0);
             $table->decimal('discount')->default(0);
             $table->integer('duration');
-            $table->string('url');
+            $table->string('path');
+            $table->foreignId('book_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }

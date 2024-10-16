@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('book_format');
             $table->integer('quantity');
-            $table->decimal('total_price');
 
             $table->foreignId('book_id')
                 ->constrained()

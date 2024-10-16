@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('fragments', function (Blueprint $table) {
             $table->id();
-            $table->string('url');
+            $table->string('path');
             
             $table->foreignId('book_id')
                 ->constrained()
