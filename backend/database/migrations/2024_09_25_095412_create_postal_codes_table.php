@@ -8,20 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('settlements', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+        Schema::create('postal_codes', function (Blueprint $table) {
+            $table->string('postal_code');
+            $table->primary('postal_code');
 
-            $table->foreignId('district_id')
+            $table->foreignId('settlement_id')
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('settlements');
+        Schema::dropIfExists('book_order');
     }
 };
