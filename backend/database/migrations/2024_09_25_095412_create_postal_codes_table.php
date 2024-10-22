@@ -16,11 +16,13 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('book_order');
+        Schema::dropIfExists('postal_codes');
     }
 };
