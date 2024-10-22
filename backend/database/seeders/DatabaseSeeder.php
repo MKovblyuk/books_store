@@ -4,9 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use Database\Seeders\Addresses\CountrySeeder;
-use Database\Seeders\Addresses\DistrictSeeder;
-use Database\Seeders\Addresses\RegionSeeder;
+use Database\Seeders\Addresses\AddressSeeder;
 use Database\Seeders\Books\AuthorSeeder;
 use Database\Seeders\Books\BookSeeder;
 use Database\Seeders\Books\CategorySeeder;
@@ -25,11 +23,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
         $this->call([
-            CountrySeeder::class,
-            RegionSeeder::class,
-            DistrictSeeder::class,
+            AddressSeeder::class,
         ]);
 
         $this->call([
@@ -50,6 +45,5 @@ class DatabaseSeeder extends Seeder
             ShippingMethodSeeder::class,
             OrderSeeder::class,
         ]);
-
     }
 }
