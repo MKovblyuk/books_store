@@ -13,7 +13,7 @@ class Settlement extends Model
 
     protected $fillable = [
         'name',
-        'district_id'
+        'district_id',
     ];
 
     public function district(): BelongsTo
@@ -24,5 +24,10 @@ class Settlement extends Model
     public function deliveryPlaces(): HasMany
     {
         return $this->hasMany(DeliveryPlace::class);
+    }
+
+    public function postalCodes(): HasMany
+    {
+        return $this->hasMany(PostalCode::class);
     }
 }
