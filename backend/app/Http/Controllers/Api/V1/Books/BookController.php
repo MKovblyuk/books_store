@@ -129,7 +129,7 @@ class BookController extends Controller
         $this->authorize('uploadFiles', Book::class);
         $action->execute($book, $request->validated('image'));
 
-        return response()->json(['message' => 'image successfully uploaded']);
+        return response()->json(['message' => 'image successfully uploaded'], 201);
     }
 
     public function deleteCoverImage(Book $book, DeleteBookCoverImageAction $action) 
