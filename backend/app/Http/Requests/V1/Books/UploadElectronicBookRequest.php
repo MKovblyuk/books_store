@@ -19,7 +19,7 @@ class UploadElectronicBookRequest extends FormRequest
         return [
             'bookId' => ['required', 'exists:electronic_formats,book_id'],
             'files' => ['required', 'array'],
-            'files.*' => [File::types(['pdf'])],
+            'files.*' => [File::types(['pdf'])->max('250mb')],
         ];
     }
 

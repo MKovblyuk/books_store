@@ -19,7 +19,7 @@ class UploadAudioBookRequest extends FormRequest
         return [
             'bookId' => ['required', 'exists:audio_formats,book_id'],
             'files' => ['required', 'array'],
-            'files.*' => [File::types(['mp3'])],
+            'files.*' => [File::types(['mp3'])->max('250mb')],
         ];
     }
 

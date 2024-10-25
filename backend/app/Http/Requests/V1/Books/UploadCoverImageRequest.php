@@ -17,7 +17,7 @@ class UploadCoverImageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => ['required', File::types(['jpg', 'png', 'jpeg'])],
+            'image' => ['required', File::types(['jpg', 'png', 'jpeg'])->max('20mb')],
         ];
     }
 
