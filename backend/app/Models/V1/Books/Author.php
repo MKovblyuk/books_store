@@ -14,7 +14,6 @@ class Author extends Model
         'first_name',
         'last_name',
         'description',
-        'photo_url',
     ];
 
     public function books(): BelongsToMany

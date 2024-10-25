@@ -21,7 +21,6 @@ class GetAuthorsAction
                 'first_name', 
                 'last_name', 
                 'description', 
-                'photo_url',
             ])
             ->allowedSorts([
                 'id', 

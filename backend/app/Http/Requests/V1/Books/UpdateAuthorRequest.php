@@ -20,7 +20,6 @@ class UpdateAuthorRequest extends AuthorRequest
             'first_name' => ['max:50'],
             'last_name' => ['max:50'],
             'description' => ['max:1000'],
-            'photo_url' => ['max:255']
         ];
     }
 
@@ -30,7 +29,6 @@ class UpdateAuthorRequest extends AuthorRequest
             'first_name' => ['required', 'max:50'],
             'last_name' => ['required', 'max:50'],
             'description' => ['required', 'max:1000'],
-            'photo_url' => ['max:255']
         ];
     }
 }

@@ -23,7 +23,6 @@ class AuthorResource extends JsonResource
             'firstName' => $this->first_name,
             'lastName' => $this->last_name,
             'description' => $this->description,
-            'photoUrl' => $this->photo_url,
         ];
     }
 
@@ -43,9 +42,6 @@ class AuthorResource extends JsonResource
             ]),
             $this->mergeWhen(in_array('description', $fields),[
                 'description' => $this->description
-            ]),
-            $this->mergeWhen(in_array('photo_url', $fields),[
-                'photoUrl' => $this->photo_url
             ]),
         ];
     }

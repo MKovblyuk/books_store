@@ -15,7 +15,6 @@ class StoreAuthorRequest extends AuthorRequest
             'first_name' => ['required', 'max:50'],
             'last_name' => ['required', 'max:50'],
             'description' => ['required', 'max:1000'],
-            'photo_url' => ['max:255'],
         ];
     }
 }

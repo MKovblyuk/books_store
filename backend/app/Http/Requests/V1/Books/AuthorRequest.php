@@ -16,9 +16,6 @@ class AuthorRequest extends FormRequest
         if (isset($this->lastName)) {
             $this->merge(['last_name' => $this->lastName]);
         }
-        if (isset($this->photoUrl)) {
-            $this->merge(['photo_url' => $this->photoUrl]);
-        }
     }
 
     protected function failedValidation(Validator $validator)
