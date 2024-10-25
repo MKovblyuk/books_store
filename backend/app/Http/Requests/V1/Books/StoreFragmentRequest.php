@@ -15,7 +15,7 @@ class StoreFragmentRequest extends FragmentRequest
     {
         return [
             'book_id' => ['required', 'exists:books,id'],
-            'file' => ['required', File::types(['jpg', 'png', 'jpeg'])],
+            'file' => ['required', File::types(['jpg', 'png', 'jpeg'])->max('10mb')],
         ];
     }
 }
