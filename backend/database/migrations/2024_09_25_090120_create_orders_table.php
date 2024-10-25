@@ -21,11 +21,6 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
 
-            $table->foreignId('shipping_method_id')
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
-
             $table->foreignId('payment_method_id')
                 ->constrained()
                 ->cascadeOnUpdate()

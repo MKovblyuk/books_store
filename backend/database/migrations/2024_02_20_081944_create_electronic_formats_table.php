@@ -16,7 +16,7 @@ return new class extends Migration
             $table->decimal('price')->default(0);
             $table->decimal('discount')->default(0);
             $table->integer('page_count');
-            $table->string('path');
+            $table->string('path')->nullable();
             $table->foreignId('book_id')
                 ->constrained()
                 ->cascadeOnUpdate()
