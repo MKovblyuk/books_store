@@ -12,8 +12,10 @@ class UpdateBookAction
     {
         return DB::transaction(function () use($book, $attributes) {      
             $book->update($attributes);
-            $book->authors()->sync(Author::find($attributes['authors_ids']));
 
+            if (isset($attributes['authors_ids'])) {
+                $book->authors()->sync(Author::find($attributes['authors_ids']));
+            }
             if (isset($attributes['formats']['paper'])) {
                 $book->paperFormat->update($attributes['formats']['paper']);
             }
