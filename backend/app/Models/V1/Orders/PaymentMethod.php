@@ -11,8 +11,11 @@ class PaymentMethod extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
-        'method'
+        'method',
+        'name',
     ];
 
     protected $casts = [
