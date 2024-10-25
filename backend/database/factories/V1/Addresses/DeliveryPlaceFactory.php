@@ -2,13 +2,12 @@
 
 namespace Database\Factories\V1\Addresses;
 
-// use App\Models\V1\Addresses\Country;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Addressess\Region>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Addressess\Country>
  */
-class RegionFactory extends Factory
+class DeliveryPlaceFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,8 +17,7 @@ class RegionFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->state(),
-            // 'country_id' => Country::all()->random()->id,
+            'street_address' => fake()->unique()->streetAddress(),
         ];
     }
 }

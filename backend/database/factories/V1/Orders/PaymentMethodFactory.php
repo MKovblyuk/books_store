@@ -2,13 +2,13 @@
 
 namespace Database\Factories\V1\Orders;
 
-use App\Enums\OrderStatus;
+use App\Enums\PaymentMethods;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Orders\Order>
  */
-class OrderFactory extends Factory
+class PaymentMethodFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,8 +18,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'status' => OrderStatus::cases()[array_rand(OrderStatus::cases())],
-            'total_price' => rand(10, 1000),
+            'method' => PaymentMethods::cases()[array_rand(PaymentMethods::cases())],
         ];
     }
 }

@@ -20,7 +20,6 @@ class AuthorFactory extends Factory
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'description' => fake()->text(),
-            'photo_url' => fake()->optional()->imageUrl(),
         ];
     }
 }

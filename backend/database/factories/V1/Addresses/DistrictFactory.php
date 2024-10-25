@@ -2,7 +2,7 @@
 
 namespace Database\Factories\V1\Addresses;
 
-use App\Models\V1\Addresses\Region;
+// use App\Models\V1\Addresses\Region;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +19,7 @@ class DistrictFactory extends Factory
     {
         return [
             'name' => fake()->state(),
-            'region_id' => Region::all()->random()->id,
+            // 'region_id' => Region::all()->random()->id,
         ];
     }
 }

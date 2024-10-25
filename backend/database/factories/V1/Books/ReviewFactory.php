@@ -2,8 +2,6 @@
 
 namespace Database\Factories\V1\Books;
 
-use App\Models\V1\Books\Book;
-use App\Models\V1\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,8 +19,6 @@ class ReviewFactory extends Factory
         return [
             'rating' => rand(1, 5),
             'review' => fake()->text(),
-            'user_id' => User::all()->random()->id,
-            'book_id' => Book::all()->random()->id,
         ];
     }
 }

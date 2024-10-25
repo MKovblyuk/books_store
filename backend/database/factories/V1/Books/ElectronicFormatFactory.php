@@ -20,7 +20,6 @@ class ElectronicFormatFactory extends Factory
             'price' => rand(10, 500) + rand(1, 100) / 100,
             'discount' => rand(1, 9) + rand(1, 100) / 100,
             'page_count' => rand(60, 1200),
-            'url' => fake()->url(),
         ];
     }
 }
