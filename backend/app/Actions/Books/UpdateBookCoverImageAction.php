@@ -25,7 +25,7 @@ class UpdateBookCoverImageAction
         
         $path = $this->generator->generate($book->id, 'cover_image');
 
-        if (!Storage::disk('preview_fragments')->put($path, $image->get())) {
+        if (!Storage::disk('preview_fragments')->put($path, $image->getContent())) {
             throw new Exception('File not written');
         }
 

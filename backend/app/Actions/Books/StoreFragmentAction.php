@@ -18,7 +18,7 @@ class StoreFragmentAction
     public function execute($bookId, $file)
     {
         $path = $this->generator->generate($bookId, 'image');
-        Storage::disk('preview_fragments')->put($path, $file->get());
+        Storage::disk('preview_fragments')->put($path, $file->getContent());
 
         Fragment::create([
             'book_id' => $bookId,
