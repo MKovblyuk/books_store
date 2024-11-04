@@ -19,7 +19,6 @@ class OrderFactory extends Factory
     {
         return [
             'status' => OrderStatus::cases()[array_rand(OrderStatus::cases())],
-            'total_price' => rand(10, 1000),
         ];
     }
 }

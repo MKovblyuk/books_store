@@ -3,9 +3,10 @@
 namespace Database\Factories\V1\Books;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Books\Review>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Books\'review'>
  */
 class ReviewFactory extends Factory
 {
@@ -16,9 +17,7 @@ class ReviewFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'rating' => rand(1, 5),
-            'review' => fake()->text(),
-        ];
+        $reviews = json_decode(Storage::disk('public')->get('seeding_files/json_files/reviews.json'), true);
+        return $reviews[array_rand($reviews)];
     }
 }

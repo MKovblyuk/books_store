@@ -2,8 +2,8 @@
 
 namespace Database\Factories\V1\Addresses;
 
-// use App\Models\V1\Addresses\Country;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Addressess\Region>
@@ -17,9 +17,10 @@ class RegionFactory extends Factory
      */
     public function definition(): array
     {
+        $regions = json_decode(Storage::disk('public')->get('seeding_files/json_files/regions.json'));
+
         return [
-            'name' => fake()->unique()->state(),
-            // 'country_id' => Country::all()->random()->id,
+            'name' => fake()->unique()->randomElement($regions),
         ];
     }
 }
