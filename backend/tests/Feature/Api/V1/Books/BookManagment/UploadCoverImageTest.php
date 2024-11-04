@@ -14,7 +14,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
 
-class uploadCoverImageTest extends ApiV1TestCase
+class UploadCoverImageTest extends ApiV1TestCase
 {
     use RefreshDatabase;
 
