@@ -3,8 +3,13 @@
 namespace Database\Seeders\Books;
 
 use App\Models\V1\Books\Category;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Factories\V1\Books\CategoryNestedSetTreeFactory;
 use Illuminate\Database\Seeder;
+
+//
+//  Nested set works based on model's events, so if use WithoutModelEvents Trait
+//  this won't work !
+//
 
 class CategorySeeder extends Seeder
 {
@@ -13,63 +18,6 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-
-        Category::create([
-            'name' => 'root_category',
-            'children' => [
-                [
-                    'name' => 'science and technology',
-                    'children' => [
-                        [
-                            'name' => 'astronomy, space',
-                            'children' => [
-                                [ 
-                                    'name' => 'theoretical astronomy' 
-                                ],
-                                [ 
-                                    'name' => 'stellar astronomy' 
-                                ],
-                                [ 
-                                    'name' => 'celestial mechanics' 
-                                ],
-                            ],
-                        ],
-                        [
-                            'name' => 'biological sciences',
-                            'children' => [
-                                [ 
-                                    'name' => 'general genetics' 
-                                ],
-                                [ 
-                                    'name' => 'microbiology. virology' 
-                                ],
-                            ],
-                        ],
-                        [
-                            'name' => 'chemistry',
-                            'children' => [
-                                [ 
-                                    'name' => 'inorganic chemistry' 
-                                ],
-                                [ 
-                                    'name' => 'organic chemistry' 
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'name' => 'history',
-                    'children' => [
-                        [
-                            'name' => 'military history',
-                        ],
-                        [
-                            'name' => 'world history',
-                        ],
-                    ],
-                ],
-            ]
-        ]);
+        Category::create(CategoryNestedSetTreeFactory::create());
     }
 }

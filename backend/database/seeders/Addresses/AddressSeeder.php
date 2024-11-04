@@ -9,6 +9,9 @@ use App\Services\Orders\ShippingServiceInterface;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Seed by data from shipping services
+ */
 class AddressSeeder extends Seeder
 {
     private array $shippingServices = [

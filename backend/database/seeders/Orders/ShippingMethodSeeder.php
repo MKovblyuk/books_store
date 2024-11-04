@@ -14,7 +14,8 @@ class ShippingMethodSeeder extends Seeder
      */
     public function run(): void
     {
-        ShippingMethod::create(['name' => ShippingMethods::NovaPoshta]);
-        ShippingMethod::create(['name' => ShippingMethods::UkrPoshta]);
+        foreach (ShippingMethods::cases() as $shippingMethod) {
+            ShippingMethod::create(['name' => $shippingMethod]);
+        }
     }
 }
