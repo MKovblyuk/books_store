@@ -10,6 +10,4 @@ enum PaymentMethods : string
 
     case UponReceiving = 'UponReceiving';
     case CreditCard = 'CC';
-    case ApplePay = 'AP';
-    case GooglePay = 'GP';
 }

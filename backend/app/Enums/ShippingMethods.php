@@ -4,6 +4,6 @@ namespace App\Enums;
 
 enum ShippingMethods : string
 {
-    case UkrPoshta = 'UkrPoshta';
-    case NovaPoshta = 'NovaPoshta';
+    case UkrPoshta = 'Ukr Poshta';
+    case NovaPoshta = 'Nova Poshta';
 }
