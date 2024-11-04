@@ -15,11 +15,10 @@ class PaymentMethod extends Model
 
     protected $fillable = [
         'method',
-        'name',
     ];
 
     protected $casts = [
-        'method' => PaymentMethods::class
+        'method' => PaymentMethods::class,
     ];
 
     public function orders(): HasMany

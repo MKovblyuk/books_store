@@ -24,7 +24,7 @@ class OrderSeeder extends Seeder
                 $order = Order::factory()
                     ->for(User::all()->random())
                     ->for(DeliveryPlace::all()->random())
-                    ->for(PaymentMethod::where('name', PaymentMethods::CreditCard->name)->first())
+                    ->for(PaymentMethod::where('method', PaymentMethods::CreditCard)->first())
                     ->create([
                         'total_price' => rand(100, 2000),
                         'status' => OrderStatus::Received

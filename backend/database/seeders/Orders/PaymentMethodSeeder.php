@@ -17,7 +17,6 @@ class PaymentMethodSeeder extends Seeder
         foreach (PaymentMethods::cases() as $paymentMethod) {
             PaymentMethod::create([
                 'method' => $paymentMethod,
-                'name' => $paymentMethod->name
             ]);
         }
     }
