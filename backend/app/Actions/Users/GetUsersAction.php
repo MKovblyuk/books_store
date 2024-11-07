@@ -8,7 +8,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GetUsersAction
 {
-    public function execute()
+    public function execute(int $perPage)
     {
         return QueryBuilder::for(User::class)
             ->allowedFields([
@@ -33,12 +33,14 @@ class GetUsersAction
                 'last_name', 
                 'email', 
                 'phone_number',
+                'created_at',
+                'updated_at',
             ])
             ->allowedIncludes([
                 'orders', 
                 'reviews', 
                 'likedBooks',
             ])
-            ->get();
+            ->paginate($perPage);
     }
 }

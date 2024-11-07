@@ -82,6 +82,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::group(['namespace' => 'Users'], function(){
         Route::apiResource('users', UserController::class)->missing(fn() => notFoundJsonResponse());
         Route::get('users/{user}/orders', [UserController::class, 'getOrders'])->missing(fn() => notFoundJsonResponse());
+        Route::get('users/{user}/details', [UserController::class, 'getDetails'])->missing(fn() => notFoundJsonResponse());
         Route::get('users/{user}/electronicBooks', [UserController::class, 'getElectronicBooks'])->missing(fn() => notFoundJsonResponse());
         Route::get('users/{user}/audioBooks', [UserController::class, 'getAudioBooks'])->missing(fn() => notFoundJsonResponse());
         Route::get('users/{user}/likedBooks', [UserController::class, 'getLikedBooks'])->missing(fn() => notFoundJsonResponse());
