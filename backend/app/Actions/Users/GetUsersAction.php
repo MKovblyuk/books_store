@@ -2,6 +2,7 @@
 
 namespace App\Actions\Users;
 
+use App\Filters\DateFilter;
 use App\Models\V1\User;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -26,8 +27,8 @@ class GetUsersAction
                 'email', 
                 'role', 
                 'phone_number',
-                'created_at',
-                'updated_at',
+                AllowedFilter::custom('created_at', new DateFilter()),
+                AllowedFilter::custom('updated_at', new DateFilter()),
             ])
             ->allowedSorts([
                 'id', 
