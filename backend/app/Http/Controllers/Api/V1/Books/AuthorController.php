@@ -19,7 +19,7 @@ class AuthorController extends Controller
 
     public function index(GetAuthorsAction $action)
     {
-        return new AuthorCollection($action->execute());
+        return new AuthorCollection($action->execute(request('per_page', 10)));
     }
 
     public function store(StoreAuthorRequest $request)

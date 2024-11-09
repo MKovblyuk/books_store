@@ -8,7 +8,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GetAuthorsAction
 {
-    public function execute()
+    public function execute(int $perPage)
     {
         return QueryBuilder::for(Author::class)
             ->allowedFilters([
@@ -27,6 +27,6 @@ class GetAuthorsAction
                 'first_name', 
                 'last_name',
             ])
-            ->get();
+            ->paginate($perPage);
     }
 }
