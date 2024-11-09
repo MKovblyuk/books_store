@@ -11,7 +11,7 @@ class UsersRegistrationResource extends JsonResource
     {
         return [
             'usersCount' => $this->users_count,
-            'createdAt' => $this->created_at,
+            'creationDate' => $this->creation_date,
         ];
     }
 }

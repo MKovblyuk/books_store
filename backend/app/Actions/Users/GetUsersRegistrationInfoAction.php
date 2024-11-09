@@ -10,8 +10,8 @@ class GetUsersRegistrationInfoAction
     public function execute(): Collection
     {
         return User::query()
-            ->selectRaw('count(id) as users_count, created_at')
-            ->groupBy('created_at')
+            ->selectRaw('count(id) as users_count, DATE(created_at) as creation_date')
+            ->groupBy('creation_date')
             ->get();
     }
 }
