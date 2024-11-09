@@ -80,6 +80,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     });
 
     Route::group(['namespace' => 'Users'], function(){
+        Route::get('users/registration', [UserController::class, 'getRegistrationInfo']);
         Route::apiResource('users', UserController::class)->missing(fn() => notFoundJsonResponse());
         Route::get('users/{user}/orders', [UserController::class, 'getOrders'])->missing(fn() => notFoundJsonResponse());
         Route::get('users/{user}/details', [UserController::class, 'getDetails'])->missing(fn() => notFoundJsonResponse());

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Users;
 
 use App\Actions\Users\GetUserDetailsAction;
+use App\Actions\Users\GetUsersRegistrationInfoAction;
 use App\Actions\Users\GetUsersAction;
 use App\Actions\Users\LikeBookAction;
 use App\Actions\Users\UnlikeBookAction;
@@ -15,6 +16,7 @@ use App\Http\Resources\V1\Orders\DetailedOrderCollection;
 use App\Http\Resources\V1\Users\UserCollection;
 use App\Http\Resources\V1\Users\UserDetailsResource;
 use App\Http\Resources\V1\Users\UserResource;
+use App\Http\Resources\V1\Users\UsersRegistrationCollection;
 use App\Models\V1\Books\Book;
 use App\Models\V1\User;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -111,5 +113,11 @@ class UserController extends Controller
     {
         $this->authorize('view', $user);
         return new UserDetailsResource($action->execute($user));
+    }
+
+    public function getRegistrationInfo(GetUsersRegistrationInfoAction $action)
+    {
+        $this->authorize('view', User::class);
+        return new UsersRegistrationCollection($action->execute());
     }
 }
