@@ -8,7 +8,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GetPublishersAction
 {
-    public function execute()
+    public function execute(int $perPage)
     {
         return QueryBuilder::for(Publisher::class)
             ->allowedFilters([
@@ -23,6 +23,6 @@ class GetPublishersAction
                 'id', 
                 'name',
             ])
-            ->get();
+            ->paginate($perPage);
     }
 }
