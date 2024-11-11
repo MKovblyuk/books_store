@@ -13,7 +13,7 @@ class CategoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+        $this->middleware('auth:sanctum', ['except' => ['index', 'show', 'getChildren']]);
     }
 
     public function index()
@@ -56,5 +56,10 @@ class CategoryController extends Controller
         return $category->delete()
             ? response()->noContent()
             : response()->json(['message' => 'Category not deleted'], 500);
+    }
+
+    public function getChildren(Category $parentCategory)
+    {
+        return new CategoryCollection(Category::descendantsOf($parentCategory));
     }
 }

@@ -44,6 +44,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::apiResource('fragments', FragmentController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('reviews', ReviewController::class)->missing(fn() => notFoundJsonResponse());
 
+        Route::get('categories/{parentCategory}/children', [CategoryController::class, 'getChildren'])->missing(fn() => notFoundJsonResponse());
         Route::apiResource('categories', CategoryController::class)->missing(fn() => notFoundJsonResponse());
         Route::post('categories/{parentCategory}', [CategoryController::class, 'storeForParent'])->missing(fn() => notFoundJsonResponse());
 
