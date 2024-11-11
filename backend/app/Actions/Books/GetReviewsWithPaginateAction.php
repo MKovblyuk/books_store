@@ -31,6 +31,9 @@ class GetReviewsWithPaginateAction
                 'rating', 
                 'updated_at',
             ])
+            ->allowedIncludes([
+                'book'
+            ])
             ->paginate($perPage);
     }
 }

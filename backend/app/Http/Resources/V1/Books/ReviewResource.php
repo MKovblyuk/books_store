@@ -3,11 +3,14 @@
 namespace App\Http\Resources\V1\Books;
 
 use App\Models\V1\User;
+use App\Traits\AllowedIncludes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReviewResource extends JsonResource
 {
+    use AllowedIncludes;
+
     public function toArray(Request $request): array
     {
         $user = User::find($this->user_id);
@@ -23,8 +26,13 @@ class ReviewResource extends JsonResource
             'userId' => $this->user_id,
             'userFirstName' => $user->first_name,
             'userLastName' => $user->last_name,
-            'bookId' => $this->book_id,
             'updatedAt' => $this->updated_at,
+            $this->mergeWhen($this->fieldIsIncluded('book', $request), [
+                'book' => $this->book,
+            ]),
+            $this->mergeWhen($this->fieldIsNotIncluded('book', $request), [
+                'bookId' => $this->book_id,
+            ]),
         ];
     }
 
