@@ -60,6 +60,6 @@ class CategoryController extends Controller
 
     public function getChildren(Category $parentCategory)
     {
-        return new CategoryCollection(Category::descendantsOf($parentCategory));
+        return new CategoryCollection($parentCategory->children()->get());
     }
 }
