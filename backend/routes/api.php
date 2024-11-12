@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\V1\Addresses\AddressController;
 use App\Http\Controllers\Api\V1\Addresses\CountryController;
 use App\Http\Controllers\Api\V1\Addresses\DeliveryPlaceController;
 use App\Http\Controllers\Api\V1\Addresses\DistrictController;
@@ -17,7 +16,6 @@ use App\Http\Controllers\Api\V1\Orders\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Orders\ShippingMethodController;
 use App\Http\Controllers\Api\V1\Users\UserController;
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -69,6 +67,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::apiResource('districts', DistrictController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('settlements', SettlementController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('deliveryPlaces', DeliveryPlaceController::class)->missing(fn() => notFoundJsonResponse());
+        Route::get('deliveryPlaces/{deliveryPlace}/fullAddress', [DeliveryPlaceController::class, 'getFullAddress'])->missing(fn() => notFoundJsonResponse());
     });
 
     Route::group(['namespace' => 'Orders'], function(){
