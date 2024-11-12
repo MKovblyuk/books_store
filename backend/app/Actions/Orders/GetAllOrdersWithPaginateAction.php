@@ -18,11 +18,13 @@ class GetAllOrdersWithPaginateAction
                 'created_at',
                 'updated_at',
                 'delivery_place_id',
+                'payment_method_id',
             ])
             ->allowedFilters([
                 AllowedFilter::exact('id'),
                 AllowedFilter::exact("user_id"),
                 AllowedFilter::exact('delivery_place_id'),
+                AllowedFilter::exact('payment_method_id'),
                 AllowedFilter::exact('created_at'),
                 AllowedFilter::exact('updated_at'),
                 'status',
@@ -37,6 +39,7 @@ class GetAllOrdersWithPaginateAction
                 'user',
                 'books',
                 'deliveryPlace',
+                'paymentMethod',
             ])
             ->paginate($perPage);
     }
