@@ -16,7 +16,6 @@ class PaymentMethodResource extends JsonResource
         return [
             'id' => $this->id,
             'method' => $this->method,
-            'name' => $this->name,
         ];
     }
 
@@ -30,9 +29,6 @@ class PaymentMethodResource extends JsonResource
             ]),
             $this->mergeWhen(in_array('method', $fields), [
                 'method' => $this->method,
-            ]),
-            $this->mergeWhen(in_array('name', $fields), [
-                'name' => $this->name,
             ]),
         ];
     }
