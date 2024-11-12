@@ -21,6 +21,7 @@ class FullAddressResource extends JsonResource
             'districtName' => $this->settlement->district->name,
             'regionName' => $this->settlement->district->region->name,
             'countryName' => $this->settlement->district->region->country->name,
+            'shippingMethodName' => $this->shippingMethod->name, 
         ];
     }
 }
