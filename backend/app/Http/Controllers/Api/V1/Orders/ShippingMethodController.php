@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Orders;
 
+use App\Actions\Orders\GetShippingMethodsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Orders\StoreShippingMethodRequest;
 use App\Http\Requests\V1\Orders\UpdateShippingMethodRequest;
@@ -16,9 +17,9 @@ class ShippingMethodController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
     }
 
-    public function index()
+    public function index(GetShippingMethodsAction $action)
     {
-        return new ShippingMethodCollection(ShippingMethod::all());
+        return new ShippingMethodCollection($action->execute());
     }
 
     public function store(StoreShippingMethodRequest $request)
