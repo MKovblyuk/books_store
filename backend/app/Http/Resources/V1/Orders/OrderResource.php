@@ -40,6 +40,13 @@ class OrderResource extends JsonResource
                 'deliveryPlace' => new DeliveryPlaceResource($this->deliveryPlace)
             ]),
 
+            $this->mergeWhen($this->fieldIsNotIncluded('paymentMethod', $request), [
+                'paymentMethodId' => $this->payment_method_id
+            ]),
+            $this->mergeWhen($this->fieldIsIncluded('paymentMethod', $request), [
+                'paymentMethod' => new PaymentMethodResource($this->paymentMethod)
+            ]),
+
             $this->mergeWhen($this->fieldIsIncluded('books', $request),
                 ['books' => new BookCollection($this->books)]
             ),
