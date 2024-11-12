@@ -40,7 +40,7 @@ function paymentMethodIsAllowed(method)
                     @change="e => emit('payment_method_id_changed', e.target.value)"
                     class="me-2"
                 >
-                <label :for="'payment_method_' + method.id">{{method.name}}</label><br>
+                <label :for="'payment_method_' + method.id">{{method.method}}</label><br>
             </template>
         </template>
     </div>

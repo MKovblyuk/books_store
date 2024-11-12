@@ -46,7 +46,7 @@ watch(easyPayCheckoutPopup.successfulPaymentInteraction, isSuccessful => isSucce
 
 async function assignUponReceivingMethodId()
 {
-    const response = await axios.get('/paymentMethods?filter[name]=Upon Receiving');
+    const response = await axios.get('/paymentMethods?filter[method]=UponReceiving');
     uponReceivingMethodId = response.data.data[0].id;
 }
 
