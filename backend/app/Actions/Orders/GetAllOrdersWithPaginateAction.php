@@ -30,7 +30,8 @@ class GetAllOrdersWithPaginateAction
             ->allowedSorts([
                 'id',
                 'created_at',
-                'updated_at'
+                'updated_at',
+                'total_price',
             ])
             ->allowedIncludes([
                 'user',
