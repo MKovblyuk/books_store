@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V1\Orders\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Orders\ShippingMethodController;
 use App\Http\Controllers\Api\V1\Users\UserController;
 use App\Http\Controllers\AuthController;
+use App\Models\V1\Books\Category;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +43,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::apiResource('fragments', FragmentController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('reviews', ReviewController::class)->missing(fn() => notFoundJsonResponse());
 
+        Route::get('categories/{category}/siblings', [CategoryController::class, 'getSiblings'])->missing(fn() => notFoundJsonResponse());
+        Route::get('categories/{category}/siblingsAndSelf', [CategoryController::class, 'getSiblingsAndSelf'])->missing(fn() => notFoundJsonResponse());
         Route::get('categories/{parentCategory}/children', [CategoryController::class, 'getChildren'])->missing(fn() => notFoundJsonResponse());
         Route::apiResource('categories', CategoryController::class)->missing(fn() => notFoundJsonResponse());
         Route::post('categories/{parentCategory}', [CategoryController::class, 'storeForParent'])->missing(fn() => notFoundJsonResponse());

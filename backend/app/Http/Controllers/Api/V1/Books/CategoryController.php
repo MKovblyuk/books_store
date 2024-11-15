@@ -13,7 +13,9 @@ class CategoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum', ['except' => ['index', 'show', 'getChildren']]);
+        $this->middleware('auth:sanctum', [
+            'except' => ['index', 'show', 'getChildren', 'getSiblings', 'getSiblingsAndSelf']
+        ]);
     }
 
     public function index()
@@ -61,5 +63,15 @@ class CategoryController extends Controller
     public function getChildren(Category $parentCategory)
     {
         return new CategoryCollection($parentCategory->children()->get());
+    }
+
+    public function getSiblings(Category $category)
+    {
+        return new CategoryCollection($category->siblings()->get());
+    }
+
+    public function getSiblingsAndSelf(Category $category)
+    {
+        return new CategoryCollection($category->siblingsAndSelf()->get());
     }
 }
