@@ -7,6 +7,7 @@ use App\Http\Requests\V1\Books\StoreCategoryRequest;
 use App\Http\Requests\V1\Books\UpdateCategoryRequest;
 use App\Http\Resources\V1\Books\CategoryCollection;
 use App\Http\Resources\V1\Books\CategoryResource;
+use App\Http\Resources\V1\Books\FlatCategoryCollection;
 use App\Models\V1\Books\Category;
 
 class CategoryController extends Controller
@@ -14,7 +15,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         $this->middleware('auth:sanctum', [
-            'except' => ['index', 'show', 'getChildren', 'getSiblings', 'getSiblingsAndSelf']
+            'except' => ['index', 'show', 'getChildren', 'getSiblings', 'getSiblingsAndSelf', 'getFlat']
         ]);
     }
 
@@ -74,4 +75,9 @@ class CategoryController extends Controller
     {
         return new CategoryCollection($category->siblingsAndSelf()->get());
     }
+    
+    public function getFlat()
+    {
+        return new FlatCategoryCollection(Category::whereNot('parent_id')->get());
+    }   
 }

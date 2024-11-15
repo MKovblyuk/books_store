@@ -43,6 +43,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::apiResource('fragments', FragmentController::class)->missing(fn() => notFoundJsonResponse());
         Route::apiResource('reviews', ReviewController::class)->missing(fn() => notFoundJsonResponse());
 
+        Route::get('categories/flat', [CategoryController::class, 'getFlat']);
         Route::get('categories/{category}/siblings', [CategoryController::class, 'getSiblings'])->missing(fn() => notFoundJsonResponse());
         Route::get('categories/{category}/siblingsAndSelf', [CategoryController::class, 'getSiblingsAndSelf'])->missing(fn() => notFoundJsonResponse());
         Route::get('categories/{parentCategory}/children', [CategoryController::class, 'getChildren'])->missing(fn() => notFoundJsonResponse());
