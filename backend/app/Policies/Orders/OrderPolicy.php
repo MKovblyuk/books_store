@@ -52,4 +52,9 @@ class OrderPolicy
     {
         return $user->id === $order->user_id;
     }
+
+    public function showStatistic(User $user, Order $order): bool
+    {
+        return false;
+    }
 }

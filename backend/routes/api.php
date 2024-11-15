@@ -76,6 +76,9 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
     Route::group(['namespace' => 'Orders'], function(){
         Route::apiResource('shippingMethods',ShippingMethodController::class)->missing(fn() => notFoundJsonResponse());
+        Route::get('orders/creationInfo', [OrderController::class, 'getCreationInfo']);
+        Route::get('orders/categoriesStat', [OrderController::class, 'getCategoriesStat']);
+        Route::get('orders/bookFormatsStat', [OrderController::class, 'getBookFormatsStat']);
         Route::apiResource('orders', OrderController::class)->missing(fn() => notFoundJsonResponse());
         Route::get('orders/{order}/details', [OrderController::class, 'showDetails'])->missing(fn() => notFoundJsonResponse());
         Route::post('orders/createOnlinePaymentOrder', [OrderController::class, 'createOnlinePaymentOrder']);
