@@ -22,4 +22,19 @@ class AudioBookStorageService implements BookStorageServiceInterface
         $dirName = $book->audioFormat->path;
         return $this->downloadFile(Storage::disk('audio'), $dirName, $extension, $book->name);
     }
+
+    public function delete(Book $book): bool
+    {
+        $dirName = $book->audioFormat->path;
+        return $this->deleteAllFiles(Storage::disk('audio'), $dirName);
+    }
+
+    /**
+     * Return files meta
+     */
+    public function getAllFiles(Book $book): array
+    {
+        $dirName = $book->audioFormat->path;
+        return $this->getAllFilesMeta(Storage::disk('audio'), $dirName);
+    }
 }

@@ -44,4 +44,29 @@ trait FileStorage
             $fileSystem->put($dirName, $newFile);
         }
     }
+
+    protected function deleteAllFiles(FilesystemAdapter $fileSystem, string $dirName): bool
+    {
+        return $fileSystem->deleteDirectory($dirName);
+    }
+
+    protected function deleteFile(FilesystemAdapter $fileSystem, string $dirName, string $fileName): bool
+    {
+        return $fileSystem->delete($dirName . '/' . $fileName);
+    }
+
+    /**
+     * Return files meta
+     */
+    protected function getAllFilesMeta(FilesystemAdapter $fileSystem, string $dirName): array
+    {
+        return array_map(function($item) use($fileSystem, $dirName) {
+            return [
+                'mimeType' => $fileSystem->mimeType($item),
+                'size' => $fileSystem->size($item),
+                'dirName' => $dirName,
+                'fullName' => $item,
+            ];
+        }, $fileSystem->allFiles($dirName));
+    }
 }

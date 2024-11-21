@@ -2,6 +2,8 @@
 
 namespace App\Models\V1\Books;
 
+use App\Services\Books\AudioBookStorageService;
+use App\Services\Books\BookStorageServiceInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,5 +33,10 @@ class AudioFormat extends Model
     public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);
+    }
+
+    public function getFileStorageService(): BookStorageServiceInterface
+    {
+        return new AudioBookStorageService();
     }
 }

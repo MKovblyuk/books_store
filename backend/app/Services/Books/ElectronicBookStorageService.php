@@ -22,4 +22,19 @@ class ElectronicBookStorageService implements BookStorageServiceInterface
         $dirName = $book->electronicFormat->path;
         return $this->downloadFile(Storage::disk('electronic'), $dirName, $extension, $book->name);
     }
+
+    public function delete(Book $book): bool
+    {
+        $dirName = $book->electronicFormat->path;
+        return $this->deleteAllFiles(Storage::disk('electronic'), $dirName);
+    }
+
+    /**
+     * Return files meta
+     */
+    public function getAllFiles(Book $book): array
+    {
+        $dirName = $book->audioFormat->path;
+        return $this->getAllFilesMeta(Storage::disk('audio'), $dirName);
+    }
 }
