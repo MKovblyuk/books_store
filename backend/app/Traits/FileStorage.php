@@ -50,11 +50,6 @@ trait FileStorage
         return $fileSystem->deleteDirectory($dirName);
     }
 
-    protected function deleteFile(FilesystemAdapter $fileSystem, string $dirName, string $fileName): bool
-    {
-        return $fileSystem->delete($dirName . '/' . $fileName);
-    }
-
     /**
      * Return files meta
      */
