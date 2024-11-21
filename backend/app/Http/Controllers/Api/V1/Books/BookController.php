@@ -165,7 +165,7 @@ class BookController extends Controller
     {
         $this->authorize('uploadFiles', Book::class);
 
-        $electronicFormat = ElectronicFormat::where('book_id', $request->validated('bookId'));
+        $electronicFormat = ElectronicFormat::where('book_id', $request->validated('bookId'))->first();
 
         if ($electronicFormat) {
             $electronicFormat->getFileStorageService()->store($request->validated('files'));
@@ -179,7 +179,7 @@ class BookController extends Controller
     {
         $this->authorize('uploadFiles', Book::class);
 
-        $audioFormat = AudioFormat::where('book_id', $request->validated('bookId'));
+        $audioFormat = AudioFormat::where('book_id', $request->validated('bookId'))->first();
 
         if ($audioFormat) {
             $audioFormat->getFileStorageService()->store($request->validated('files'));
