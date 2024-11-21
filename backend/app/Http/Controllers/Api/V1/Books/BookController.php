@@ -225,4 +225,30 @@ class BookController extends Controller
 
         return response()->json(['message' => 'Format not found'], 404);
     }
+
+    public function deleteElectronicFile(Book $book, string $extension)
+    {
+        $this->authorize('deleteFormat', $book);
+        
+        if ($book->electronicFormat) {
+            return $book->electronicFormat->getFileStorageService()->deleteFile($extension)
+                ? response()->noContent()
+                : response()->json(['message' => 'File not deleted'], 400);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
+
+    public function deleteAudioFile(Book $book, string $extension)
+    {
+        $this->authorize('deleteFormat', $book);
+
+        if ($book->audioFormat) {
+            return $book->audioFormat->getFileStorageService()->deleteFile($extension)
+                ? response()->noContent()
+                : response()->json(['message' => 'File not deleted'], 400);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
 }

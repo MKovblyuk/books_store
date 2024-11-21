@@ -67,6 +67,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::post('books/upload/electronic', [BookController::class, 'uploadElectronicFiles']);
         Route::post('books/upload/audio', [BookController::class, 'uploadAudioFiles']);
         Route::post('books/{book}/uploadCoverImage', [BookController::class, 'uploadCoverImage'])->missing(fn() => notFoundJsonResponse());
+        Route::delete('books/electronic/{book}/{extension}', [BookController::class, 'deleteElectronicFile'])->missing(fn() => notFoundJsonResponse());
+        Route::delete('books/audio/{book}/{extension}', [BookController::class, 'deleteAudioFile'])->missing(fn() => notFoundJsonResponse());
     });
 
     Route::group(['namespace' => 'Addresses'], function(){

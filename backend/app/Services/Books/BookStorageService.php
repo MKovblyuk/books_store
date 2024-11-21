@@ -3,6 +3,7 @@
 namespace App\Services\Books;
 
 use App\Traits\FileStorage;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -29,6 +30,19 @@ class BookStorageService implements BookStorageServiceInterface
     public function delete(): bool
     {
         return $this->deleteAllFiles($this->fileSystem, $this->path);
+    }
+
+    public function deleteFile(string $extension): bool
+    {
+        $files = $this->fileSystem->allFiles($this->path);
+
+        foreach ($files as $file) {
+            if (\File::extension($file) === $extension) {
+                return $this->fileSystem->delete($file);
+            }
+        }
+
+        throw new FileNotFoundException('File not found');
     }
 
     /**
