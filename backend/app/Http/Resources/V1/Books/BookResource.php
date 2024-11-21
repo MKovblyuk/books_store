@@ -29,6 +29,8 @@ class BookResource extends JsonResource
             'electronicFormat' => new ElectronicFormatResource($this->electronicFormat),
             'paperFormat' => new PaperFormatResource($this->paperFormat),
             'likedUsersIds' => $this->likedByUsers()->pluck('id'),
+            'createdAt' => $this->created_at,
+            'updatedAt' => $this->updated_at,
 
             $this->mergeWhen($this->fieldIsNotIncluded('publisher', $request),
                 ['publisherId' => $this->publisher_id]
@@ -46,6 +48,9 @@ class BookResource extends JsonResource
 
             $this->mergeWhen($this->fieldIsIncluded('authors', $request),
                 ['authors' => new AuthorCollection($this->authors)]
+            ),
+            $this->mergeWhen($this->fieldIsNotIncluded('authors', $request),
+                ['authorsIds' => $this->authors()->pluck('authors.id')]
             ),
 
             $this->mergeWhen($this->fieldIsIncluded('reviews', $request),
@@ -78,7 +83,7 @@ class BookResource extends JsonResource
             $this->mergeWhen(in_array('language', $fields),
                 ['language' => $this->language]
             ),
-            $this->mergeWhen(in_array('cover_image_url', $fields),
+            $this->mergeWhen(in_array('cover_image_path', $fields),
                 ['coverImageUrl' => $this->cover_image_path ? Storage::disk('preview_fragments')->url($this->cover_image_path) : null,]
             ),
             $this->mergeWhen(in_array('published_at', $fields),
@@ -92,6 +97,12 @@ class BookResource extends JsonResource
             ),
             $this->mergeWhen(in_array('liked_users_ids', $fields), 
                 ['likedUsersIds' => $this->likedByUsers()->pluck('id')]
+            ),
+            $this->mergeWhen(in_array('created_at', $fields),
+                ['createdAt' => $this->created_at]
+            ),
+            $this->mergeWhen(in_array('updated_at', $fields),
+                ['updatedAt' => $this->updated_at]
             ),
         ];
     }
