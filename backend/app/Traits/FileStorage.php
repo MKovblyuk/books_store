@@ -58,6 +58,7 @@ trait FileStorage
         return array_map(function($item) use($fileSystem, $dirName) {
             return [
                 'mimeType' => $fileSystem->mimeType($item),
+                'extension' => \File::extension($item),
                 'size' => $fileSystem->size($item),
                 'dirName' => $dirName,
                 'fullName' => $item,
