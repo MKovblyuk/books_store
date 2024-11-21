@@ -2,6 +2,7 @@
 
 namespace App\Actions\Books;
 
+use App\Filters\DateFilter;
 use App\Filters\FilterBooksByAuthors;
 use App\Filters\FilterBooksByCategoryWithChild;
 use App\Filters\FilterBooksByFormats;
@@ -27,6 +28,8 @@ class GetAllBooksWithPaginateAction
                 AllowedFilter::custom('category_with_children', new FilterBooksByCategoryWithChild()),
                 AllowedFilter::exact('publisher_id'),
                 AllowedFilter::exact('category_id'),
+                AllowedFilter::custom('created_at', new DateFilter()),
+                AllowedFilter::custom('updated_at', new DateFilter()),
                 'name',
                 'publication_year',
                 'language',
@@ -38,7 +41,7 @@ class GetAllBooksWithPaginateAction
                 'description',
                 'publication_year',
                 'language',
-                'cover_image_url',
+                'cover_image_path',
                 'published_at',
                 'publisher_id',
                 'category_id',
@@ -58,6 +61,8 @@ class GetAllBooksWithPaginateAction
                 'published_at',
                 'publisher_id',
                 'category_id',
+                'created_at',
+                'updated_at',
                 AllowedSort::custom('selling_count', new SortBooksBySellingCount()),
                 AllowedSort::custom('likes', new SortBooksByLikes()),
                 AllowedSort::custom('price', new SortBooksByPrice()),
