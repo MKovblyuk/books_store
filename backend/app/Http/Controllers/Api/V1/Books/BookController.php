@@ -23,22 +23,14 @@ use App\Http\Resources\V1\Books\ElectronicFormatResource;
 use App\Http\Resources\V1\Books\FragmentCollection;
 use App\Http\Resources\V1\Books\PaperFormatResource;
 use App\Http\Resources\V1\Books\ReviewCollection;
+use App\Models\V1\Books\AudioFormat;
 use App\Models\V1\Books\Book;
-use App\Services\Books\AudioBookStorageService;
-use App\Services\Books\BookStorageServiceInterface;
-use App\Services\Books\ElectronicBookStorageService;
-use Illuminate\Http\Request;
+use App\Models\V1\Books\ElectronicFormat;
 
 class BookController extends Controller
 {
-    private ElectronicBookStorageService $electronicStorageService;
-    private AudioBookStorageService $audioStorageService;
-
     public function __construct()
     {
-        $this->electronicStorageService = new ElectronicBookStorageService();
-        $this->audioStorageService = new AudioBookStorageService();
-
         $this->middleware('auth:sanctum', [
             'except' => [
                 'index', 
@@ -150,35 +142,51 @@ class BookController extends Controller
     public function downloadElectronicBook(Book $book, string $extension)
     {
         $this->authorize('downloadElectronicBook', $book);
-        return $this->electronicStorageService->download($book, $extension);
+
+        if ($book->electronicFormat) {
+            return $book->electronicFormat->getFileStorageService()->download($extension);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
     }
 
     public function downloadAudioBook(Book $book, string $extension)
     {
         $this->authorize('downloadAudioBook', $book);
-        return $this->audioStorageService->download($book, $extension);
-    }
 
+        if ($book->audioFormat) {
+            return $book->audioFormat->getFileStorageService()->download($extension);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
 
     public function uploadElectronicFiles(UploadElectronicBookRequest $request)
     {
-        return $this->uploadFiles($request, $this->electronicStorageService);
+        $this->authorize('uploadFiles', Book::class);
+
+        $electronicFormat = ElectronicFormat::where('book_id', $request->validated('bookId'));
+
+        if ($electronicFormat) {
+            $electronicFormat->getFileStorageService()->store($request->validated('files'));
+            return response()->json(['message' => 'files successfully stored'], 201);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
     }
 
     public function uploadAudioFiles(UploadAudioBookRequest $request)
     {
-        return $this->uploadFiles($request, $this->audioStorageService);
-    }
-
-    private function uploadFiles(Request $request, BookStorageServiceInterface $service)
-    {
         $this->authorize('uploadFiles', Book::class);
 
-        $files = $request->validated('files');
-        $bookId = $request->validated('bookId');
+        $audioFormat = AudioFormat::where('book_id', $request->validated('bookId'));
 
-        $service->store(Book::find($bookId), $files);
-        return response()->json(['message' => 'files successfully stored'], 201);
+        if ($audioFormat) {
+            $audioFormat->getFileStorageService()->store($request->validated('files'));
+            return response()->json(['message' => 'files successfully stored'], 201);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
     }
 
     public function getLanguages(GetLanguagesAction $action) 
@@ -193,10 +201,8 @@ class BookController extends Controller
 
     public function getPaperFormat(Book $book)
     {
-        $format = $book->getFormat(BookFormat::Paper);
-
-        if ($format) {
-            return new PaperFormatResource($format);
+        if ($book->paperFormat) {
+            return new PaperFormatResource($book->paperFormat);
         }
 
         return response()->json(['message' => 'Format not found'], 404);
@@ -204,10 +210,8 @@ class BookController extends Controller
 
     public function getElectronicFormat(Book $book)
     {
-        $format = $book->getFormat(BookFormat::Electronic);
-
-        if ($format) {
-            return new ElectronicFormatResource($format);
+        if ($book->electronicFormat) {
+            return new ElectronicFormatResource($book->electronicFormat);
         }
 
         return response()->json(['message' => 'Format not found'], 404);
@@ -215,10 +219,8 @@ class BookController extends Controller
 
     public function getAudioFormat(Book $book)
     {
-        $format = $book->getFormat(BookFormat::Audio);
-
-        if ($format) {
-            return new AudioFormatResource($format);
+        if ($book->audioFormat) {
+            return new AudioFormatResource($book->audioFormat);
         }
 
         return response()->json(['message' => 'Format not found'], 404);

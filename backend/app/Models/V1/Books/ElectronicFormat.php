@@ -36,6 +36,6 @@ class ElectronicFormat extends Model
 
     public function getFileStorageService(): BookStorageServiceInterface
     {
-        return new ElectronicBookStorageService();
+        return new ElectronicBookStorageService($this->path);
     }
 }

@@ -37,6 +37,6 @@ class AudioFormat extends Model
 
     public function getFileStorageService(): BookStorageServiceInterface
     {
-        return new AudioBookStorageService();
+        return new AudioBookStorageService($this->path);
     }
 }
