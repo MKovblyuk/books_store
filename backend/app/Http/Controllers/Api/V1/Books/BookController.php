@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Books;
 
 use App\Actions\Books\DeleteBookCoverImageAction;
 use App\Actions\Books\GetAllBooksWithPaginateAction;
+use App\Actions\Books\GetLanguagesAction;
 use App\Actions\Books\GetRelatedBooksWithPaginateAction;
 use App\Actions\Books\StoreBookAction;
 use App\Actions\Books\UpdateBookAction;
@@ -27,7 +28,6 @@ use App\Services\Books\AudioBookStorageService;
 use App\Services\Books\BookStorageServiceInterface;
 use App\Services\Books\ElectronicBookStorageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -181,15 +181,9 @@ class BookController extends Controller
         return response()->json(['message' => 'files successfully stored'], 201);
     }
 
-    public function getLanguages() 
+    public function getLanguages(GetLanguagesAction $action) 
     {
-        $languages = DB::table('books')
-            ->select('language')
-            ->distinct()
-            ->get()
-            ->map(fn($item) => $item->language);
-
-        return response()->json(['data' => $languages]);
+        return response()->json(['data' => $action->execute()]);
     }
 
     public function getRelatedBooks(Book $book, GetRelatedBooksWithPaginateAction $action)
