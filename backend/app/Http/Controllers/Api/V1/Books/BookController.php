@@ -15,9 +15,12 @@ use App\Http\Requests\V1\Books\UpdateBookRequest;
 use App\Http\Requests\V1\Books\UploadAudioBookRequest;
 use App\Http\Requests\V1\Books\UploadCoverImageRequest;
 use App\Http\Requests\V1\Books\UploadElectronicBookRequest;
+use App\Http\Resources\V1\Books\AudioFormatResource;
 use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Books\BookResource;
+use App\Http\Resources\V1\Books\ElectronicFormatResource;
 use App\Http\Resources\V1\Books\FragmentCollection;
+use App\Http\Resources\V1\Books\PaperFormatResource;
 use App\Http\Resources\V1\Books\ReviewCollection;
 use App\Models\V1\Books\Book;
 use App\Services\Books\AudioBookStorageService;
@@ -43,7 +46,10 @@ class BookController extends Controller
                 'getReviews', 
                 'getPreviewFragments', 
                 'getLanguages', 
-                'getRelatedBooks'
+                'getRelatedBooks',
+                'getPaperFormat',
+                'getElectronicFormat',
+                'getAudioFormat',
             ]
         ]);
     }
@@ -189,5 +195,38 @@ class BookController extends Controller
     public function getRelatedBooks(Book $book, GetRelatedBooksWithPaginateAction $action)
     {
         return new BookCollection($action->execute($book, request('per_page', 10)));
+    }
+
+    public function getPaperFormat(Book $book)
+    {
+        $format = $book->getFormat(BookFormat::Paper);
+
+        if ($format) {
+            return new PaperFormatResource($format);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
+
+    public function getElectronicFormat(Book $book)
+    {
+        $format = $book->getFormat(BookFormat::Electronic);
+
+        if ($format) {
+            return new ElectronicFormatResource($format);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
+
+    public function getAudioFormat(Book $book)
+    {
+        $format = $book->getFormat(BookFormat::Audio);
+
+        if ($format) {
+            return new AudioFormatResource($format);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
     }
 }
