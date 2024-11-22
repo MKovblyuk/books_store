@@ -8,6 +8,6 @@ class AudioBookStorageService extends BookStorageService
 {
     public function __construct(string $path)
     {
-        parent::__construct($path, Storage::disk('electronic'));
+        parent::__construct($path, Storage::disk('audio'));
     }
 }
