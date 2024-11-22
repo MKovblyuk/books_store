@@ -22,7 +22,7 @@ class BookRequest extends FormRequest
             $this->merge(['cover_image_url' => $this->coverImageUrl]);
         }
         if (isset($this->publisherId)) {
-            $this->merge(['publisher_id' => $this->publihserId]);
+            $this->merge(['publisher_id' => $this->publisherId]);
         }
         if (isset($this->categoryId)) {
             $this->merge(['category_id' => $this->categoryId]);
