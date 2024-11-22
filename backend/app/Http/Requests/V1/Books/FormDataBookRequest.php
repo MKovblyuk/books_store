@@ -6,7 +6,7 @@ use App\Exceptions\Http\FailedValidationHttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class NewBookRequest extends FormRequest
+class FormDataBookRequest extends FormRequest
 {
     protected function failedValidation(Validator $validator)
     {

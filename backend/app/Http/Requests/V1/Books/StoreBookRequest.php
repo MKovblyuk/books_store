@@ -5,7 +5,7 @@ namespace App\Http\Requests\V1\Books;
 use App\Rules\Books\BookFormat;
 use Illuminate\Validation\Rules\File;
 
-class StoreBookRequest extends NewBookRequest
+class StoreBookRequest extends FormDataBookRequest
 {
     public function authorize(): bool
     {
