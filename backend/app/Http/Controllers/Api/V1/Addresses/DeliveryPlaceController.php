@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Addresses;
 
-use App\Actions\Addresses\GetDeliveryPlacesWithPaginateAction;
+use App\Actions\Addresses\GetDeliveryPlacesAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Addresses\StoreDeliveryPlaceRequest;
 use App\Http\Requests\V1\Addresses\UpdateDeliveryPlaceRequest;
@@ -18,7 +18,7 @@ class DeliveryPlaceController extends Controller
         $this->middleware('auth:sanctum', ['except' => ['index','show', 'getFullAddress']]);
     }
 
-    public function index(GetDeliveryPlacesWithPaginateAction $action)
+    public function index(GetDeliveryPlacesAction $action)
     {
         return new DeliveryPlaceCollection($action->execute(request('per_page', 15)));
     }

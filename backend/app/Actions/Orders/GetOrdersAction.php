@@ -6,7 +6,7 @@ use App\Models\V1\Orders\Order;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class GetAllOrdersWithPaginateAction
+class GetOrdersAction
 {
     public function execute(int $perPage) 
     {

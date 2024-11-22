@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\V1\Books;
 
 use App\Actions\Books\DeleteBookCoverImageAction;
-use App\Actions\Books\GetAllBooksWithPaginateAction;
+use App\Actions\Books\GetBooksAction;
 use App\Actions\Books\GetLanguagesAction;
-use App\Actions\Books\GetRelatedBooksWithPaginateAction;
+use App\Actions\Books\GetRelatedBooksAction;
 use App\Actions\Books\StoreBookAction;
 use App\Actions\Books\UpdateBookAction;
 use App\Actions\Books\UpdateBookCoverImageAction;
@@ -46,7 +46,7 @@ class BookController extends Controller
         ]);
     }
 
-    public function index(GetAllBooksWithPaginateAction $action)
+    public function index(GetBooksAction $action)
     {
         return new BookCollection($action->execute(request()->get('per_page', 10)));
     }
@@ -191,7 +191,7 @@ class BookController extends Controller
         return response()->json(['data' => $action->execute()]);
     }
 
-    public function getRelatedBooks(Book $book, GetRelatedBooksWithPaginateAction $action)
+    public function getRelatedBooks(Book $book, GetRelatedBooksAction $action)
     {
         return new BookCollection($action->execute($book, request('per_page', 10)));
     }

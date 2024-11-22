@@ -6,9 +6,9 @@ use App\Models\V1\Books\Review;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class GetReviewsWithPaginateAction
+class GetReviewsAction
 {
-    public function execute($perPage)
+    public function execute(int $perPage)
     {
         return QueryBuilder::for(Review::class)
             ->allowedFields([

@@ -8,27 +8,28 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GetDistrictsAction
 {
-    public function execute()
+    public function execute(int $perPage = null)
     {
-        return QueryBuilder::for(District::class)
-        ->allowedFields([
-            'id', 
-            'name', 
-            'region_id',
-        ])
-        ->allowedFilters([
-            'id', 
-            'name', 
-            AllowedFilter::exact('region_id')
-        ])
-        ->allowedSorts([
-            'id', 
-            'name', 
-            'region_id',
-        ])
-        ->allowedIncludes([
-            'region',
-        ])
-        ->get();
+        $query = QueryBuilder::for(District::class)
+            ->allowedFields([
+                'id', 
+                'name', 
+                'region_id',
+            ])
+            ->allowedFilters([
+                'id', 
+                'name', 
+                AllowedFilter::exact('region_id')
+            ])
+            ->allowedSorts([
+                'id', 
+                'name', 
+                'region_id',
+            ])
+            ->allowedIncludes([
+                'region',
+            ]);
+
+        return $perPage ? $query->paginate($perPage) : $query->get();
     }
 }

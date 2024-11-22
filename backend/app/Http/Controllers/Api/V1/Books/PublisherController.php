@@ -19,7 +19,7 @@ class PublisherController extends Controller
 
     public function index(GetPublishersAction $action)
     {
-        return new PublisherCollection($action->execute(request('per_page', 10)));
+        return new PublisherCollection($action->execute(request('per_page')));
     }
 
     public function store(StorePublisherRequest $request)

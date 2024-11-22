@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1\Orders;
 
-use App\Actions\Orders\GetAllOrdersWithPaginateAction;
 use App\Actions\Orders\GetBookFormatsStatAction;
 use App\Actions\Orders\GetCategoriesStatAction;
+use App\Actions\Orders\GetOrdersAction;
 use App\Actions\Orders\GetOrdersCreationInfoAction;
 use App\Exceptions\General\IncorrectDataException;
 use App\Exceptions\Orders\IncorrectPaymentMethodException;
@@ -30,7 +30,7 @@ class OrderController extends Controller
         $this->middleware(GuestUserHandling::class)->only(['store', 'createOnlinePaymentOrder']);
     }
 
-    public function index(GetAllOrdersWithPaginateAction $action)
+    public function index(GetOrdersAction $action)
     {
         $this->authorize('viewAny', Order::class);
         return new OrderCollection($action->execute(request('per_page', 10)));

@@ -6,11 +6,11 @@ use App\Models\V1\Addresses\DeliveryPlace;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class GetDeliveryPlacesWithPaginateAction
+class GetDeliveryPlacesAction
 {
-    public function execute(int $perPage)
+    public function execute(int $perPage = null)
     {
-        return QueryBuilder::for(DeliveryPlace::class)
+        $query = QueryBuilder::for(DeliveryPlace::class)
             ->allowedFields([
                 'id', 
                 'street_address', 
@@ -32,7 +32,8 @@ class GetDeliveryPlacesWithPaginateAction
             ->allowedIncludes([
                 'settlement',
                 'shippingMethod',
-            ])
-            ->paginate($perPage);
+            ]);
+
+        return $perPage ? $query->paginate($perPage) : $query->get();
     }
 }

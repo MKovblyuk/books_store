@@ -8,9 +8,9 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GetPublishersAction
 {
-    public function execute(int $perPage)
+    public function execute(int $perPage = null)
     {
-        return QueryBuilder::for(Publisher::class)
+        $query = QueryBuilder::for(Publisher::class)
             ->allowedFilters([
                 AllowedFilter::exact('id'),
                 'name',
@@ -22,7 +22,8 @@ class GetPublishersAction
             ->allowedSorts([
                 'id', 
                 'name',
-            ])
-            ->paginate($perPage);
+            ]);
+
+        return $perPage ? $query->paginate($perPage) : $query->get();
     }
 }

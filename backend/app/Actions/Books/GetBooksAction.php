@@ -15,7 +15,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class GetAllBooksWithPaginateAction 
+class GetBooksAction 
 {
     public function execute(int $perPage)
     {

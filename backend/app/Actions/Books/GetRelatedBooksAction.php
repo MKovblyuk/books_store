@@ -3,9 +3,8 @@
 namespace App\Actions\Books;
 
 use App\Models\V1\Books\Book;
-use Illuminate\Support\Facades\DB;
 
-class GetRelatedBooksWithPaginateAction
+class GetRelatedBooksAction
 {
     public function execute(Book $book, int $perPage)
     {

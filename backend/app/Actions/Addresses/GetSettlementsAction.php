@@ -6,11 +6,11 @@ use App\Models\V1\Addresses\Settlement;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class GetSettlementsWithPaginateAction
+class GetSettlementsAction
 {
-    public function execute(int $perPage)
+    public function execute(int $perPage = null)
     {
-        return QueryBuilder::for(Settlement::class)
+        $query = QueryBuilder::for(Settlement::class)
             ->allowedFields([
                 'id', 
                 'name', 
@@ -28,7 +28,8 @@ class GetSettlementsWithPaginateAction
             ])
             ->allowedIncludes([
                 'district',
-            ])
-            ->paginate($perPage);
+            ]);
+
+        return $perPage ? $query->paginate($perPage) : $query->get();
     }
 }

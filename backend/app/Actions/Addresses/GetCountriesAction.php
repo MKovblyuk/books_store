@@ -7,13 +7,14 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GetCountriesAction
 {
-    public function execute()
+    public function execute(int $perPage = null)
     {
-        return QueryBuilder::for(Country::class)
+        $query = QueryBuilder::for(Country::class)
             ->allowedFields('id', 'name')
             ->allowedFilters('id', 'name')
             ->allowedSorts('id', 'name')
-            ->allowedIncludes('id', 'name')
-            ->get();
+            ->allowedIncludes('id', 'name');
+
+        return $perPage ? $query->paginate($perPage) : $query->get();
     }
 }
