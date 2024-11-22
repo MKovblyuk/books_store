@@ -81,9 +81,6 @@ class BookController extends Controller
             : response()->json(['message' => 'Book not updated'], 400);
     }
 
-    // TODO 
-    // when force deleting, delete all files or all files specific format
-
     public function destroy(Book $book)
     {
         $this->authorize('delete', $book);
