@@ -15,6 +15,9 @@ class StoreAudioFormatAction
     )
     {}
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function execute(Book $book, array $attributes)
     {
         if ($book->electronicFormat) {
