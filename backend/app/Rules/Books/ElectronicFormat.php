@@ -10,7 +10,7 @@ use Illuminate\Validation\Rules\File;
 class ElectronicFormat implements ValidationRule
 {
     public function __construct(
-        private string $method
+        private string $method = 'POST'
     )
     {}
 

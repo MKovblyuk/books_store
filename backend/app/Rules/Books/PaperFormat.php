@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class PaperFormat implements ValidationRule
 {
     public function __construct(
-        private string $method
+        private string $method = 'POST'
     )
     {}
 
