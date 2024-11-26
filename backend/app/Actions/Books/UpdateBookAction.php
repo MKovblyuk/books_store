@@ -2,7 +2,6 @@
 
 namespace App\Actions\Books;
 
-use App\Listeners\Books\DeleteBookCoverImage;
 use App\Models\V1\Books\Author;
 use App\Models\V1\Books\Book;
 use Exception;
