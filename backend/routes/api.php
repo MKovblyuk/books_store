@@ -5,10 +5,13 @@ use App\Http\Controllers\Api\V1\Addresses\DeliveryPlaceController;
 use App\Http\Controllers\Api\V1\Addresses\DistrictController;
 use App\Http\Controllers\Api\V1\Addresses\RegionController;
 use App\Http\Controllers\Api\V1\Addresses\SettlementController;
+use App\Http\Controllers\Api\V1\Books\AudioFormatController;
 use App\Http\Controllers\Api\V1\Books\AuthorController;
 use App\Http\Controllers\Api\V1\Books\BookController;
 use App\Http\Controllers\Api\V1\Books\CategoryController;
+use App\Http\Controllers\Api\V1\Books\ElectronicFormatController;
 use App\Http\Controllers\Api\V1\Books\FragmentController;
+use App\Http\Controllers\Api\V1\Books\PaperFormatController;
 use App\Http\Controllers\Api\V1\Books\PublisherController;
 use App\Http\Controllers\Api\V1\Books\ReviewController;
 use App\Http\Controllers\Api\V1\Orders\OrderController;
@@ -16,7 +19,6 @@ use App\Http\Controllers\Api\V1\Orders\PaymentMethodController;
 use App\Http\Controllers\Api\V1\Orders\ShippingMethodController;
 use App\Http\Controllers\Api\V1\Users\UserController;
 use App\Http\Controllers\AuthController;
-use App\Models\V1\Books\Category;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -70,6 +72,15 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
         Route::post('books/{book}/uploadCoverImage', [BookController::class, 'uploadCoverImage'])->missing(fn() => notFoundJsonResponse());
         Route::delete('books/electronic/{book}/{extension}', [BookController::class, 'deleteElectronicFile'])->missing(fn() => notFoundJsonResponse());
         Route::delete('books/audio/{book}/{extension}', [BookController::class, 'deleteAudioFile'])->missing(fn() => notFoundJsonResponse());
+        
+        Route::apiResource('paperFormats', PaperFormatController::class)->except(['store'])->missing(fn() => notFoundJsonResponse());
+        Route::post('paperFormats/{book}', [PaperFormatController::class, 'storeForBook'])->missing(fn() => notFoundJsonResponse());
+
+        Route::apiResource('audioFormats', AudioFormatController::class)->except(['store'])->missing(fn() => notFoundJsonResponse());
+        Route::post('audioFormats/{book}', [AudioFormatController::class, 'storeForBook'])->missing(fn() => notFoundJsonResponse());
+
+        Route::apiResource('electronicFormats', ElectronicFormatController::class)->except(['store'])->missing(fn() => notFoundJsonResponse());
+        Route::post('electronicFormats/{book}', [ElectronicFormatController::class, 'storeForBook'])->missing(fn() => notFoundJsonResponse());
     });
 
     Route::group(['namespace' => 'Addresses'], function(){
