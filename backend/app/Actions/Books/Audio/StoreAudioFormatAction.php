@@ -5,8 +5,8 @@ namespace App\Actions\Books\Audio;
 use App\Helpers\DirectoryNameGenerator;
 use App\Models\V1\Books\AudioFormat;
 use App\Models\V1\Books\Book;
-use Exception;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 class StoreAudioFormatAction
 {
@@ -18,7 +18,7 @@ class StoreAudioFormatAction
     public function execute(Book $book, array $attributes)
     {
         if ($book->electronicFormat) {
-            throw new Exception('Audio format already exists for this book');
+            throw new InvalidArgumentException('Audio format already exists for this book');
         }
 
         DB::transaction(function () use ($book, $attributes) {

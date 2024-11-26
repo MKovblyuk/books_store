@@ -5,8 +5,8 @@ namespace App\Actions\Books\Electronic;
 use App\Helpers\DirectoryNameGenerator;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\ElectronicFormat;
-use Exception;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 class StoreElectronicFormatAction
 {
@@ -18,7 +18,7 @@ class StoreElectronicFormatAction
     public function execute(Book $book, array $attributes)
     {
         if ($book->electronicFormat) {
-            throw new Exception('Electronic format already exists for this book');
+            throw new InvalidArgumentException('Electronic format already exists for this book');
         }
 
         DB::transaction(function () use ($book, $attributes) {
