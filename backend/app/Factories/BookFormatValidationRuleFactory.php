@@ -11,12 +11,12 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class BookFormatValidationRuleFactory
 {
-    public static function create(BookFormat $format): ValidationRule
+    public static function create(BookFormat $format, string $method): ValidationRule
     {
         switch ($format) {
-            case BookFormat::Audio : return new AudioFormat;
-            case BookFormat::Electronic : return new ElectronicFormat;
-            case BookFormat::Paper : return new PaperFormat;
+            case BookFormat::Audio : return new AudioFormat($method);
+            case BookFormat::Electronic : return new ElectronicFormat($method);
+            case BookFormat::Paper : return new PaperFormat($method);
             default: throw new Exception('Not found passed book format');
         }
     }

@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateBookAction 
 {
+    public function __construct(
+        private UpdateOrCreatePaperFormatAction $updateOrCreatePaperFormatAction,
+        private UpdateOrCreateElectronicFormatAction $updateOrCreateElectronicFormatAction,
+        private UpdateOrCreateAudioFormatAction $updateOrCreateAudioFormatAction,
+        private UpdateBookCoverImageAction $updateBookCoverImageAction,
+    )
+    {}
+
     public function execute(Book $book, array $attributes): bool
     {
         return DB::transaction(function () use($book, $attributes) {      
@@ -17,13 +25,16 @@ class UpdateBookAction
                 $book->authors()->sync(Author::find($attributes['authors_ids']));
             }
             if (isset($attributes['formats']['paper'])) {
-                $book->paperFormat->update($attributes['formats']['paper']);
-            }
-            if (isset($attributes['formats']['audio'])) {
-                $book->audioFormat->update($attributes['formats']['audio']);
+                $this->updateOrCreatePaperFormatAction->execute($book, $attributes['formats']['paper']);
             }
             if (isset($attributes['formats']['electronic'])) {
-                $book->electronicFormat->update($attributes['formats']['electronic']);
+                $this->updateOrCreateElectronicFormatAction->execute($book, $attributes['formats']['electronic']);
+            }
+            if (isset($attributes['formats']['audio'])) {
+                $this->updateOrCreateAudioFormatAction->execute($book, $attributes['formats']['audio']);
+            }
+            if (isset($attributes['cover_image'])) {
+                $this->updateBookCoverImageAction->execute($book, $attributes['cover_image']);
             }
 
             return true;

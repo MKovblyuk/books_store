@@ -9,6 +9,11 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class BookFormat implements ValidationRule
 {
+    public function __construct(
+        private string $method = 'POST'
+    )
+    {}
+
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $formatName = ucfirst(explode(".", $attribute)[1]);
@@ -18,6 +23,6 @@ class BookFormat implements ValidationRule
             $fail('Incorrect format name: ' . $formatName);
         }
 
-        BookFormatValidationRuleFactory::create($bookFormat)->validate($formatName, $value, $fail);
+        BookFormatValidationRuleFactory::create($bookFormat, $this->method)->validate($formatName, $value, $fail);
     }
 }
