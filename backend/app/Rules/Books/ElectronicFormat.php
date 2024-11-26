@@ -28,7 +28,7 @@ class ElectronicFormat implements ValidationRule
     {
         return [
             'price' => ['required', 'decimal:0,2', 'min:0'],
-            'discount' => ['sometimes', 'decimal:0,2', 'min:0'],
+            'discount' => ['sometimes', 'decimal:0,2', 'min:0', 'max:100'],
             'page_count' => ['required', 'integer', 'min:1'],
             'files' => ['required', 'array'],
             'files.*' => [File::types(['pdf'])->max('250mb')],
@@ -39,7 +39,7 @@ class ElectronicFormat implements ValidationRule
     {
         return [
             'price' => ['sometimes', 'decimal:0,2', 'min:0'],
-            'discount' => ['sometimes', 'decimal:0,2', 'min:0'],
+            'discount' => ['sometimes', 'decimal:0,2', 'min:0', 'max:100'],
             'page_count' => ['sometimes', 'integer', 'min:1'],
             'files' => ['sometimes', 'array'],
             'files.*' => [File::types(['pdf'])->max('250mb')],

@@ -28,7 +28,7 @@ class AudioFormat implements ValidationRule
     {
         return [
             'price' => ['required', 'decimal:0,2', 'min:0'],
-            'discount' => ['sometimes', 'decimal:0,2', 'min:0'],
+            'discount' => ['sometimes', 'decimal:0,2', 'min:0', 'max:100'],
             'duration' => ['required', 'integer', 'min:0'],
             'files' => ['required', 'array'],
             'files.*' => [File::types(['mp3'])->max('250mb')],
@@ -39,7 +39,7 @@ class AudioFormat implements ValidationRule
     {
         return [
             'price' => ['sometimes', 'decimal:0,2', 'min:0'],
-            'discount' => ['sometimes', 'decimal:0,2', 'min:0'],
+            'discount' => ['sometimes', 'decimal:0,2', 'min:0', 'max:100'],
             'duration' => ['sometimes', 'integer', 'min:0'],
             'files' => ['sometimes', 'array'],
             'files.*' => [File::types(['mp3'])->max('250mb')],

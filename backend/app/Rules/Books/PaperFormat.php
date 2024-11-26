@@ -27,7 +27,7 @@ class PaperFormat implements ValidationRule
     {
         return [
             'price' => ['required', 'decimal:0,2', 'min:0'],
-            'discount' => ['sometimes', 'decimal:0,2', 'min:0'],
+            'discount' => ['sometimes', 'decimal:0,2', 'min:0', 'max:100'],
             'quantity' => ['required', 'integer', 'min:0'],
             'page_count' => ['required', 'integer', 'min:1'],
         ];
@@ -37,7 +37,7 @@ class PaperFormat implements ValidationRule
     {
         return [
             'price' => ['sometimes', 'decimal:0,2', 'min:0'],
-            'discount' => ['sometimes', 'decimal:0,2', 'min:0'],
+            'discount' => ['sometimes', 'decimal:0,2', 'min:0', 'max:100'],
             'quantity' => ['sometimes', 'integer', 'min:0'],
             'page_count' => ['sometimes', 'integer', 'min:1'],
         ];
