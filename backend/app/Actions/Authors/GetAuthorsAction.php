@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Books;
+namespace App\Actions\Authors;
 
 use App\Models\V1\Books\Author;
 use Spatie\QueryBuilder\AllowedFilter;

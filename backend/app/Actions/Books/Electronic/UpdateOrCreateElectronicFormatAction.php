@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Books;
+namespace App\Actions\Books\Electronic;
 
 use App\Models\V1\Books\Book;
 

@@ -2,6 +2,9 @@
 
 namespace App\Actions\Books;
 
+use App\Actions\Books\Audio\UpdateOrCreateAudioFormatAction;
+use App\Actions\Books\Electronic\UpdateOrCreateElectronicFormatAction;
+use App\Actions\Books\Paper\UpdateOrCreatePaperFormatAction;
 use App\Models\V1\Books\Author;
 use App\Models\V1\Books\Book;
 use Exception;

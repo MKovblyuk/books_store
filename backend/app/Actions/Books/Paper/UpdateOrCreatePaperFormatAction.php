@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Books;
+namespace App\Actions\Books\Paper;
 
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\PaperFormat;

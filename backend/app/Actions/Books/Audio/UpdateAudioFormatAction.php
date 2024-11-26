@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Books;
+namespace App\Actions\Books\Audio;
 
 use App\Models\V1\Books\Book;
 use Illuminate\Support\Facades\DB;
