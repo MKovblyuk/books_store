@@ -21,7 +21,7 @@ async function fetchPaymentMethods()
 
 function paymentMethodIsAllowed(method) 
 {
-    return method.name === 'Upon Receiving' 
+    return method.method === 'UponReceiving' 
         ? cartStore.items.every(item => item.bookFormat === BookFormats.Paper) 
         : true;
 }
