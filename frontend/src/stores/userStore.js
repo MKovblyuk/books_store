@@ -3,7 +3,15 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useUserStore = defineStore('user', () => {
-    const user = ref();
+    const user = ref({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        role: '',
+        createdAt: '',
+        updatedAt: ''
+    });
     const loading = ref(false);
     const authorized = ref(false);
 
