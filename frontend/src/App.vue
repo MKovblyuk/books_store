@@ -13,6 +13,7 @@ onMounted(() => {
 
 <template>
     <RouterView name="main_pages"/>
+    <RouterView name="managment_pages"/>
 </template>
 
 <style>
