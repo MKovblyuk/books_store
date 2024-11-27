@@ -20,7 +20,7 @@ class StoreAudioFormatAction
      */
     public function execute(Book $book, array $attributes)
     {
-        if ($book->electronicFormat) {
+        if ($book->audioFormat) {
             throw new InvalidArgumentException('Audio format already exists for this book');
         }
 
