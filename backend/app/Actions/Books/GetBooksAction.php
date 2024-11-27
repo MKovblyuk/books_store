@@ -67,6 +67,15 @@ class GetBooksAction
                 AllowedSort::custom('likes', new SortBooksByLikes()),
                 AllowedSort::custom('price', new SortBooksByPrice()),
             ])
+            ->whereIn('books.id', function ($query) {
+                $query->select('book_id')->from('paper_formats');
+            })
+            ->orWhereIn('books.id', function ($query) {
+                $query->select('book_id')->from('electronic_formats');
+            })
+            ->orWhereIn('books.id', function ($query) {
+                $query->select('book_id')->from('audio_formats');
+            })
             ->paginate($perPage);
     }
 }
