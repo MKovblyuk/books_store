@@ -10,7 +10,7 @@ class DeleteAudioFormatAction
     public function execute(AudioFormat $audioFormat): bool
     {
         return DB::transaction(function() use($audioFormat){
-            return $audioFormat->delete() && $audioFormat->getFileStorageSerivce()->delete();
+            return $audioFormat->delete() && $audioFormat->getFileStorageService()->delete();
         });
     }
 }

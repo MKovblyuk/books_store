@@ -10,7 +10,7 @@ class DeleteElectronicFormatAction
     public function execute(ElectronicFormat $electronicFormat): bool
     {
         return DB::transaction(function() use($electronicFormat){
-            return $electronicFormat->delete() && $electronicFormat->getFileStorageSerivce()->delete();
+            return $electronicFormat->delete() && $electronicFormat->getFileStorageService()->delete();
         });
     }
 }
