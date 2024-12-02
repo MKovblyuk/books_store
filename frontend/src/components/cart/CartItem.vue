@@ -1,5 +1,6 @@
 <script setup>
 import { useDefaultAssests } from '@/composables/defaultAssets';
+import { BookFormats } from '@/enums/bookFormats';
 import { useCartStore } from '@/stores/cartStore';
 
 const props = defineProps(['item']);
@@ -37,7 +38,10 @@ const cartStore = useCartStore();
             <a href="#" class="text-end" @click="cartStore.removeItem(item)">
                 Remove
             </a>
-            <div class="d-flex align-items-center justify-content-between">
+            <div 
+                v-if="item?.bookFormat === BookFormats.Paper"
+                class="d-flex align-items-center justify-content-between"
+            >
                 <button class="btn btn-outline-dark" @click="item.decreaseQuantity">-</button>
                 <div class="p-1"> {{item.getQuantity()}}</div>
                 <button class="btn btn-outline-dark" @click="item.increaseQuantity">+</button>
