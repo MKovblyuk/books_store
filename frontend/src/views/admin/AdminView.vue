@@ -5,13 +5,13 @@ import { RouterView } from 'vue-router';
 </script>
 
 <template>
-    <div class="container-fluid">
+    <div>
         <Header/>
-        <div class="row align-items-start pt-1">
-            <div class="col-2 bg-body-tertiary">
+        <div class="d-flex pt-1">
+            <div class="col-4 col-sm-3 col-md-2 col-xxl-1 bg-body-tertiary px-1">
                 <SideMenu class="vh-100"></SideMenu>
             </div>
-            <div class="col">
+            <div class="col px-2">
                 <RouterView name="admin_content"/>
             </div>
         </div>
