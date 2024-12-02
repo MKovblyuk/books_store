@@ -42,13 +42,10 @@ class StoreBookAction
 
                 return $book->id;
             } catch (Exception $e) {
-                if (isset($attributes['formats']['audio'])) {
-                    $book->audioFormat->getFileStorageService()->delete();
-                }
-                if (isset($attributes['formats']['electronic'])) {
-                    $book->electronicFormat->getFileStorageService()->delete();
-                }
-                if (isset($attributes['cover_image'])) {
+                $book->audioFormat?->getFileStorageService()->delete();
+                $book->electronicFormat?->getFileStorageService()->delete();
+
+                if ($book->cover_image_path) {
                     $this->deleteBookCoverImageAction->execute($book);
                 }
 
