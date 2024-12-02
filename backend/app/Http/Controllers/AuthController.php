@@ -12,14 +12,24 @@ class AuthController extends Controller
 {
     public function login(LoginUserRequest $request)
     {        
-        if (Auth::attempt($request->validated())) {
+        $credentials = [
+            'email' => $request->validated('email'),
+            'password' => $request->validated('password'),
+        ];
+
+        if (Auth::attempt($credentials, $request->validated('remember'))) {
 
             if (isset($request->session)) {
                 $request->session()->regenerate();
             }
 
             $user = Auth::user();
-            $customerToken = $user->createToken('customer_token_' . $user->id);
+            $expirationMinutes = $request->validated('remember') ? now()->addDays(14) : now()->addDays(2);
+            $customerToken = $user->createToken(
+                $user->role->name . '_token_' . $user->id, 
+                ['*'], 
+                $expirationMinutes
+            );
 
             return response()->json([
                 'message' => 'User successfully logged in',
@@ -44,7 +54,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $customerToken = $user->createToken('customer_token_' . $user->id);
+            $customerToken = $user->createToken($user->role->name . '_token_' . $user->id);
 
             return response()->json([
                 'message' => 'User successfully registered',
