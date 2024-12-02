@@ -107,9 +107,3 @@ function buy()
         />
     </div>
 </template>
-
-<style scoped>
-    /* .book_preview {
-        max-height: 700px;
-    } */
-</style>
