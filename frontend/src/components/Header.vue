@@ -62,6 +62,13 @@ const bookStore = useBookStore();
             >
                 Dashboard
             </RouterLink>
+            <RouterLink 
+                to="/editor" 
+                class="btn btn-primary ms-2"
+                v-if="userStore.user.role === UserRoles.Editor"
+            >
+                Dashboard
+            </RouterLink>
             <RouterLink to="/profile" class="btn btn-primary ms-2">Profile</RouterLink>
             <RouterLink to="/home" class="btn btn-primary ms-2" @click="userStore.logout">Logout</RouterLink>
         </template>

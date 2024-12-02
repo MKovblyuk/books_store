@@ -7,6 +7,7 @@ import HomeView from "@/views/HomeView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import OrderView from "@/views/OrderView.vue";
 import adminRoutes from './adminRoutes';
+import editorRoutes from './editorRoutes';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,6 +78,7 @@ const router = createRouter({
 	  }
 	},
 	...adminRoutes,
+	...editorRoutes,
   ]
 })
 
