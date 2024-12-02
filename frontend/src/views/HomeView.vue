@@ -17,15 +17,15 @@ const router = useRouter();
 const filterStore = useFilterStore();
 const subcategories = ref([]);
 const selectedCategory = ref();
-const BOOKS_PER_PAGE = 20;
 
 onMounted(() => {
-    store.fetchBooks(route.params.page, BOOKS_PER_PAGE);
+    store.perPage = 20;
+    store.fetchBooks(route.params.page);
 });
 
 const pageChangedHandler = (page) => {
     router.push('/' + page);
-    store.fetchBooks(page, BOOKS_PER_PAGE);
+    store.fetchBooks(page);
 }
 
 watch(() => filterStore.category, async newCategoryId => {
@@ -35,7 +35,7 @@ watch(() => filterStore.category, async newCategoryId => {
 
 function categoryChangedHandler(id) {
     filterStore.category = id;
-    store.fetchBooks(1, BOOKS_PER_PAGE);
+    store.fetchBooks(1);
 }
 
 </script>

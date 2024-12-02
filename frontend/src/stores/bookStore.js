@@ -68,5 +68,6 @@ export const useBookStore = defineStore('book', () => {
         bookIsLoaded, 
         fetchBook,
         booksIsLoaded,
+        perPage
     };
 });
