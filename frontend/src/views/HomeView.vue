@@ -44,9 +44,9 @@ function categoryChangedHandler(id) {
 </script>
 
 <template>
-    <div class="row">
+    <div class="row w-100">
         <SideMenu 
-            class="side_menu col-4 col-sm-3 col-lg-2"
+            class="side_menu col-4 col-sm-3 col-lg-2 ps-4"
             @filter_options_changed="store.fetchBooks(1)"
         />
         <div class="col-8 col-sm-9 col-lg-10">
