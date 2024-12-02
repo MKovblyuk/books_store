@@ -13,6 +13,7 @@ import { computed, ref, watch } from "vue";
 import { useBook } from "@/composables/book";
 import { useUserStore } from "@/stores/userStore";
 import AddReviewForm from "@/components/reviews/AddReviewForm.vue";
+import { BookFormats } from "@/enums/bookFormats";
 
 const bookStore = useBookStore();
 const reviewStore = useReviewStore();
@@ -25,7 +26,7 @@ const RELATED_BOOKS_PER_PAGE = 10;
 
 const selectedFormat = ref();
 const props = defineProps(['id']);
-const canBuy = computed(() => selectedFormat.value !== BookFormats.Paper || props.book.paperFormat?.quantity > 0);
+const canBuy = computed(() => selectedFormat.value !== BookFormats.Paper || bookStore.book?.paperFormat?.quantity > 0);
 
 watch(() => props.id, fetchData, { immediate: true});
 
@@ -49,7 +50,7 @@ async function reviewPageChangedHandler(page)
 
 function addToCart() 
 {
-    if (canBuy) {
+    if (canBuy.value) {
         try {
             const cartItem = new CartItem(bookStore.book, selectedFormat.value);
             cartStore.addItem(cartItem);
@@ -61,8 +62,10 @@ function addToCart()
 
 function buy()
 {
-    addToCart();
-    router.push('/order');
+    if (canBuy.value) {
+        addToCart();
+        router.push('/order');
+    }
 }
 
 </script>

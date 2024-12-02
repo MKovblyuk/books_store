@@ -2,7 +2,7 @@
 import { useBook } from "@/composables/book";
 import { CartItem } from "@/models/CartItem";
 import { useCartStore } from "@/stores/cartStore";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from 'vue-router'
 import BookCardFormatItem from "./BookCardFormatItem.vue";
 import { BookFormats } from "@/enums/bookFormats";
@@ -17,7 +17,7 @@ const { getAvailableFormat, getFormatData } = useBook(props.book);
 const priceCalculator = usePriceCalculator();
 const { defaultImageSrc } = useDefaultAssests();
 
-const selectedFormat = ref(getAvailableFormat());
+const selectedFormat = ref();
 const formatData = computed(() => getFormatData(selectedFormat.value));
 
 const canBuy = computed(() => selectedFormat.value !== BookFormats.Paper || props.book.paperFormat?.quantity > 0);
@@ -39,10 +39,18 @@ function buy()
     addToCart();
     router.push('/order');
 }
+
+onMounted(() => {
+    try {
+        selectedFormat.value = getAvailableFormat();
+    } catch(e) {
+        selectedFormat.value = false;
+    }
+})
 </script>
 
 <template>
-    <div class="card" style="width: 14rem;">
+    <div class="card" style="width: 14rem;" v-if="selectedFormat">
         <div class="d-flex justify-content-center">
             <img 
                 :src="book.coverImageUrl ?? defaultImageSrc" 
