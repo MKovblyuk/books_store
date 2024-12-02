@@ -21,6 +21,9 @@ const selectedCategory = ref();
 onMounted(() => {
     store.perPage = 20;
     store.fetchBooks(route.params.page);
+
+    selectedCategory.value = useCategoryStore().getCategoryById(filterStore.category);
+    subcategories.value = selectedCategory.value?.children;
 });
 
 const pageChangedHandler = (page) => {
