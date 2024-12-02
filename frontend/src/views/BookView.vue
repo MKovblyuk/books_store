@@ -72,15 +72,15 @@ function buy()
 
 <template>
     <div>
-        <div class="d-flex p-2">
+        <div class="p-2 row align-items-star justify-content-start">
             <BookPreview 
-                class="book_preview px-2" 
+                class="book_preview px-2 col-2" 
                 @to_cart="addToCart"
                 @buy="buy"
             />
             <BookDetails 
                 v-if="bookStore.bookIsLoaded" 
-                class="book_details px-5" 
+                class="px-5 col-10" 
                 :book="bookStore.book"
                 :selectedFormat="selectedFormat ?? useBook(bookStore.book).getAvailableFormat()"
                 @change_selected_format="format => selectedFormat = format"
@@ -109,10 +109,7 @@ function buy()
 </template>
 
 <style scoped>
-    .book_preview {
-        width: 15%;
-    }
-    .book_details {
-        width: 85%;
-    }
+    /* .book_preview {
+        max-height: 700px;
+    } */
 </style>
