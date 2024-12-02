@@ -6,6 +6,7 @@ import { useCartStore } from "@/stores/cartStore";
 import { useUserStore } from "@/stores/userStore";
 import { useFilterStore } from "@/stores/filterStore";
 import { useBookStore } from "@/stores/bookStore";
+import { UserRoles } from "@/enums/userRoles";
 
 const cartStore = useCartStore();
 const userStore = useUserStore();
@@ -54,6 +55,13 @@ const bookStore = useBookStore();
             </span>
         </button>
         <template v-if="userStore.authorized">
+            <RouterLink 
+                to="/admin" 
+                class="btn btn-primary ms-2"
+                v-if="userStore.user.role === UserRoles.Admin"
+            >
+                Dashboard
+            </RouterLink>
             <RouterLink to="/profile" class="btn btn-primary ms-2">Profile</RouterLink>
             <RouterLink to="/home" class="btn btn-primary ms-2" @click="userStore.logout">Logout</RouterLink>
         </template>

@@ -13,6 +13,7 @@ export default [
     components: {
             managment_pages: AdminView
     },
+    redirect: '/admin/users',
     children: [
         {
             path: 'users',
