@@ -16,6 +16,7 @@ const router = createRouter({
 	  components: {
 		main_pages: BaseView
 	  },
+	  redirect: 'home',
 	  children: [
 		{
 			path: '1',
