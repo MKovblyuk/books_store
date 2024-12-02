@@ -22,7 +22,7 @@ const userStore = useUserStore();
 
 const router = useRouter();
 const REVIEWS_PER_PAGE = 2;
-const RELATED_BOOKS_PER_PAGE = 10;
+const RELATED_BOOKS_PER_PAGE = 20;
 
 const selectedFormat = ref();
 const props = defineProps(['id']);
