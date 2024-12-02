@@ -17,14 +17,14 @@ const bookStore = useBookStore();
 
 <template>
 
-<header class="d-flex p-3 justify-content-between align-items-center">
+<header class="d-flex p-2 justify-content-between align-items-center">
     <div>
         <RouterLink to="/home">
             <img
-                src="https://w7.pngwing.com/pngs/973/11/png-transparent-phoenix-logo-design-mark-phoenix-fire-thumbnail.png"
+                src="@/assets/icons/book_store_logo.png"
                 alt="logo"
-                width="30px"
-                height="30px"
+                width="50rem"
+                height="50rem"
             >
         </RouterLink>
     </div>
