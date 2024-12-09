@@ -26,7 +26,7 @@ class BookFactory extends Factory
             'description' => $descriptions[array_rand($descriptions)],
             'publication_year' => fake()->year(),
             'language' => $languages[array_rand($languages)], 
-            'published_at' => fake()->optional(0.8)->date,
+            'published_at' => fake()->optional(0.8)->dateTime(),
         ];
     }
 }
