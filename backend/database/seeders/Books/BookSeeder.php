@@ -8,52 +8,73 @@ use App\Models\V1\Books\Book;
 use App\Models\V1\Books\Category;
 use App\Models\V1\Books\Publisher;
 use Database\Seeders\Books\AdditionalSeeders\AudioFormatSeeder;
-use Database\Seeders\Books\AdditionalSeeders\CoverImageSeeder;
 use Database\Seeders\Books\AdditionalSeeders\ElectronicFormatSeeder;
 use Database\Seeders\Books\AdditionalSeeders\PaperFormatSeeder;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class BookSeeder extends Seeder
 {
     public function run(): void
-    {
-        $this->seedBooksWithFormats(3, [BookFormat::Audio, BookFormat::Electronic, BookFormat::Paper]);
-        $this->seedBooksWithFormats(3, [BookFormat::Audio, BookFormat::Electronic]);
-        $this->seedBooksWithFormats(3, [BookFormat::Paper]);
+    {            
+        DB::transaction(function () {
+            try {
+                $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic, BookFormat::Paper]);
+                $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic]);
+                $this->seedBooksWithFormats(10_000, [BookFormat::Paper]);
+            } catch (Exception $e) {
+                ElectronicFormatSeeder::rollback();
+                AudioFormatSeeder::rollback();
+                throw $e;
+            }
+        });
     }
 
     private function seedBooksWithFormats(int $count, array $formats): void
     {
-        for ($i = 0; $i < $count; $i++) {
-            $this->seedBookWithFormats($formats);
+        for ($BATCH_SIZE = 1000; $count > 0; $count -= $BATCH_SIZE) {
+            if ($count < $BATCH_SIZE) {
+                $BATCH_SIZE = $count;
+            }
+
+            $books = Book::factory($BATCH_SIZE)
+                ->for(Publisher::inRandomOrder()->first())
+                ->for(Category::inRandomOrder()->first())
+                ->create();
+
+            $this->seedAuthorBookTable(rand(1, 3), $books);
+            $this->seedBookFormats($formats, $books);
         }
     }
 
-    private function seedBookWithFormats(array $formats): void
+    private function seedBookFormats(array $formats, Collection $books): void
     {
-        $book = $this->createBook();
-
         foreach ($formats as $format) {
             switch ($format) {
-                case BookFormat::Audio : AudioFormatSeeder::seed($book); break;
-                case BookFormat::Electronic : ElectronicFormatSeeder::seed($book); break;
-                case BookFormat::Paper: PaperFormatSeeder::seed($book); break;
+                case BookFormat::Audio : AudioFormatSeeder::seed($books); break;
+                case BookFormat::Electronic : ElectronicFormatSeeder::seed($books); break;
+                case BookFormat::Paper: PaperFormatSeeder::seed($books); break;
                 default : throw new Exception('Incorrect Book Format');
             }
         }
     }
 
-    private function createBook(): Book
-    {
-        $book = Book::factory()
-            ->hasAttached(Author::all()->random(2))
-            ->for(Publisher::all()->random())
-            ->for(Category::all()->random())
-            ->create();
+    private function seedAuthorBookTable(int $authorsCount, Collection $books): void
+    {   
+        $authors = Author::all('id');
+        $data = [];
 
-        CoverImageSeeder::seed($book);        
-        
-        return $book;
+        foreach ($books as $book) {
+            for ($i = 0; $i < $authorsCount; $i++) {
+                $data[] = [
+                    'book_id' => $book->id, 
+                    'author_id' => $authors->random()->id
+                ];
+            }
+        }
+
+        DB::table('author_book')->insert($data);
     }
 }
