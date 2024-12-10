@@ -26,7 +26,7 @@ class AudioFormatSeeder
 
             link(
                 storage_path('app/public/seeding_files/audio_book_file.mp3'),
-                storage_path('app/books/audio/'. $dirName .'/link_to_file.mp3')
+                Storage::disk('audio')->path($dirName .'/link_to_file.pdf')
             );
 
             $data[] = [

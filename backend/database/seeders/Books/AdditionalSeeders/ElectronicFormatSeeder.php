@@ -26,7 +26,7 @@ class ElectronicFormatSeeder
 
             link(
                 storage_path('app/public/seeding_files/electronic_book_file.pdf'),
-                storage_path('app/books/electronic/'. $dirName .'/link_to_file.pdf')
+                Storage::disk('electronic')->path($dirName .'/link_to_file.pdf')
             );
 
             $data[] = [
