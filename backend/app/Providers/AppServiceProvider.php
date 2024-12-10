@@ -17,6 +17,11 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(PaymentServiceInterface::class, EasyPayPaymentService::class);
         $this->app->bind(PriceCalculatorInterface::class, PriceCalculatorService::class);
+
+        if ($this->app->environment('local')) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**
