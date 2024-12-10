@@ -3,6 +3,7 @@
 namespace Database\Seeders\Books;
 
 use App\Enums\BookFormat;
+use App\Factories\CoverImageFactory;
 use App\Models\V1\Books\Author;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\Category;
@@ -17,6 +18,11 @@ use Illuminate\Support\Facades\DB;
 
 class BookSeeder extends Seeder
 {
+    public function __construct(
+        private $coverImageFactory = new CoverImageFactory
+    )
+    {}
+
     public function run(): void
     {            
         DB::transaction(function () {
@@ -27,6 +33,7 @@ class BookSeeder extends Seeder
             } catch (Exception $e) {
                 ElectronicFormatSeeder::rollback();
                 AudioFormatSeeder::rollback();
+                $this->coverImageFactory->rollback();
                 throw $e;
             }
         });
@@ -42,6 +49,7 @@ class BookSeeder extends Seeder
             $books = Book::factory($BATCH_SIZE)
                 ->for(Publisher::inRandomOrder()->first())
                 ->for(Category::inRandomOrder()->first())
+                ->sequence(fn () => ['cover_image_path' => $this->coverImageFactory->createLinkToImage()])
                 ->create();
 
             $this->seedAuthorBookTable(rand(1, 3), $books);
