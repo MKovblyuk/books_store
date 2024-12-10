@@ -14,7 +14,7 @@ class ElectronicFormatResource extends JsonResource
             'price' => $this->price,
             'discount' => $this->discount,
             'pageCount' => $this->page_count,
-            'files' => $this->getFileStorageService()->getAllFiles($this->book),
+            'files' => $this->getFileStorageService()->getAllFiles(),
         ];
     }
 }
