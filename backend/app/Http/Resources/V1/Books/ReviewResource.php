@@ -13,10 +13,8 @@ class ReviewResource extends JsonResource
 
     public function toArray(Request $request): array
     {
-        $user = User::find($this->user_id);
-
         if (isset($request->fields)) {
-            return $this->resourceWithSelectedFields($request, $user);
+            return $this->resourceWithSelectedFields($request, $this->user);
         }
 
         return [
@@ -24,15 +22,16 @@ class ReviewResource extends JsonResource
             'rating' => $this->rating,
             'review' => $this->review,
             'userId' => $this->user_id,
-            'userFirstName' => $user->first_name,
-            'userLastName' => $user->last_name,
+            'userFirstName' => $this->user->first_name,
+            'userLastName' => $this->user->last_name,
             'updatedAt' => $this->updated_at,
-            $this->mergeWhen($this->fieldIsIncluded('book', $request), [
-                'book' => $this->book,
-            ]),
-            $this->mergeWhen($this->fieldIsNotIncluded('book', $request), [
-                'bookId' => $this->book_id,
-            ]),
+
+            'book' => $this->when($this->fieldIsIncluded('book', $request),
+                fn () => $this->book
+            ),
+            'bookId' => $this->when($this->fieldIsNotIncluded('book', $request),
+                $this->book_id
+            ),
         ];
     }
 
