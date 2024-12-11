@@ -20,11 +20,11 @@ class DistrictResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
 
-            $this->mergeWhen($this->fieldIsNotIncluded('region', $request), 
-                ['regionId' => $this->region_id]
+            'regionId' => $this->when($this->fieldIsNotIncluded('region', $request), 
+                $this->region_id
             ),
-            $this->mergeWhen($this->fieldIsIncluded('region', $request),
-                ['region' => new RegionResource($this->region)]
+            'region' => $this->when($this->fieldIsIncluded('region', $request),
+                fn () => new RegionResource($this->region)
             ),
         ];
     }
