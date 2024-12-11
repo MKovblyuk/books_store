@@ -35,6 +35,13 @@ class Book extends Model
         'deleted' => BookDeleted::class,
     ];
 
+    protected $with = [
+        'paperFormat',
+        'electronicFormat',
+        'audioFormat',
+        'likedByUsers'
+    ];
+
     public function authors(): BelongsToMany
     {
         return $this->belongsToMany(Author::class);
