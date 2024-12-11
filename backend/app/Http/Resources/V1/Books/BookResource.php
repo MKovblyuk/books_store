@@ -43,7 +43,7 @@ class BookResource extends JsonResource
                 $this->category_id
             ),
             'category' => $this->when($this->fieldIsIncluded('category', $request),
-                fn () => new CategoryResource($this->category)
+                fn () => new FlatCategoryResource($this->category)
             ),
 
             'authors' => $this->when($this->fieldIsIncluded('authors', $request),
