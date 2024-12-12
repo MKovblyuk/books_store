@@ -2,6 +2,7 @@
 
 namespace App\Actions\Books;
 
+use App\Enums\BookFormat;
 use App\Filters\DateFilter;
 use App\Filters\FilterBooksByAuthors;
 use App\Filters\FilterBooksByCategoryWithChild;
@@ -23,7 +24,7 @@ class GetBooksAction
             ->allowedFilters([
                 AllowedFilter::exact('id'),
                 AllowedFilter::custom('author_id', new FilterBooksByAuthors()),
-                AllowedFilter::custom('format', new FilterBooksByFormats()),
+                AllowedFilter::custom('format', new FilterBooksByFormats())->default(BookFormat::values()),
                 AllowedFilter::custom('price_range', new FilterBooksByPrice()),
                 AllowedFilter::custom('category_with_children', new FilterBooksByCategoryWithChild()),
                 AllowedFilter::exact('publisher_id'),
@@ -67,16 +68,6 @@ class GetBooksAction
                 AllowedSort::custom('likes', new SortBooksByLikes()),
                 AllowedSort::custom('price', new SortBooksByPrice()),
             ])
-            ->whereIn('books.id', function ($query) {
-                $query->select('book_id')
-                     ->from('paper_formats')
-                     ->unionAll(function ($query) {
-                       $query->select('book_id')->from('electronic_formats');
-                     })
-                     ->unionAll(function ($query) {
-                       $query->select('book_id')->from('audio_formats');
-                     });
-            })
             ->with('authors')
             ->paginate($perPage);
     }
