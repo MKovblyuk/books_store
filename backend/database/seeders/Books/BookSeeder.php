@@ -71,14 +71,14 @@ class BookSeeder extends Seeder
 
     private function seedAuthorBookTable(int $authorsCount, Collection $books): void
     {   
-        $authors = Author::all('id')->random($authorsCount);
+        $authors = Author::inRandomOrder()->limit($authorsCount)->pluck('id');
         $data = [];
 
         foreach ($books as $book) {
             for ($i = 0; $i < $authorsCount; $i++) {
                 $data[] = [
                     'book_id' => $book->id, 
-                    'author_id' => $authors[$i]->id
+                    'author_id' => $authors[$i]
                 ];
             }
         }

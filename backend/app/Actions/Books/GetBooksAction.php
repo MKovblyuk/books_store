@@ -20,6 +20,11 @@ class GetBooksAction
 {
     public function execute(int $perPage)
     {
+        return $this->getBuilder()->paginate($perPage);
+    }
+
+    public function getBuilder(): QueryBuilder
+    {
         return QueryBuilder::for(Book::class)
             ->allowedFilters([
                 AllowedFilter::exact('id'),
@@ -68,7 +73,6 @@ class GetBooksAction
                 AllowedSort::custom('likes', new SortBooksByLikes()),
                 AllowedSort::custom('price', new SortBooksByPrice()),
             ])
-            ->with('authors')
-            ->paginate($perPage);
+            ->with('authors');
     }
 }

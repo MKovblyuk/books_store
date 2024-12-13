@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Books;
 
 use App\Actions\Books\DeleteBookCoverImageAction;
 use App\Actions\Books\GetBooksAction;
+use App\Actions\Books\GetBooksWithCacheAction;
 use App\Actions\Books\GetLanguagesAction;
 use App\Actions\Books\GetRelatedBooksAction;
 use App\Actions\Books\StoreBookAction;
@@ -46,7 +47,7 @@ class BookController extends Controller
         ]);
     }
 
-    public function index(GetBooksAction $action)
+    public function index(GetBooksWithCacheAction $action)
     {
         return new BookCollection($action->execute(request()->get('per_page', 10)));
     }
