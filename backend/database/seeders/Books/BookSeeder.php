@@ -27,9 +27,9 @@ class BookSeeder extends Seeder
     {            
         DB::transaction(function () {
             try {
-                $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic, BookFormat::Paper]);
-                $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic]);
-                $this->seedBooksWithFormats(10_000, [BookFormat::Paper]);
+                // $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic, BookFormat::Paper]);
+                // $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic]);
+                $this->seedBooksWithFormats(50_000, [BookFormat::Paper]);
             } catch (Exception $e) {
                 ElectronicFormatSeeder::rollback();
                 AudioFormatSeeder::rollback();
@@ -71,14 +71,14 @@ class BookSeeder extends Seeder
 
     private function seedAuthorBookTable(int $authorsCount, Collection $books): void
     {   
-        $authors = Author::all('id');
+        $authors = Author::all('id')->random($authorsCount);
         $data = [];
 
         foreach ($books as $book) {
             for ($i = 0; $i < $authorsCount; $i++) {
                 $data[] = [
                     'book_id' => $book->id, 
-                    'author_id' => $authors->random()->id
+                    'author_id' => $authors[$i]->id
                 ];
             }
         }
