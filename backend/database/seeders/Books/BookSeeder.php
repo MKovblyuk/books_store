@@ -29,7 +29,7 @@ class BookSeeder extends Seeder
             try {
                 $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic, BookFormat::Paper]);
                 $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic]);
-                $this->seedBooksWithFormats(50_000, [BookFormat::Paper]);
+                $this->seedBooksWithFormats(10_000, [BookFormat::Paper]);
             } catch (Exception $e) {
                 ElectronicFormatSeeder::rollback();
                 AudioFormatSeeder::rollback();

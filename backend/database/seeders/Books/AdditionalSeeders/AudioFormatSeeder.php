@@ -24,7 +24,7 @@ class AudioFormatSeeder
             Storage::disk('audio')->makeDirectory($dirName);
             self::$directories[] = $dirName;
 
-            link(
+            symlink(
                 storage_path('app/public/seeding_files/audio_book_file.mp3'),
                 Storage::disk('audio')->path($dirName .'/link_to_file.pdf')
             );

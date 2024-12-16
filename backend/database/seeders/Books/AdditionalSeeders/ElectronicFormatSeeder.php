@@ -24,7 +24,7 @@ class ElectronicFormatSeeder
             Storage::disk('electronic')->makeDirectory($dirName);
             self::$directories[] = $dirName;
 
-            link(
+            symlink(
                 storage_path('app/public/seeding_files/electronic_book_file.pdf'),
                 Storage::disk('electronic')->path($dirName .'/link_to_file.pdf')
             );
