@@ -9,9 +9,7 @@ use App\Filters\FilterBooksByCategoryWithChild;
 use App\Filters\FilterBooksByFormats;
 use App\Filters\FilterBooksByPrice;
 use App\Models\V1\Books\Book;
-use App\Sorts\SortBooksByLikes;
 use App\Sorts\SortBooksByPrice;
-use App\Sorts\SortBooksBySellingCount;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -69,8 +67,8 @@ class GetBooksAction
                 'category_id',
                 'created_at',
                 'updated_at',
-                AllowedSort::custom('selling_count', new SortBooksBySellingCount()),
-                AllowedSort::custom('likes', new SortBooksByLikes()),
+                'selling_count',
+                'likes',
                 AllowedSort::custom('price', new SortBooksByPrice()),
             ])
             ->with('authors');
