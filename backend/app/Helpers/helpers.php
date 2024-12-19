@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
+
 if (!function_exists('notFoundJsonResponse')) {
     function notFoundJsonResponse()
     {
@@ -13,5 +15,11 @@ if (!function_exists('getVariableMemoryUsage')) {
         $startMemory = memory_get_usage();
         $tmp = unserialize(serialize($var)); 
         return memory_get_usage() - $startMemory;
+    }
+}
+
+if (!function_exists('logExecutionTimeAfterStart')) {
+    function logExecutionTimeAfterStart(string $title = '') {
+        Log::channel('execution_time')->info("$title: " . microtime(true) - LARAVEL_START . ' seconds');
     }
 }
