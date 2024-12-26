@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Api\V1\Books;
 
 use App\Actions\Books\DeleteBookCoverImageAction;
-use App\Actions\Books\GetBooksAction;
 use App\Actions\Books\GetBooksWithCacheAction;
-use App\Actions\Books\GetLanguagesAction;
+use App\Actions\Books\GetLanguagesWithCacheAction;
 use App\Actions\Books\GetRelatedBooksAction;
 use App\Actions\Books\StoreBookAction;
 use App\Actions\Books\UpdateBookAction;
@@ -187,7 +186,7 @@ class BookController extends Controller
         return response()->json(['message' => 'Format not found'], 404);
     }
 
-    public function getLanguages(GetLanguagesAction $action) 
+    public function getLanguages(GetLanguagesWithCacheAction $action) 
     {
         return response()->json(['data' => $action->execute()]);
     }

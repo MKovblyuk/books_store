@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
+use App\Actions\Categories\GetCategoriesWithCacheAction;
+use App\Actions\Categories\GetFlatCategoriesWithCacheAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StoreCategoryRequest;
 use App\Http\Requests\V1\Books\UpdateCategoryRequest;
@@ -19,10 +21,9 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(GetCategoriesWithCacheAction $action)
     {
-        $categories = Category::whereIsRoot()->first()->children()->get();
-        return new CategoryCollection($categories);
+        return new CategoryCollection($action->execute());
     }
 
     public function store(StoreCategoryRequest $request)
@@ -76,8 +77,8 @@ class CategoryController extends Controller
         return new CategoryCollection($category->siblingsAndSelf()->get());
     }
     
-    public function getFlat()
+    public function getFlat(GetFlatCategoriesWithCacheAction $action)
     {
-        return new FlatCategoryCollection(Category::whereNot('parent_id')->get());
+        return new FlatCategoryCollection($action->execute());
     }   
 }
