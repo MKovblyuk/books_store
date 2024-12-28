@@ -40,64 +40,64 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function(){
 
     Route::group(['namespace' => 'Books'], function(){
-        Route::apiResource('publishers', PublisherController::class)->missing(fn() => notFoundJsonResponse());
-        Route::apiResource('authors', AuthorController::class)->missing(fn() => notFoundJsonResponse());
-        Route::apiResource('fragments', FragmentController::class)->missing(fn() => notFoundJsonResponse());
-        Route::apiResource('reviews', ReviewController::class)->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('publishers', PublisherController::class);
+        Route::apiResource('authors', AuthorController::class);
+        Route::apiResource('fragments', FragmentController::class);
+        Route::apiResource('reviews', ReviewController::class);
 
         Route::get('categories/flat', [CategoryController::class, 'getFlat']);
-        Route::get('categories/{category}/siblings', [CategoryController::class, 'getSiblings'])->missing(fn() => notFoundJsonResponse());
-        Route::get('categories/{category}/siblingsAndSelf', [CategoryController::class, 'getSiblingsAndSelf'])->missing(fn() => notFoundJsonResponse());
-        Route::get('categories/{parentCategory}/children', [CategoryController::class, 'getChildren'])->missing(fn() => notFoundJsonResponse());
-        Route::apiResource('categories', CategoryController::class)->missing(fn() => notFoundJsonResponse());
-        Route::post('categories/{parentCategory}', [CategoryController::class, 'storeForParent'])->missing(fn() => notFoundJsonResponse());
+        Route::get('categories/{category}/siblings', [CategoryController::class, 'getSiblings']);
+        Route::get('categories/{category}/siblingsAndSelf', [CategoryController::class, 'getSiblingsAndSelf']);
+        Route::get('categories/{parentCategory}/children', [CategoryController::class, 'getChildren']);
+        Route::apiResource('categories', CategoryController::class);
+        Route::post('categories/{parentCategory}', [CategoryController::class, 'storeForParent']);
 
         Route::get('books/languages', [BookController::class, 'getLanguages']);
-        Route::apiResource('books', BookController::class)->missing(fn() => notFoundJsonResponse());
-        Route::delete('books/{book}/coverImage', [BookController::class, 'deleteCoverImage'])->missing(fn() => notFoundJsonResponse());
-        Route::delete('books/{book}/{format}', [BookController::class, 'deleteFormat'])->missing(fn() => notFoundJsonResponse());
-        Route::get('books/{book}/reviews', [BookController::class, 'getReviews'])->missing(fn() => notFoundJsonResponse());
-        Route::get('books/{book}/fragments', [BookController::class, 'getPreviewFragments'])->missing(fn() => notFoundJsonResponse());
-        Route::get('books/{book}/related', [BookController::class, 'getRelatedBooks'])->missing(fn() => notFoundJsonResponse());
-        Route::get('books/{book}/paper', [BookController::class, 'getPaperFormat'])->missing(fn() => notFoundJsonResponse());
-        Route::get('books/{book}/electronic', [BookController::class, 'getElectronicFormat'])->missing(fn() => notFoundJsonResponse());
-        Route::get('books/{book}/audio', [BookController::class, 'getAudioFormat'])->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('books', BookController::class);
+        Route::delete('books/{book}/coverImage', [BookController::class, 'deleteCoverImage']);
+        Route::delete('books/{book}/{format}', [BookController::class, 'deleteFormat']);
+        Route::get('books/{book}/reviews', [BookController::class, 'getReviews']);
+        Route::get('books/{book}/fragments', [BookController::class, 'getPreviewFragments']);
+        Route::get('books/{book}/related', [BookController::class, 'getRelatedBooks']);
+        Route::get('books/{book}/paper', [BookController::class, 'getPaperFormat']);
+        Route::get('books/{book}/electronic', [BookController::class, 'getElectronicFormat']);
+        Route::get('books/{book}/audio', [BookController::class, 'getAudioFormat']);
 
 
-        Route::get('books/electronic/{book}/download/{extension}', [BookController::class, 'downloadElectronicBook'])->missing(fn() => notFoundJsonResponse());
-        Route::get('books/audio/{book}/download/{extension}', [BookController::class, 'downloadAudioBook'])->missing(fn() => notFoundJsonResponse());
+        Route::get('books/electronic/{book}/download/{extension}', [BookController::class, 'downloadElectronicBook']);
+        Route::get('books/audio/{book}/download/{extension}', [BookController::class, 'downloadAudioBook']);
         Route::post('books/upload/electronic', [BookController::class, 'uploadElectronicFiles']);
         Route::post('books/upload/audio', [BookController::class, 'uploadAudioFiles']);
-        Route::post('books/{book}/uploadCoverImage', [BookController::class, 'uploadCoverImage'])->missing(fn() => notFoundJsonResponse());
-        Route::delete('books/electronic/{book}/{extension}', [BookController::class, 'deleteElectronicFile'])->missing(fn() => notFoundJsonResponse());
-        Route::delete('books/audio/{book}/{extension}', [BookController::class, 'deleteAudioFile'])->missing(fn() => notFoundJsonResponse());
+        Route::post('books/{book}/uploadCoverImage', [BookController::class, 'uploadCoverImage']);
+        Route::delete('books/electronic/{book}/{extension}', [BookController::class, 'deleteElectronicFile']);
+        Route::delete('books/audio/{book}/{extension}', [BookController::class, 'deleteAudioFile']);
         
-        Route::apiResource('paperFormats', PaperFormatController::class)->except(['store'])->missing(fn() => notFoundJsonResponse());
-        Route::post('paperFormats/{book}', [PaperFormatController::class, 'storeForBook'])->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('paperFormats', PaperFormatController::class)->except(['store']);
+        Route::post('paperFormats/{book}', [PaperFormatController::class, 'storeForBook']);
 
-        Route::apiResource('audioFormats', AudioFormatController::class)->except(['store'])->missing(fn() => notFoundJsonResponse());
-        Route::post('audioFormats/{book}', [AudioFormatController::class, 'storeForBook'])->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('audioFormats', AudioFormatController::class)->except(['store']);
+        Route::post('audioFormats/{book}', [AudioFormatController::class, 'storeForBook']);
 
-        Route::apiResource('electronicFormats', ElectronicFormatController::class)->except(['store'])->missing(fn() => notFoundJsonResponse());
-        Route::post('electronicFormats/{book}', [ElectronicFormatController::class, 'storeForBook'])->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('electronicFormats', ElectronicFormatController::class)->except(['store']);
+        Route::post('electronicFormats/{book}', [ElectronicFormatController::class, 'storeForBook']);
     });
 
     Route::group(['namespace' => 'Addresses'], function(){
-        Route::apiResource('countries', CountryController::class)->missing(fn() => notFoundJsonResponse());
-        Route::apiResource('regions', RegionController::class)->missing(fn() => notFoundJsonResponse());
-        Route::apiResource('districts', DistrictController::class)->missing(fn() => notFoundJsonResponse());
-        Route::apiResource('settlements', SettlementController::class)->missing(fn() => notFoundJsonResponse());
-        Route::apiResource('deliveryPlaces', DeliveryPlaceController::class)->missing(fn() => notFoundJsonResponse());
-        Route::get('deliveryPlaces/{deliveryPlace}/fullAddress', [DeliveryPlaceController::class, 'getFullAddress'])->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('countries', CountryController::class);
+        Route::apiResource('regions', RegionController::class);
+        Route::apiResource('districts', DistrictController::class);
+        Route::apiResource('settlements', SettlementController::class);
+        Route::apiResource('deliveryPlaces', DeliveryPlaceController::class);
+        Route::get('deliveryPlaces/{deliveryPlace}/fullAddress', [DeliveryPlaceController::class, 'getFullAddress']);
     });
 
     Route::group(['namespace' => 'Orders'], function(){
-        Route::apiResource('shippingMethods',ShippingMethodController::class)->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('shippingMethods',ShippingMethodController::class);
         Route::get('orders/creationInfo', [OrderController::class, 'getCreationInfo']);
         Route::get('orders/categoriesStat', [OrderController::class, 'getCategoriesStat']);
         Route::get('orders/bookFormatsStat', [OrderController::class, 'getBookFormatsStat']);
-        Route::apiResource('orders', OrderController::class)->missing(fn() => notFoundJsonResponse());
-        Route::get('orders/{order}/details', [OrderController::class, 'showDetails'])->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('orders', OrderController::class);
+        Route::get('orders/{order}/details', [OrderController::class, 'showDetails']);
         Route::post('orders/createOnlinePaymentOrder', [OrderController::class, 'createOnlinePaymentOrder']);
         Route::post('orders/confirmOnlinePaymentOrder', [OrderController::class, 'confirmOnlinePaymentOrder']);
         Route::get('paymentMethods', [PaymentMethodController::class, 'index']);
@@ -105,13 +105,13 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
     Route::group(['namespace' => 'Users'], function(){
         Route::get('users/registration', [UserController::class, 'getRegistrationInfo']);
-        Route::apiResource('users', UserController::class)->missing(fn() => notFoundJsonResponse());
-        Route::get('users/{user}/orders', [UserController::class, 'getOrders'])->missing(fn() => notFoundJsonResponse());
-        Route::get('users/{user}/details', [UserController::class, 'getDetails'])->missing(fn() => notFoundJsonResponse());
-        Route::get('users/{user}/electronicBooks', [UserController::class, 'getElectronicBooks'])->missing(fn() => notFoundJsonResponse());
-        Route::get('users/{user}/audioBooks', [UserController::class, 'getAudioBooks'])->missing(fn() => notFoundJsonResponse());
-        Route::get('users/{user}/likedBooks', [UserController::class, 'getLikedBooks'])->missing(fn() => notFoundJsonResponse());
-        Route::post('users/{user}/like/{book}', [UserController::class, 'likeBook'])->missing(fn() => notFoundJsonResponse());
-        Route::post('users/{user}/unlike/{book}', [UserController::class, 'unlikeBook'])->missing(fn() => notFoundJsonResponse());
+        Route::apiResource('users', UserController::class);
+        Route::get('users/{user}/orders', [UserController::class, 'getOrders']);
+        Route::get('users/{user}/details', [UserController::class, 'getDetails']);
+        Route::get('users/{user}/electronicBooks', [UserController::class, 'getElectronicBooks']);
+        Route::get('users/{user}/audioBooks', [UserController::class, 'getAudioBooks']);
+        Route::get('users/{user}/likedBooks', [UserController::class, 'getLikedBooks']);
+        Route::post('users/{user}/like/{book}', [UserController::class, 'likeBook']);
+        Route::post('users/{user}/unlike/{book}', [UserController::class, 'unlikeBook']);
     });
 });

@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Log;
 
-if (!function_exists('notFoundJsonResponse')) {
-    function notFoundJsonResponse()
+if (!function_exists('resourceNotFoundJsonResponse')) {
+    function resourceNotFoundJsonResponse()
     {
         return response()->json(['message' => 'Not Found Resource'], 404);
     }

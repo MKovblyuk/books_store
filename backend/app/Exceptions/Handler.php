@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Exceptions\General\FileExistException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -41,6 +42,9 @@ class Handler extends ExceptionHandler
         }
         if ($e instanceof FileExistException) {
             return response()->json(['message' => $e->getMessage()], 422);
+        }
+        if ($e instanceof ModelNotFoundException) {
+            return resourceNotFoundJsonResponse();
         }
 
         return parent::render($request, $e); 
