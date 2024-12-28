@@ -37,6 +37,10 @@ class GetBooksWithCacheAction
     {
         $items_count = 0;
 
+        if (isset(request('filter')['name'])) {
+            return false;
+        }
+
         foreach (collect(request('filter'))->values() as $value) {
             $items_count += count(explode(',', $value));
         }
