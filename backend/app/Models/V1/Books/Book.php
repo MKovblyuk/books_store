@@ -29,6 +29,8 @@ class Book extends Model
         'published_at',
         'publisher_id',
         'category_id',
+        'selling_count',
+        'likes',
     ];
 
     protected $dispatchesEvents = [
