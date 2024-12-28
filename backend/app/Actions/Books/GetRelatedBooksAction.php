@@ -6,15 +6,25 @@ use App\Models\V1\Books\Book;
 
 class GetRelatedBooksAction
 {
-    public function execute(Book $book, int $perPage)
+    public function execute(Book $book, int $limit)
     {
         $relatedCategoriesIds = $book->category->descendants()->pluck('id');
         $relatedCategoriesIds->push($book->category->id);
 
+        $query2 = Book::query()
+            ->select(['id', 'name', 'cover_image_path'])
+            ->without('likedByUsers')
+            ->whereNot('id', $book->id)
+            ->whereNotIn('category_id', $relatedCategoriesIds);
+
         return Book::query()
+            ->select(['id', 'name', 'cover_image_path'])
+            ->without('likedByUsers')
             ->whereNot('id',$book->id)
-            ->orderByRaw('category_id IN (' . $relatedCategoriesIds->implode(',') . ') DESC')
-            ->paginate($perPage);
+            ->whereIn('category_id', $relatedCategoriesIds)
+            ->union($query2)
+            ->limit($limit)
+            ->get();
     }
 
 }

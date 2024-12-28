@@ -22,6 +22,7 @@ use App\Http\Resources\V1\Books\BookResource;
 use App\Http\Resources\V1\Books\ElectronicFormatResource;
 use App\Http\Resources\V1\Books\FragmentCollection;
 use App\Http\Resources\V1\Books\PaperFormatResource;
+use App\Http\Resources\V1\Books\RelatedBookCollection;
 use App\Http\Resources\V1\Books\ReviewCollection;
 use App\Models\V1\Books\AudioFormat;
 use App\Models\V1\Books\Book;
@@ -193,7 +194,7 @@ class BookController extends Controller
 
     public function getRelatedBooks(Book $book, GetRelatedBooksAction $action)
     {
-        return new BookCollection($action->execute($book, request('per_page', 10)));
+        return new RelatedBookCollection($action->execute($book, request('limit', 10)));
     }
 
     public function getPaperFormat(Book $book)
