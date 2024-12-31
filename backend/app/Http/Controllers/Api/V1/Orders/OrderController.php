@@ -6,6 +6,7 @@ use App\Actions\Orders\GetBookFormatsStatAction;
 use App\Actions\Orders\GetCategoriesStatAction;
 use App\Actions\Orders\GetOrdersAction;
 use App\Actions\Orders\GetOrdersCreationInfoAction;
+use App\Actions\Orders\UpdateOrderAction;
 use App\Exceptions\General\IncorrectDataException;
 use App\Exceptions\Orders\IncorrectPaymentMethodException;
 use App\Http\Controllers\Controller;
@@ -81,11 +82,11 @@ class OrderController extends Controller
         return new OrderDetailCollection($order->details());
     }
 
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order, UpdateOrderAction $action)
     {
         $this->authorize('update', $order);
 
-        return $order->update($request->validated())
+        return $action->execute($order, $request->validated())
             ? response()->json(['message' => 'Order successfully updated'], 200)
             : response()->json(['message' => 'Order not updated'], 400);
     }
