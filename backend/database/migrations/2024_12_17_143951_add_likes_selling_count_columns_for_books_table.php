@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('books', function (Blueprint $table) {
-            $table->unsignedInteger('likes');
-            $table->unsignedInteger('selling_count');
+            $table->unsignedInteger('likes')->default(0);
+            $table->unsignedInteger('selling_count')->default(0);
 
             $table->index('likes');
             $table->index('selling_count');
