@@ -41,6 +41,9 @@ class FormDataBookRequest extends FormRequest
         if (isset($data->authorsIds)) {
             $this->merge(['authors_ids' => $data->authorsIds]);
         }
+        if (isset($data->publishedAt)) {
+            $this->merge(['published_at' => $data->publishedAt]);
+        }
         if (isset($data->formats)) {
             $this->merge(['formats' => $this->prepareFormatsForValidation($data->formats)]);
         }
