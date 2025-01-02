@@ -19,9 +19,9 @@ class GetBooksWithCacheAction
     { 
         if ($this->isNeedToUseCache()) {
             $key = $this->createCacheKeyForRequest();
-            $totalCount = Cache::store('redis')->get($key);
-    
-            if ($totalCount !== null) {
+            $totalCount = (int) Cache::store('redis')->get($key);
+
+            if ($totalCount) {
                 return $this->getBooksAction->getBuilder()->paginate($perPage, ['*'], 'page', null, $totalCount);
             }
     
