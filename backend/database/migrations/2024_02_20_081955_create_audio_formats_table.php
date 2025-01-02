@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('audio_formats', function (Blueprint $table) {
             $table->id();
-            $table->decimal('price')->default(0);
-            $table->decimal('discount')->default(0);
-            $table->integer('duration');
+            $table->decimal('price')->default(0)->unsigned();
+            $table->decimal('discount')->default(0)->unsigned()->max(100);
+            $table->integer('duration')->unsigned();
             $table->string('path')->nullable();
+
             $table->foreignId('book_id')
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+                
             $table->timestamps();
         });
     }

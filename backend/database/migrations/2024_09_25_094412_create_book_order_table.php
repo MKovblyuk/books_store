@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('book_order', function (Blueprint $table) {
             $table->id();
             $table->string('book_format');
-            $table->integer('quantity');
+            $table->integer('quantity')->unsigned();
 
             $table->foreignId('book_id')
                 ->constrained()
