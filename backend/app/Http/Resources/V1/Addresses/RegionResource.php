@@ -20,13 +20,12 @@ class RegionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
 
-            $this->mergeWhen($this->fieldIsNotIncluded('country', $request), 
-                ['countryId' => $this->country_id,]
+            'countryId' => $this->when($this->fieldIsNotIncluded('country', $request), 
+                $this->country_id
             ),
-            $this->mergeWhen($this->fieldIsIncluded('country', $request), 
-                ['country' => new CountryResource($this->country)]
-            ),
-            
+            'country' => $this->when($this->fieldIsIncluded('country', $request),
+                fn () => new CountryResource($this->country)
+            ), 
         ];
     }
 

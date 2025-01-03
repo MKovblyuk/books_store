@@ -13,6 +13,7 @@ import { computed, ref, watch } from "vue";
 import { useBook } from "@/composables/book";
 import { useUserStore } from "@/stores/userStore";
 import AddReviewForm from "@/components/reviews/AddReviewForm.vue";
+import { BookFormats } from "@/enums/bookFormats";
 
 const bookStore = useBookStore();
 const reviewStore = useReviewStore();
@@ -21,11 +22,11 @@ const userStore = useUserStore();
 
 const router = useRouter();
 const REVIEWS_PER_PAGE = 2;
-const RELATED_BOOKS_PER_PAGE = 10;
+const RELATED_BOOKS_PER_PAGE = 20;
 
 const selectedFormat = ref();
 const props = defineProps(['id']);
-const canBuy = computed(() => selectedFormat.value !== BookFormats.Paper || props.book.paperFormat?.quantity > 0);
+const canBuy = computed(() => selectedFormat.value !== BookFormats.Paper || bookStore.book?.paperFormat?.quantity > 0);
 
 watch(() => props.id, fetchData, { immediate: true});
 
@@ -49,7 +50,7 @@ async function reviewPageChangedHandler(page)
 
 function addToCart() 
 {
-    if (canBuy) {
+    if (canBuy.value) {
         try {
             const cartItem = new CartItem(bookStore.book, selectedFormat.value);
             cartStore.addItem(cartItem);
@@ -61,23 +62,25 @@ function addToCart()
 
 function buy()
 {
-    addToCart();
-    router.push('/order');
+    if (canBuy.value) {
+        addToCart();
+        router.push('/order');
+    }
 }
 
 </script>
 
 <template>
     <div>
-        <div class="d-flex p-2">
+        <div class="p-2 row align-items-star justify-content-start">
             <BookPreview 
-                class="book_preview px-2" 
+                class="book_preview px-2 col-2" 
                 @to_cart="addToCart"
                 @buy="buy"
             />
             <BookDetails 
                 v-if="bookStore.bookIsLoaded" 
-                class="book_details px-5" 
+                class="px-5 col-10" 
                 :book="bookStore.book"
                 :selectedFormat="selectedFormat ?? useBook(bookStore.book).getAvailableFormat()"
                 @change_selected_format="format => selectedFormat = format"
@@ -104,12 +107,3 @@ function buy()
         />
     </div>
 </template>
-
-<style scoped>
-    .book_preview {
-        width: 15%;
-    }
-    .book_details {
-        width: 85%;
-    }
-</style>

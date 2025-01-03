@@ -14,6 +14,7 @@ class AudioFormatResource extends JsonResource
             'price' => $this->price,
             'discount' => $this->discount,
             'duration' => $this->duration,
+            'files' => $this->getFileStorageService()->getAllFiles(),
         ];
     }
 }

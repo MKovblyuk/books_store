@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('electronic_formats', function (Blueprint $table) {
             $table->id();
-            $table->decimal('price')->default(0);
-            $table->decimal('discount')->default(0);
-            $table->integer('page_count');
+            $table->decimal('price')->default(0)->unsigned();
+            $table->decimal('discount')->default(0)->unsigned()->max(100);
+            $table->smallInteger('page_count')->unsigned();
             $table->string('path')->nullable();
+
             $table->foreignId('book_id')
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+                
             $table->timestamps();
         });
     }

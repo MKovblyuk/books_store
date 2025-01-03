@@ -1,6 +1,5 @@
 <script setup>
 
-import BookCharacteristicsList from "@/components/books/BookCharacteristicsList.vue";
 import { useBook } from "@/composables/book";
 import { usePriceCalculator } from "@/composables/priceCalculator";
 import { BookFormats } from "@/enums/bookFormats";
@@ -92,8 +91,6 @@ authors = authors.substring(0, authors.length - 2);
         </div>
 
         <div class="mt-3">{{book.description}}</div>
-
-        <BookCharacteristicsList/>
 
     </div>
 </template>

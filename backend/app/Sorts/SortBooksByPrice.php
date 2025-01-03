@@ -13,19 +13,28 @@ class SortBooksByPrice implements Sort
     {
         $q = $query->getQuery();
         $asterisk = empty($q->bindings['select']) && empty($q->columns) ? '* ,' : '';
+        $sqlFunction = $descending ? 'MAX' : 'MIN';
 
-        $defaultValue = $descending ? 0 : 99999999.99;
-        $sqlFunction = $descending ? 'GREATEST' : 'LEAST';
-        $sqlFunctionBody = '';
-
-        foreach ($this->getFilteringFormats() as $format_table) {
-            $sqlFunctionBody .= 'COALESCE((SELECT `price` - (`price` * `discount` / 100) FROM `'.$format_table.'` WHERE `'.$format_table.'`.`book_id` = `books`.`id`),'.$defaultValue.'),';
+        $subQuery = null;
+        foreach ($this->getFilteringFormats() as $table_name) {
+            $queryPart = DB::table($table_name)->select('book_id', 'price', 'discount');
+    
+            if ($subQuery === null) {
+                $subQuery = $queryPart;
+            } else {
+                $subQuery->unionAll($queryPart);
+            }
         }
 
-        $query->addSelect(DB::raw(
-            $asterisk . $sqlFunction . '('. $sqlFunctionBody . $defaultValue.') as `price`'
-        ))
-        ->orderBy('price', $descending ? 'desc' : 'asc');
+        $query->select(DB::raw($asterisk . ' format_prices.price as price'))
+            ->joinSub(
+                function ($query) use ($subQuery, $sqlFunction) {
+                    $query->selectRaw("book_id, $sqlFunction(price - (price * discount)) AS price")
+                        ->fromSub($subQuery, 'all_format_prices')
+                        ->groupBy('book_id');
+                }, 'format_prices', 'books.id', '=', 'format_prices.book_id')
+
+            ->orderBy('price', $descending ? 'desc' : 'asc');
     }
 
     private function getFilteringFormats(): array

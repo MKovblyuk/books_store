@@ -6,6 +6,7 @@ import { useCartStore } from "@/stores/cartStore";
 import { useUserStore } from "@/stores/userStore";
 import { useFilterStore } from "@/stores/filterStore";
 import { useBookStore } from "@/stores/bookStore";
+import { UserRoles } from "@/enums/userRoles";
 
 const cartStore = useCartStore();
 const userStore = useUserStore();
@@ -16,14 +17,14 @@ const bookStore = useBookStore();
 
 <template>
 
-<header class="d-flex p-3 justify-content-between align-items-center">
+<header class="d-flex p-2 justify-content-between align-items-center">
     <div>
         <RouterLink to="/home">
             <img
-                src="https://w7.pngwing.com/pngs/973/11/png-transparent-phoenix-logo-design-mark-phoenix-fire-thumbnail.png"
+                src="@/assets/icons/book_store_logo.png"
                 alt="logo"
-                width="30px"
-                height="30px"
+                width="50rem"
+                height="50rem"
             >
         </RouterLink>
     </div>
@@ -54,6 +55,20 @@ const bookStore = useBookStore();
             </span>
         </button>
         <template v-if="userStore.authorized">
+            <RouterLink 
+                to="/admin" 
+                class="btn btn-primary ms-2"
+                v-if="userStore.user.role === UserRoles.Admin"
+            >
+                Dashboard
+            </RouterLink>
+            <RouterLink 
+                to="/editor" 
+                class="btn btn-primary ms-2"
+                v-if="userStore.user.role === UserRoles.Editor"
+            >
+                Dashboard
+            </RouterLink>
             <RouterLink to="/profile" class="btn btn-primary ms-2">Profile</RouterLink>
             <RouterLink to="/home" class="btn btn-primary ms-2" @click="userStore.logout">Logout</RouterLink>
         </template>

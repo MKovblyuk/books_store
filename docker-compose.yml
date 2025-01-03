@@ -9,6 +9,7 @@ services:
       - './backend:/var/www/html'
     depends_on:
       - mysql_service
+      - redis_service
     links:
       - mysql_service
 
@@ -32,6 +33,15 @@ services:
     ports:
       - '80:80'
 
+  redis_service:
+    build:
+      context: './docker/redis'
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - './docker/redis/redis.conf:/usr/local/etc/redis/redis.conf'
+
   mysql_service:
     container_name: mysql
     image: mysql:8
@@ -40,6 +50,7 @@ services:
     restart: always
     volumes:
       - './docker/volumes/mysql:/var/lib/mysql'
+      - './docker/mysql/conf.d:/etc/mysql/conf.d'
     secrets:
       - db_root_password
 

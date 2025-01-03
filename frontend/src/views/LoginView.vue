@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router';
 const loginData = ref({
     email: '',
     password: '',
+    remember: false
 });
 
 const errors = ref({
@@ -82,7 +83,12 @@ const login = async () => {
                             </div>
     
                             <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" value="" id="rememberPasswordCheck">
+                                <input 
+                                    class="form-check-input" 
+                                    type="checkbox" 
+                                    id="rememberPasswordCheck"
+                                    v-model="loginData.remember"
+                                >
                                 <label class="form-check-label" for="rememberPasswordCheck">
                                     Remember me
                                 </label>

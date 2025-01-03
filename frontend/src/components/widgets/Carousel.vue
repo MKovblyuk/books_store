@@ -12,7 +12,11 @@ const props = defineProps(['imageUrls'])
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
-            <div class="carousel-item active" v-for="imageUrl in imageUrls">
+            <div 
+                v-for="(imageUrl, index) in imageUrls"
+                :class="'carousel-item ' + (index === 0 ? 'active' : '')"
+                :key="imageUrl + index" 
+            >
                 <img
                     :src="imageUrl"
                     class="d-block w-100"
@@ -30,7 +34,3 @@ const props = defineProps(['imageUrls'])
         </button>
     </div>
 </template>
-
-<style scoped>
-
-</style>

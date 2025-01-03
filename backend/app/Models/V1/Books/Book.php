@@ -29,10 +29,19 @@ class Book extends Model
         'published_at',
         'publisher_id',
         'category_id',
+        'selling_count',
+        'likes',
     ];
 
     protected $dispatchesEvents = [
         'deleted' => BookDeleted::class,
+    ];
+
+    protected $with = [
+        'paperFormat',
+        'electronicFormat',
+        'audioFormat',
+        'likedByUsers'
     ];
 
     public function authors(): BelongsToMany

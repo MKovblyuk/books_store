@@ -6,8 +6,8 @@ use App\Enums\BookFormat;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\Filters\Filter;
 
-class FilterBooksByFormats implements Filter{
-    
+class FilterBooksByFormats implements Filter
+{    
     public function __invoke(Builder $query, $value, string $property)
     {
         if (is_array($value)) {

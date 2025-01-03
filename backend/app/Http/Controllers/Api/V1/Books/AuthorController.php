@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
-use App\Actions\Books\GetAuthorsAction;
+use App\Actions\Authors\GetAuthorsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StoreAuthorRequest;
 use App\Http\Requests\V1\Books\UpdateAuthorRequest;
@@ -19,7 +19,7 @@ class AuthorController extends Controller
 
     public function index(GetAuthorsAction $action)
     {
-        return new AuthorCollection($action->execute());
+        return new AuthorCollection($action->execute(request('per_page')));
     }
 
     public function store(StoreAuthorRequest $request)

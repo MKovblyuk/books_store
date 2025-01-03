@@ -19,7 +19,11 @@ const subcategories = ref([]);
 const selectedCategory = ref();
 
 onMounted(() => {
+    store.perPage = 20;
     store.fetchBooks(route.params.page);
+
+    selectedCategory.value = useCategoryStore().getCategoryById(filterStore.category);
+    subcategories.value = selectedCategory.value?.children;
 });
 
 const pageChangedHandler = (page) => {
@@ -40,12 +44,12 @@ function categoryChangedHandler(id) {
 </script>
 
 <template>
-    <div class="d-flex flex-grow-1">
+    <div class="row w-100">
         <SideMenu 
-            class="side_menu"
+            class="side_menu col-4 col-sm-3 col-lg-2 ps-4"
             @filter_options_changed="store.fetchBooks(1)"
         />
-        <div class="content">
+        <div class="col-8 col-sm-9 col-lg-10">
             <CategoriesBreadcrumb 
                 :category="selectedCategory"
                 @category_changed="categoryChangedHandler"
@@ -66,10 +70,6 @@ function categoryChangedHandler(id) {
 
 <style scoped>
 .side_menu {
-    width: 15%;
     border-right: 1px solid #888888;
-}
-.content {
-    width: 85%;
 }
 </style>

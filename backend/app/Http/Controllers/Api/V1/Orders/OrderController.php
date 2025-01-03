@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1\Orders;
 
-use App\Actions\Orders\GetAllOrdersWithPaginateAction;
+use App\Actions\Orders\GetBookFormatsStatAction;
+use App\Actions\Orders\GetCategoriesStatAction;
+use App\Actions\Orders\GetOrdersAction;
+use App\Actions\Orders\GetOrdersCreationInfoAction;
+use App\Actions\Orders\UpdateOrderAction;
 use App\Exceptions\General\IncorrectDataException;
 use App\Exceptions\Orders\IncorrectPaymentMethodException;
 use App\Http\Controllers\Controller;
@@ -12,6 +16,9 @@ use App\Http\Requests\V1\Orders\UpdateOrderRequest;
 use App\Http\Resources\V1\Orders\OrderCollection;
 use App\Http\Resources\V1\Orders\OrderDetailCollection;
 use App\Http\Resources\V1\Orders\OrderResource;
+use App\Http\Resources\V1\Orders\OrdersCreationInfoCollection;
+use App\Http\Transformers\BookFormatsStatTransformer;
+use App\Http\Transformers\CategoriesStatTransformer;
 use App\Models\V1\Orders\Order;
 use App\Services\Orders\OrderService;
 use Illuminate\Http\Request;
@@ -24,7 +31,7 @@ class OrderController extends Controller
         $this->middleware(GuestUserHandling::class)->only(['store', 'createOnlinePaymentOrder']);
     }
 
-    public function index(GetAllOrdersWithPaginateAction $action)
+    public function index(GetOrdersAction $action)
     {
         $this->authorize('viewAny', Order::class);
         return new OrderCollection($action->execute(request('per_page', 10)));
@@ -75,11 +82,11 @@ class OrderController extends Controller
         return new OrderDetailCollection($order->details());
     }
 
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order, UpdateOrderAction $action)
     {
         $this->authorize('update', $order);
 
-        return $order->update($request->validated())
+        return $action->execute($order, $request->validated())
             ? response()->json(['message' => 'Order successfully updated'], 200)
             : response()->json(['message' => 'Order not updated'], 400);
     }
@@ -91,5 +98,25 @@ class OrderController extends Controller
         return $order->delete()
             ? response()->noContent()
             : response()->json(['message' => 'Order not deleted']);
+    }
+
+    public function getCreationInfo(GetOrdersCreationInfoAction $action)
+    {
+        $this->authorize('showStatistic', Order::class);
+        return new OrdersCreationInfoCollection($action->execute());
+    }
+
+    public function getCategoriesStat(GetCategoriesStatAction $action, CategoriesStatTransformer $transformer)
+    {
+        $this->authorize('showStatistic', Order::class);
+        $data = $transformer->transform($action->execute(request('year'), request('month')));
+        return response()->json(['data' => $data]);
+    }
+
+    public function getBookFormatsStat(GetBookFormatsStatAction $action, BookFormatsStatTransformer $transformer)
+    {
+        $this->authorize('showStatistic', Order::class);
+        $data = $transformer->transform($action->execute(request('year'), request('month')));
+        return response()->json(['data' => $data]);
     }
 }

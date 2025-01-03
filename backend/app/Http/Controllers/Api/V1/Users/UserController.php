@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Users;
 
+use App\Actions\Users\GetUserDetailsAction;
+use App\Actions\Users\GetUsersRegistrationInfoAction;
 use App\Actions\Users\GetUsersAction;
 use App\Actions\Users\LikeBookAction;
 use App\Actions\Users\UnlikeBookAction;
@@ -12,7 +14,9 @@ use App\Http\Requests\V1\Users\UpdateUserRequest;
 use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Orders\DetailedOrderCollection;
 use App\Http\Resources\V1\Users\UserCollection;
+use App\Http\Resources\V1\Users\UserDetailsResource;
 use App\Http\Resources\V1\Users\UserResource;
+use App\Http\Resources\V1\Users\UsersRegistrationCollection;
 use App\Models\V1\Books\Book;
 use App\Models\V1\User;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -27,7 +31,7 @@ class UserController extends Controller
     public function index(GetUsersAction $action)
     {
         $this->authorize('viewAny', User::class);
-        return new UserCollection($action->execute());
+        return new UserCollection($action->execute(request('per_page', 10)));
     }
 
     public function store(StoreUserRequest $request)
@@ -103,5 +107,17 @@ class UserController extends Controller
         $this->authorize('update', $user);
         $action->execute($user, $book);
         return response('', 200);
+    }
+
+    public function getDetails(User $user, GetUserDetailsAction $action)
+    {
+        $this->authorize('view', $user);
+        return new UserDetailsResource($action->execute($user));
+    }
+
+    public function getRegistrationInfo(GetUsersRegistrationInfoAction $action)
+    {
+        $this->authorize('view', User::class);
+        return new UsersRegistrationCollection($action->execute());
     }
 }

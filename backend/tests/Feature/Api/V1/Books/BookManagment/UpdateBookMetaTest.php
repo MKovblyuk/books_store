@@ -52,7 +52,7 @@ class UpdateBookMetaTest extends ApiV1TestCase
         $book = Book::factory()
             ->for(Publisher::factory())
             ->for(Category::factory())
-            ->create();
+            ->create(['published_at' => now()]);
 
         $data = $book->toArray();
         $data['authorsIds'] = Author::factory(2)->create()->pluck('id');

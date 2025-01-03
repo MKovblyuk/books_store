@@ -26,22 +26,29 @@ class OrderResource extends JsonResource
             'updatedAt' => $this->updated_at,
             'totalPrice' => $this->total_price, 
 
-            $this->mergeWhen($this->fieldIsNotIncluded('user', $request), 
-                ['userId' => $this->user_id,]
+            'userId' => $this->when($this->fieldIsNotIncluded('user', $request),
+                $this->user_id
             ),
-            $this->mergeWhen($this->fieldIsIncluded('user', $request),
-                ['user' => new UserResource($this->user)]
+            'user' => $this->when($this->fieldIsIncluded('user', $request),
+                fn () => new UserResource($this->user)
             ),
 
-            $this->mergeWhen($this->fieldIsNotIncluded('deliveryPlace', $request), [
-                'deliveryPlaceId' => $this->delivery_place_id
-            ]),
-            $this->mergeWhen($this->fieldIsIncluded('deliveryPlace', $request), [
-                'deliveryPlace' => new DeliveryPlaceResource($this->deliveryPlace)
-            ]),
+            'deliveryPlaceId' => $this->when($this->fieldIsNotIncluded('deliveryPlace', $request),
+                $this->delivery_place_id
+            ),
+            'deliveryPlace' => $this->when($this->fieldIsIncluded('deliveryPlace', $request),
+                fn () => new DeliveryPlaceResource($this->deliveryPlace)
+            ),
 
-            $this->mergeWhen($this->fieldIsIncluded('books', $request),
-                ['books' => new BookCollection($this->books)]
+            'paymentMethodId' => $this->when($this->fieldIsNotIncluded('paymentMethod', $request),
+                $this->payment_method_id
+            ),
+            'paymentMethod' => $this->when($this->fieldIsIncluded('paymentMethod', $request),
+                fn () => new PaymentMethodResource($this->paymentMethod)
+            ),
+
+            'books' => $this->when($this->fieldIsIncluded('books', $request),
+                fn () => new BookCollection($this->books)
             ),
         ];
     }

@@ -28,32 +28,37 @@ class BookResource extends JsonResource
             'audioFormat' => new AudioFormatResource($this->audioFormat),
             'electronicFormat' => new ElectronicFormatResource($this->electronicFormat),
             'paperFormat' => new PaperFormatResource($this->paperFormat),
-            'likedUsersIds' => $this->likedByUsers()->pluck('id'),
+            'likedUsersIds' => $this->likedByUsers->pluck('id'),
+            'createdAt' => $this->created_at,
+            'updatedAt' => $this->updated_at,
 
-            $this->mergeWhen($this->fieldIsNotIncluded('publisher', $request),
-                ['publisherId' => $this->publisher_id]
+            'publisherId' => $this->when($this->fieldIsNotIncluded('publisher', $request),
+                $this->publisher_id
             ),
-            $this->mergeWhen($this->fieldIsIncluded('publisher', $request),
-                ['publisher' => new PublisherResource($this->publisher)]
-            ),
-
-            $this->mergeWhen($this->fieldIsNotIncluded('category', $request),
-                ['categoryId' => $this->category_id]
-            ),
-            $this->mergeWhen($this->fieldIsIncluded('category', $request),
-                ['category' => new CategoryResource($this->category)]
+            'publisher' => $this->when($this->fieldIsIncluded('publisher', $request),
+                fn () => new PublisherResource($this->publisher)
             ),
 
-            $this->mergeWhen($this->fieldIsIncluded('authors', $request),
-                ['authors' => new AuthorCollection($this->authors)]
+            'categoryId' => $this->when($this->fieldIsNotIncluded('category', $request), 
+                $this->category_id
+            ),
+            'category' => $this->when($this->fieldIsIncluded('category', $request),
+                fn () => new FlatCategoryResource($this->category)
             ),
 
-            $this->mergeWhen($this->fieldIsIncluded('reviews', $request),
-                ['reviews' => new ReviewCollection($this->reviews)]
+            'authors' => $this->when($this->fieldIsIncluded('authors', $request),
+                fn () => new AuthorCollection($this->authors)
+            ),
+            'authorsIds' => $this->when($this->fieldIsNotIncluded('authors', $request),
+                fn () => $this->authors->pluck('id')
             ),
 
-            $this->mergeWhen($this->fieldIsIncluded('fragments', $request), 
-                ['fragments' => new FragmentCollection($this->fragments)]
+            'reviews' => $this->when($this->fieldIsIncluded('reviews', $request),
+                fn () => new ReviewCollection($this->reviews)
+            ),
+
+            'fragments' => $this->when($this->fieldIsIncluded('fragments', $request),
+                fn () => new FragmentCollection($this->fragments)
             ),
         ];
     }
@@ -78,7 +83,7 @@ class BookResource extends JsonResource
             $this->mergeWhen(in_array('language', $fields),
                 ['language' => $this->language]
             ),
-            $this->mergeWhen(in_array('cover_image_url', $fields),
+            $this->mergeWhen(in_array('cover_image_path', $fields),
                 ['coverImageUrl' => $this->cover_image_path ? Storage::disk('preview_fragments')->url($this->cover_image_path) : null,]
             ),
             $this->mergeWhen(in_array('published_at', $fields),
@@ -91,7 +96,13 @@ class BookResource extends JsonResource
                 ['publisherId' => $this->publisher_id]
             ),
             $this->mergeWhen(in_array('liked_users_ids', $fields), 
-                ['likedUsersIds' => $this->likedByUsers()->pluck('id')]
+                ['likedUsersIds' => $this->likedByUsers->pluck('id')]
+            ),
+            $this->mergeWhen(in_array('created_at', $fields),
+                ['createdAt' => $this->created_at]
+            ),
+            $this->mergeWhen(in_array('updated_at', $fields),
+                ['updatedAt' => $this->updated_at]
             ),
         ];
     }

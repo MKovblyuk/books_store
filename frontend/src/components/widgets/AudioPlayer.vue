@@ -10,7 +10,7 @@ defineExpose({player});
 
 <template>
     <div class="audio-body">
-        <img :src="imageSrc" class="w-50 h-50 mb-2"/>
+        <img v-if="imageSrc" :src="imageSrc" class="w-50 h-50 mb-2"/>
         <audio controls v-if="audioSrc" ref="player">
             <source :src=audioSrc type="audio/mpeg">
         </audio>

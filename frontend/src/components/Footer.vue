@@ -5,7 +5,7 @@
 <template>
     <footer>
         <div>
-            Footer some text
+            Privacy Policy | Terms of Service | Contact Us
         </div>
     </footer>
 </template>

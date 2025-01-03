@@ -19,12 +19,12 @@ class SettlementResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
 
-            $this->mergeWhen($this->fieldIsNotIncluded('district', $request), [
-                'districtId' => $this->district_id,
-            ]),
-            $this->mergeWhen($this->fieldIsIncluded('district', $request), [
-                'district' => new DistrictResource($this->district)
-            ]),
+            'districtId' => $this->when($this->fieldIsNotIncluded('district', $request), 
+                $this->district_id
+            ),
+            'district' => $this->when($this->fieldIsIncluded('district', $request),
+                fn () => new DistrictResource($this->district)
+            ),
         ];
     }
 

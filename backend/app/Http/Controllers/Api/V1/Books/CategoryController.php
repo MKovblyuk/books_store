@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
+use App\Actions\Categories\GetCategoriesWithCacheAction;
+use App\Actions\Categories\GetFlatCategoriesWithCacheAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StoreCategoryRequest;
 use App\Http\Requests\V1\Books\UpdateCategoryRequest;
 use App\Http\Resources\V1\Books\CategoryCollection;
 use App\Http\Resources\V1\Books\CategoryResource;
+use App\Http\Resources\V1\Books\FlatCategoryCollection;
 use App\Models\V1\Books\Category;
 
 class CategoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum', ['except' => ['index', 'show']]);
+        $this->middleware('auth:sanctum', [
+            'except' => ['index', 'show', 'getChildren', 'getSiblings', 'getSiblingsAndSelf', 'getFlat']
+        ]);
     }
 
-    public function index()
+    public function index(GetCategoriesWithCacheAction $action)
     {
-        $categories = Category::whereIsRoot()->first()->children()->get();
-        return new CategoryCollection($categories);
+        return new CategoryCollection($action->execute());
     }
 
     public function store(StoreCategoryRequest $request)
@@ -57,4 +61,24 @@ class CategoryController extends Controller
             ? response()->noContent()
             : response()->json(['message' => 'Category not deleted'], 500);
     }
+
+    public function getChildren(Category $parentCategory)
+    {
+        return new CategoryCollection($parentCategory->children()->get());
+    }
+
+    public function getSiblings(Category $category)
+    {
+        return new CategoryCollection($category->siblings()->get());
+    }
+
+    public function getSiblingsAndSelf(Category $category)
+    {
+        return new CategoryCollection($category->siblingsAndSelf()->get());
+    }
+    
+    public function getFlat(GetFlatCategoriesWithCacheAction $action)
+    {
+        return new FlatCategoryCollection($action->execute());
+    }   
 }

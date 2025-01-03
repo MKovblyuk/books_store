@@ -3,17 +3,18 @@
 namespace App\Http\Resources\V1\Books;
 
 use App\Models\V1\User;
+use App\Traits\AllowedIncludes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReviewResource extends JsonResource
 {
+    use AllowedIncludes;
+
     public function toArray(Request $request): array
     {
-        $user = User::find($this->user_id);
-
         if (isset($request->fields)) {
-            return $this->resourceWithSelectedFields($request, $user);
+            return $this->resourceWithSelectedFields($request, $this->user);
         }
 
         return [
@@ -21,10 +22,16 @@ class ReviewResource extends JsonResource
             'rating' => $this->rating,
             'review' => $this->review,
             'userId' => $this->user_id,
-            'userFirstName' => $user->first_name,
-            'userLastName' => $user->last_name,
-            'bookId' => $this->book_id,
+            'userFirstName' => $this->user->first_name,
+            'userLastName' => $this->user->last_name,
             'updatedAt' => $this->updated_at,
+
+            'book' => $this->when($this->fieldIsIncluded('book', $request),
+                fn () => $this->book
+            ),
+            'bookId' => $this->when($this->fieldIsNotIncluded('book', $request),
+                $this->book_id
+            ),
         ];
     }
 

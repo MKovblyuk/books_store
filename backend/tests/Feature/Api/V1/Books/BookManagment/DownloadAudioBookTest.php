@@ -5,7 +5,6 @@ namespace Tests\Feature\Api\V1\Books\BookManagment;
 use App\Enums\BookFormat;
 use App\Models\V1\Books\AudioFormat;
 use App\Models\V1\Books\Book;
-use App\Services\Books\AudioBookStorageService;
 use GuzzleHttp\Psr7\MimeType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -55,10 +54,8 @@ class DownloadAudioBookTest extends DownloadBookTestCase
     {
         Storage::fake('audio');
 
-        AudioFormat::factory()->for($book)->create(['path' => 'test_path']);
         $file = UploadedFile::fake()->create('audioFile', 2000, MimeType::fromExtension($this->fileExtension));
-
-        $service = new AudioBookStorageService();
-        $service->store($book, [$file]);
+        $audioFormat = AudioFormat::factory()->for($book)->create(['path' => 'test_path']);
+        $audioFormat->getFileStorageService()->store([$file]);
     }
 }

@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('paper_formats', function (Blueprint $table) {
             $table->id();
-            $table->decimal('price');
-            $table->decimal('discount')->default(0);
-            $table->integer('quantity')->default(0);
-            $table->integer('page_count');
+            $table->decimal('price')->unsigned();
+            $table->decimal('discount')->default(0)->unsigned()->max(100);
+            $table->integer('quantity')->default(0)->unsigned();
+            $table->smallInteger('page_count')->unsigned();
+
             $table->foreignId('book_id')
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+                
             $table->timestamps();
         });
     }

@@ -16,8 +16,10 @@ const emptySign = '____';
     <td>{{ order.shippingMethod ?? emptySign }}</td>
     <td>{{ order.totalPrice }}</td>
     <td>{{ (new Date(order.createdAt)).toUTCString()  }}</td>
-    <td class="d-flex justify-content-center">
-        <button class="btn btn-primary btn-sm" @click="$emit('showDetails', order.id)">...</button>
+    <td>
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary" @click="$emit('showDetails', order.id)">...</button>
+        </div>
     </td>
 </tr>
 

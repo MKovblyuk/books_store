@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\V1\Books;
 
-use App\Rules\BookFormats;
+use App\Rules\Books\BookFormat;
 use Illuminate\Validation\Rules\File;
 
-class UpdateBookRequest extends BookRequest
+class UpdateBookRequest extends FormDataBookRequest
 {
     public function authorize(): bool
     {
@@ -14,7 +14,7 @@ class UpdateBookRequest extends BookRequest
 
     public function rules(): array
     {
-        return $this->method() === 'PUT' ? $this->putRules() : $this->patchRules();
+        return strtoupper($this->_method) === 'PUT' ? $this->putRules() : $this->patchRules();
     }
 
     public function putRules(): array
@@ -27,9 +27,11 @@ class UpdateBookRequest extends BookRequest
             'publisher_id' => ['required', 'exists:publishers,id'],
             'category_id' => ['required', 'exists:categories,id'],
             'published_at' => ['sometimes', 'nullable', 'date'],
-            'formats' => ['required','array', 'max:3', new BookFormats()],
+            'formats' => ['required', 'array'],
+            'formats.*' => [new BookFormat],
             'authors_ids' => ['required', 'array'],
-            'authors_ids.*' => ['required','integer', 'exists:authors,id'],
+            'authors_ids.*' => ['required', 'integer', 'exists:authors,id'],
+            'cover_image' => ['sometimes', File::types(['jpg', 'png', 'jpeg'])->max('20mb')],
         ];
     }
 
@@ -43,9 +45,11 @@ class UpdateBookRequest extends BookRequest
             'publisher_id' => ['sometimes', 'exists:publishers,id'],
             'category_id' => ['sometimes', 'exists:categories,id'],
             'published_at' => ['sometimes', 'nullable', 'date'],
-            'formats' => ['sometimes','array', 'max:3', new BookFormats()],
+            'formats' => ['sometimes', 'array'],
+            'formats.*' => [new BookFormat('PATCH')],
             'authors_ids' => ['sometimes', 'array'],
-            'authors_ids.*' => ['sometimes','integer', 'exists:authors,id'],
+            'authors_ids.*' => ['sometimes', 'integer', 'exists:authors,id'],
+            'cover_image' => ['sometimes', File::types(['jpg', 'png', 'jpeg'])->max('20mb')],
         ];
     }
 }

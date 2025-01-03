@@ -5,7 +5,6 @@ namespace Tests\Feature\Api\V1\Books\BookManagment;
 use App\Enums\BookFormat;
 use App\Models\V1\Books\Book;
 use App\Models\V1\Books\ElectronicFormat;
-use App\Services\Books\ElectronicBookStorageService;
 use GuzzleHttp\Psr7\MimeType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -55,10 +54,8 @@ class DownloadElectronicBookTest extends DownloadBookTestCase
     {
         Storage::fake('electronic');
 
-        ElectronicFormat::factory()->for($book)->create(['path' => 'test_path']);
         $file = UploadedFile::fake()->create('eFile', 2000, MimeType::fromExtension($this->fileExtension));
-
-        $service = new ElectronicBookStorageService();
-        $service->store($book, [$file]);
+        $electronicFormat = ElectronicFormat::factory()->for($book)->create(['path' => 'test_path']);
+        $electronicFormat->getFileStorageService()->store([$file]);
     }
 }

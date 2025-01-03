@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\V1\Books;
 
-use App\Rules\BookFormats;
+use App\Rules\Books\BookFormat;
 use Illuminate\Validation\Rules\File;
 
-class StoreBookRequest extends BookRequest
+class StoreBookRequest extends FormDataBookRequest
 {
     public function authorize(): bool
     {
@@ -22,9 +22,11 @@ class StoreBookRequest extends BookRequest
             'publisher_id' => ['required', 'exists:publishers,id'],
             'category_id' => ['required', 'exists:categories,id'],
             'published_at' => ['sometimes', 'nullable', 'date'],
-            'formats' => ['required','array', 'max:3', new BookFormats()],
+            'formats' => ['required', 'array'],
+            'formats.*' => [new BookFormat],
             'authors_ids' => ['required', 'array'],
             'authors_ids.*' => ['required', 'integer', 'exists:authors,id'],
+            'cover_image' => ['sometimes', File::types(['jpg', 'png', 'jpeg'])->max('20mb')],
         ];
     }
 }

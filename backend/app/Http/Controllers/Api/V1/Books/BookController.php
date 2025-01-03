@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\V1\Books;
 
 use App\Actions\Books\DeleteBookCoverImageAction;
-use App\Actions\Books\GetAllBooksWithPaginateAction;
-use App\Actions\Books\GetRelatedBooksWithPaginateAction;
+use App\Actions\Books\GetBooksWithCacheAction;
+use App\Actions\Books\GetLanguagesWithCacheAction;
+use App\Actions\Books\GetRelatedBooksAction;
 use App\Actions\Books\StoreBookAction;
 use App\Actions\Books\UpdateBookAction;
 use App\Actions\Books\UpdateBookCoverImageAction;
@@ -15,27 +16,22 @@ use App\Http\Requests\V1\Books\UpdateBookRequest;
 use App\Http\Requests\V1\Books\UploadAudioBookRequest;
 use App\Http\Requests\V1\Books\UploadCoverImageRequest;
 use App\Http\Requests\V1\Books\UploadElectronicBookRequest;
+use App\Http\Resources\V1\Books\AudioFormatResource;
 use App\Http\Resources\V1\Books\BookCollection;
 use App\Http\Resources\V1\Books\BookResource;
+use App\Http\Resources\V1\Books\ElectronicFormatResource;
 use App\Http\Resources\V1\Books\FragmentCollection;
+use App\Http\Resources\V1\Books\PaperFormatResource;
+use App\Http\Resources\V1\Books\RelatedBookCollection;
 use App\Http\Resources\V1\Books\ReviewCollection;
+use App\Models\V1\Books\AudioFormat;
 use App\Models\V1\Books\Book;
-use App\Services\Books\AudioBookStorageService;
-use App\Services\Books\BookStorageServiceInterface;
-use App\Services\Books\ElectronicBookStorageService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\V1\Books\ElectronicFormat;
 
 class BookController extends Controller
 {
-    private ElectronicBookStorageService $electronicStorageService;
-    private AudioBookStorageService $audioStorageService;
-
     public function __construct()
     {
-        $this->electronicStorageService = new ElectronicBookStorageService();
-        $this->audioStorageService = new AudioBookStorageService();
-
         $this->middleware('auth:sanctum', [
             'except' => [
                 'index', 
@@ -43,12 +39,15 @@ class BookController extends Controller
                 'getReviews', 
                 'getPreviewFragments', 
                 'getLanguages', 
-                'getRelatedBooks'
+                'getRelatedBooks',
+                'getPaperFormat',
+                'getElectronicFormat',
+                'getAudioFormat',
             ]
         ]);
     }
 
-    public function index(GetAllBooksWithPaginateAction $action)
+    public function index(GetBooksWithCacheAction $action)
     {
         return new BookCollection($action->execute(request()->get('per_page', 10)));
     }
@@ -82,9 +81,6 @@ class BookController extends Controller
             ? response()->json(['message' => 'Book successfully updated'], 200)
             : response()->json(['message' => 'Book not updated'], 400);
     }
-
-    // TODO 
-    // when force deleting, delete all files or all files specific format
 
     public function destroy(Book $book)
     {
@@ -144,50 +140,113 @@ class BookController extends Controller
     public function downloadElectronicBook(Book $book, string $extension)
     {
         $this->authorize('downloadElectronicBook', $book);
-        return $this->electronicStorageService->download($book, $extension);
+
+        if ($book->electronicFormat) {
+            return $book->electronicFormat->getFileStorageService()->download($extension);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
     }
 
     public function downloadAudioBook(Book $book, string $extension)
     {
         $this->authorize('downloadAudioBook', $book);
-        return $this->audioStorageService->download($book, $extension);
-    }
 
+        if ($book->audioFormat) {
+            return $book->audioFormat->getFileStorageService()->download($extension);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
 
     public function uploadElectronicFiles(UploadElectronicBookRequest $request)
     {
-        return $this->uploadFiles($request, $this->electronicStorageService);
+        $this->authorize('uploadFiles', Book::class);
+
+        $electronicFormat = ElectronicFormat::where('book_id', $request->validated('bookId'))->first();
+
+        if ($electronicFormat) {
+            $electronicFormat->getFileStorageService()->store($request->validated('files'));
+            return response()->json(['message' => 'files successfully stored'], 201);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
     }
 
     public function uploadAudioFiles(UploadAudioBookRequest $request)
     {
-        return $this->uploadFiles($request, $this->audioStorageService);
-    }
-
-    private function uploadFiles(Request $request, BookStorageServiceInterface $service)
-    {
         $this->authorize('uploadFiles', Book::class);
 
-        $files = $request->validated('files');
-        $bookId = $request->validated('bookId');
+        $audioFormat = AudioFormat::where('book_id', $request->validated('bookId'))->first();
 
-        $service->store(Book::find($bookId), $files);
-        return response()->json(['message' => 'files successfully stored'], 201);
+        if ($audioFormat) {
+            $audioFormat->getFileStorageService()->store($request->validated('files'));
+            return response()->json(['message' => 'files successfully stored'], 201);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
     }
 
-    public function getLanguages() 
+    public function getLanguages(GetLanguagesWithCacheAction $action) 
     {
-        $languages = DB::table('books')
-            ->select('language')
-            ->distinct()
-            ->get()
-            ->map(fn($item) => $item->language);
-
-        return response()->json(['data' => $languages]);
+        return response()->json(['data' => $action->execute()]);
     }
 
-    public function getRelatedBooks(Book $book, GetRelatedBooksWithPaginateAction $action)
+    public function getRelatedBooks(Book $book, GetRelatedBooksAction $action)
     {
-        return new BookCollection($action->execute($book, request('per_page', 10)));
+        return new RelatedBookCollection($action->execute($book, request('limit', 10)));
+    }
+
+    public function getPaperFormat(Book $book)
+    {
+        if ($book->paperFormat) {
+            return new PaperFormatResource($book->paperFormat);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
+
+    public function getElectronicFormat(Book $book)
+    {
+        if ($book->electronicFormat) {
+            return new ElectronicFormatResource($book->electronicFormat);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
+
+    public function getAudioFormat(Book $book)
+    {
+        if ($book->audioFormat) {
+            return new AudioFormatResource($book->audioFormat);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
+
+    public function deleteElectronicFile(Book $book, string $extension)
+    {
+        $this->authorize('deleteFormat', $book);
+        
+        if ($book->electronicFormat) {
+            return $book->electronicFormat->getFileStorageService()->deleteFile($extension)
+                ? response()->noContent()
+                : response()->json(['message' => 'File not deleted'], 400);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
+    }
+
+    public function deleteAudioFile(Book $book, string $extension)
+    {
+        $this->authorize('deleteFormat', $book);
+
+        if ($book->audioFormat) {
+            return $book->audioFormat->getFileStorageService()->deleteFile($extension)
+                ? response()->noContent()
+                : response()->json(['message' => 'File not deleted'], 400);
+        }
+
+        return response()->json(['message' => 'Format not found'], 404);
     }
 }

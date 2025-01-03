@@ -8,9 +8,9 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class GetRegionsAction
 {
-    public function execute()
+    public function execute(int $perPage = null)
     {
-        return QueryBuilder::for(Region::class)
+        $query = QueryBuilder::for(Region::class)
             ->allowedFields([
                 'id', 
                 'name', 
@@ -28,7 +28,8 @@ class GetRegionsAction
             ])
             ->allowedIncludes([
                 'country',
-            ])
-            ->get();
+            ]);
+
+        return $perPage ? $query->paginate($perPage) : $query->get();
     }
 }

@@ -16,13 +16,12 @@ class FullAddressResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'settlementName' => $this->settlement_name,
-            'streetName' => $this->street_name,
-            'streetNumber' => $this->street_number,
-            'postalCode' => $this->postal_code,
-            'districtName' => $this->districtName,
-            'regionName' => $this->regionName,
-            'countryName' => $this->countryName,
+            'streetAddress' => $this->street_address,
+            'settlementName' => $this->settlement->name,
+            'districtName' => $this->settlement->district->name,
+            'regionName' => $this->settlement->district->region->name,
+            'countryName' => $this->settlement->district->region->country->name,
+            'shippingMethodName' => $this->shippingMethod->name, 
         ];
     }
 }

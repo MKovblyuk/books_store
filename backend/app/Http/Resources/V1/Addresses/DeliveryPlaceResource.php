@@ -20,19 +20,19 @@ class DeliveryPlaceResource extends JsonResource
             'id' => $this->id,
             'streetAddress' => $this->street_address,
 
-            $this->mergeWhen($this->fieldIsNotIncluded('settlement', $request), [
-                'settlementId' => $this->settlement_id,
-            ]),
-            $this->mergeWhen($this->fieldIsIncluded('settlement', $request), [
-                'settlement' => new SettlementResource($this->settlement),
-            ]),
+            'settlementId' => $this->when($this->fieldIsNotIncluded('settlement', $request), 
+                $this->settlement_id
+            ),
+            'settlement' => $this->when($this->fieldIsIncluded('settlement', $request), 
+                fn () => new SettlementResource($this->settlement)
+            ),
 
-            $this->mergeWhen($this->fieldIsNotIncluded('shippingMethod', $request), [
-                'shippingMethodId' => $this->shipping_method_id,
-            ]),
-            $this->mergeWhen($this->fieldIsIncluded('shippingMethod', $request), [
-                'shippingMethod' => new ShippingMethodResource($this->shippingMethod),
-            ]),
+            'shippingMethodId' => $this->when($this->fieldIsNotIncluded('shippingMethod', $request), 
+                $this->shipping_method_id
+            ),
+            'shippingMethod' => $this->when($this->fieldIsIncluded('shippingMethod', $request), 
+                fn () => new ShippingMethodResource($this->shippingMethod)
+            ),
         ];
     }
 

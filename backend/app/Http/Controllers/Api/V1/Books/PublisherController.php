@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Books;
 
-use App\Actions\Books\GetPublishersAction;
+use App\Actions\Publishers\GetPublishersAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Books\StorePublisherRequest;
 use App\Http\Requests\V1\Books\UpdatePublisherRequest;
@@ -19,7 +19,7 @@ class PublisherController extends Controller
 
     public function index(GetPublishersAction $action)
     {
-        return new PublisherCollection($action->execute());
+        return new PublisherCollection($action->execute(request('per_page')));
     }
 
     public function store(StorePublisherRequest $request)
