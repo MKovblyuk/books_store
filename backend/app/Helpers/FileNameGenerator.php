@@ -6,6 +6,6 @@ class FileNameGenerator
 {
     public function generate($id, string $name = '_'): string
     {
-        return $id . '_' . $name . '_' . rand(0, 1000) . '_' . time();
+        return $id . '_' . $name . '_' . uuid_create();
     }
 }
