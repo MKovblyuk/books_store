@@ -2,8 +2,9 @@
 
 namespace Database\Seeders\Books;
 
-use App\Actions\Books\StoreFragmentAction;
+use App\Actions\Books\StoreFragmentsAction;
 use App\Models\V1\Books\Book;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -11,9 +12,11 @@ use Illuminate\Support\Facades\Storage;
 class FragmentSeeder extends Seeder
 {
     private array $files;
-    private StoreFragmentAction $storeFragmentAction;
+    private StoreFragmentsAction $storeFragmentAction;
 
-    public function __construct(StoreFragmentAction $storeFragmentAction)
+    public const FRAGMENTS_COUNT = 3;
+
+    public function __construct(StoreFragmentsAction $storeFragmentAction)
     {
         $this->storeFragmentAction = $storeFragmentAction;
         $this->files = Storage::disk('public')->allFiles('seeding_files/preview_fragments/');
@@ -21,18 +24,24 @@ class FragmentSeeder extends Seeder
 
     public function run(): void
     {    
-        foreach (Book::all() as $book) {
-            $this->seedFragmentsForBook($book, 3);
-        }
+        Book::withoutEagerLoads()->get(['id'])->chunk(1000)->each(function (Collection $books) {
+            $this->seedFragmentsForBooks($books->toArray(), self::FRAGMENTS_COUNT);
+        });
     }
 
-    private function seedFragmentsForBook(Book $book, $count = 1): void
+    private function seedFragmentsForBooks(array $books, $count = 1): void
     {
-        for ($i = 0; $i < $count; $i++) {
-            $filePath = $this->files[array_rand($this->files)];
-            $fragmentFile = new UploadedFile(public_path('storage/' . $filePath), basename($filePath));
-    
-            $this->storeFragmentAction->execute($book->id, $fragmentFile);
-        }
+        $mappedBooks = array_map(function ($book) use ($count) {
+            for ($i = 0 ; $i < $count; $i++) {
+                $filePath = $this->files[array_rand($this->files)];
+                $fragmentFile = new UploadedFile(public_path('storage/' . $filePath), basename($filePath));
+                
+                $book['fragments'][] = $fragmentFile;
+            }
+
+            return $book;
+        }, $books);
+
+        $this->storeFragmentAction->execute($mappedBooks);
     }
 }
