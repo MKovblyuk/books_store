@@ -31,7 +31,7 @@ services:
     volumes:
       - './backend:/var/www/html'
       - './docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro'
-      - '/etc/ssl/cert:/etc/letsencrypt/live/mkvb22.site'
+      - '/etc/letsencrypt:/etc/letsencrypt'
     ports:
       - '80:80'
       - '443:443'
