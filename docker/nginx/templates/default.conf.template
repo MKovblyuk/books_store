@@ -1,0 +1,3 @@
+server {
+    include ${CONFIG_FILE_PATH};
+}
