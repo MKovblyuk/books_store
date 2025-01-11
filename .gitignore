@@ -1,4 +1,5 @@
 /docker/volumes/mysql
+/docker/nginx/templates/prod.conf
 db_root_password.txt
 /.idea
 .env.nginx
