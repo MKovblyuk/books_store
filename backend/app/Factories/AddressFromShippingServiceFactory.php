@@ -16,7 +16,7 @@ abstract class AddressFromShippingServiceFactory
 
     public function __construct()
     {
-        $this->shippingMethod = ShippingMethod::where('name', $this->getShippingMethod()->name)->first();
+        $this->shippingMethod = ShippingMethod::where('name', $this->getShippingMethod()->value)->first();
     }
 
     abstract public function getShippingMethod(): ShippingMethods;
