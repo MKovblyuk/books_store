@@ -34,7 +34,7 @@ class FragmentSeeder extends Seeder
         $mappedBooks = array_map(function ($book) use ($count) {
             for ($i = 0 ; $i < $count; $i++) {
                 $filePath = $this->files[array_rand($this->files)];
-                $fragmentFile = new UploadedFile(public_path('storage/' . $filePath), basename($filePath));
+                $fragmentFile = new UploadedFile(storage_path('app/public/' . $filePath), basename($filePath));
                 
                 $book['fragments'][] = $fragmentFile;
             }
