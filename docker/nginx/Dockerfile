@@ -1,7 +1,6 @@
 FROM nginx:latest
 
-COPY templates/default.conf.template /etc/nginx/templates/default.conf.template
-COPY templates/dev.conf /etc/nginx/templates/dev.conf
+COPY templates/* /etc/nginx/templates/
 
 RUN envsubst < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
 
