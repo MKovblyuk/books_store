@@ -30,6 +30,7 @@ services:
       - 'frontend_service'
     volumes:
       - './backend:/var/www/html'
+      - './frontend/dist:/var/www/frontend'
       - '/etc/letsencrypt:/etc/letsencrypt'
     ports:
       - '80:80'
