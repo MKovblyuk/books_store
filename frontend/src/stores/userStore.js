@@ -29,20 +29,20 @@ export const useUserStore = defineStore('user', () => {
     }
 
     async function register(data) {
-        const response = await axios.post('http://localhost/api/register', data);
+        const response = await axios.post(import.meta.env.VITE_BASE_API_REGISTER_URL, data);
         localStorage.setItem('userId', response.data.userId);
         fetchUser();
     }
 
     async function login (credentials) {
-        const response = await axios.post('http://localhost/api/login', credentials);
+        const response = await axios.post(import.meta.env.VITE_BASE_API_LOGIN_URL, credentials);
         localStorage.setItem('userId', response.data.userId);
         fetchUser();
     }
 
     async function logout() 
     {
-        await axios.post('http://localhost/api/logout');
+        await axios.post(import.meta.env.VITE_BASE_API_LOGOUT_URL);
 
         localStorage.removeItem('userId');
         authorized.value = false;
