@@ -33,5 +33,5 @@ This is a personal project: a Books Store application.
     php artisan db:seed
     php artisan key:generate
 8. Grant access permission to directories:
-    - backend/storage/logs  `chmod 755 -R backend/storage/logs`
-    - backend/storage/framework  `chmod 755 -R backend/storage/framework`
+    - backend/storage/logs
+    - backend/storage/framework
