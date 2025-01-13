@@ -32,6 +32,6 @@ This is a personal project: a Books Store application.
     php artisan migrate
     php artisan db:seed
     php artisan key:generate
-8. Grant access permission to directories:
+8. **Grant access permission to directories:**
     - backend/storage/logs
     - backend/storage/framework
