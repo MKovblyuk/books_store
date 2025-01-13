@@ -22,7 +22,7 @@ This is a personal project: a Books Store application.
     ```bash
     docker compose build
     docker compose up -d
-6.  ** Move into container:**
+6.  **Move into container:**
     ```bash
     docker compose exec backend_service sh
 7.  **Inside container run:**
