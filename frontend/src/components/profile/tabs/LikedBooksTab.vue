@@ -10,7 +10,7 @@ const userStore = useUserStore();
 const likedBooks = ref([]);
 const meta = ref();
 const isFetched = ref(false);
-const PER_PAGE = 1;
+const PER_PAGE = 20;
 
 async function fetchLikedBooks(page = 1) {
     try {

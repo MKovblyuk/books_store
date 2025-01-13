@@ -16,7 +16,7 @@ const userStore = useUserStore();
 const audioBooks = ref([]);
 const isFetched = ref(false);
 const meta = ref({});
-const PER_PAGE = 1;
+const PER_PAGE = 20;
 
 const audioPlayerRef = ref(null);
 const audioModalRef = ref(null);

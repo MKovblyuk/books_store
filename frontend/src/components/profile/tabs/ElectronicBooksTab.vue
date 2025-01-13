@@ -11,7 +11,7 @@ const userStore = useUserStore();
 const electronicBooks = ref([]);
 const isFetched = ref(false);
 const meta = ref({});
-const PER_PAGE = 1;
+const PER_PAGE = 20;
 
 const {openLinkRef, downloadLinkRef, openBook, downloadBook} = useElectronicBook();
 
