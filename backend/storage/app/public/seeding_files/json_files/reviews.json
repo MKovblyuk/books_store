@@ -1,82 +1,82 @@
 [
     {
-        "rating" : 5,
-        "review" : "Ця книга просто захопила мене з перших сторінок. Несподіваний сюжет і яскраві персонажі не давали відірватися. Однозначно рекомендую!"
+    "rating" : 5,
+    "review" : "This book simply captivated me from the first pages. The unexpected plot and vivid characters kept me glued to the screen. I definitely recommend it!"
     },
     {
-        "rating" : 4,
-        "review" : "Дуже цікава книга, але фінал здався трохи передбачуваним. Проте, загалом, залишилися приємні враження."
+    "rating" : 4,
+    "review" : "A very interesting book, but the ending seemed a bit predictable. However, overall, I left a pleasant impression."
     },
     {
-        "rating" : 5,
-        "review" : "Глибокий і зворушливий роман, який змусив задуматися про багато речей. Автор майстерно передає емоції своїх героїв."
+    "rating" : 5,
+    "review" : "A deep and touching novel that made me think about many things. The author skillfully conveys the emotions of his characters."
     },
     {
-        "rating" : 4,
-        "review" : "Книга сподобалася, але місцями було трохи нудновато. Однак, ідея твору дуже оригінальна."
+    "rating" : 4,
+    "review" : "I liked the book, but it was a bit boring in places. However, the idea of ​​the work is very original."
     },
     {
-        "rating" : 5,
-        "review" : "Це найкраща книга, яку я читала за останній рік! Не можу дочекатися продовження."
+    "rating" : 5,
+    "review" : "This is the best book I've read in the last year! I can't wait for the sequel."
     },
     {
-        "rating" : 4,
-        "review" : "Цікава історія, але деякі моменти здались трохи затягнутими."
+    "rating" : 4,
+    "review" : "Interesting story, but some moments seemed a bit drawn out."
     },
     {
-        "rating" : 5,
-        "review" : "Автор створив живих і незабутніх персонажів, з якими легко співпереживати."
+    "rating" : 5,
+    "review" : "The author created vivid and unforgettable characters, with whom it is easy to empathize."
     },
     {
-        "rating" : 5,
-        "review" : "Книга сповнена гумору і пригод. Відмінний вибір для відпочинку."
+    "rating" : 5,
+    "review" : "The book is full of humor and adventure. A great choice for relaxation."
     },
     {
-        "rating" : 4,
-        "review" : "Непоганий детектив, але розгадка загадки була занадто очевидна."
+    "rating" : 4,
+    "review" : "A good detective, but the solution to the mystery was too obvious."
     },
     {
-        "rating" : 5,
-        "review" : "Ця книга змусила мене по-новому поглянути на світ. Дуже рекомендую!"
+    "rating" : 5,
+    "review" : "This book made me look at the world in a new way. I highly recommend it!"
     },
     {
-        "rating" : 4,
-        "review" : "Цікава історія, але деякі діалоги здавалися штучними."
+    "rating" : 4,
+    "review" : "Interesting story, but some dialogues seemed artificial."
     },
     {
-        "rating" : 5,
-        "review" : "Книга написана легкою і приємною мовою. Читається на одному диханні."
+    "rating" : 5,
+    "review" : "The book is written in an easy and pleasant language. It is read in one breath."
     },
     {
-        "rating" : 4,
-        "review" : "Непогана книга, але очікувала більше глибини."
+    "rating" : 4,
+    "review" : "Not a bad book, but I expected more depth."
     },
     {
-        "rating" : 5,
-        "review" : "Ця книга стала для мене справжнім відкриттям. Автор – справжній майстер слова."
+    "rating" : 5,
+    "review" : "This book was a real discovery for me. The author is a true master of words."
     },
     {
-        "rating" : 4,
-        "review" : "Цікавий сюжет, але деякі моменти здавалися передбачуваними."
+    "rating" : 4,
+    "review" : "Interesting plot, but some moments seemed predictable."
     },
     {
-        "rating" : 5,
-        "review" : "Книга сповнена емоцій і пристрасті. Не можу забути цих героїв."
+    "rating" : 5,
+    "review" : "The book is full of emotions and passion. I can't forget these characters."
     },
     {
-        "rating" : 4,
-        "review" : "Непоганий роман, але фінал залишив деякі питання без відповіді."
+    "rating" : 4,
+    "review" : "Not a bad novel, but the ending left some questions unanswered."
     },
     {
-        "rating" : 5,
-        "review" : "Це саме та книга, яка мені була потрібна зараз. Вона надихає і мотивує."
+    "rating" : 5,
+    "review" : "This is exactly the book I needed right now. It inspires and motivates."
     },
     {
-        "rating" : 4,
-        "review" : "Цікава ідея, але реалізація кульгала в деяких моментах."
+    "rating" : 4,
+    "review" : "Interesting idea, but the implementation was lame in some moments."
     },
     {
-        "rating" : 5,
-        "review" : "Книга, яка запам'ятається надовго. Шідевр!"
+    "rating" : 5,
+    "review" : "A book that will be remembered for a long time. A masterpiece!"
     }
 ]

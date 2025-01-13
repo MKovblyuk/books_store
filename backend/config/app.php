@@ -109,8 +109,8 @@ return [
     |
     */
 
-    // 'faker_locale' => 'en_US',
-    'faker_locale' => 'uk_UA',
+    'faker_locale' => 'en_US',
+    //'faker_locale' => 'uk_UA',
 
     /*
     |--------------------------------------------------------------------------

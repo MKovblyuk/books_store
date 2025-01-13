@@ -1,147 +1,234 @@
 {
     "name": "root",
-
     "children": [
         {
-            "name": "Фантастика",
+            "name": "Fantasy",
             "children": [
                 {
-                    "name": "Фентезі",
+                    "name": "Fantasy",
                     "children": [
-                        { "name": "Епічне фентезі" },
-                        { "name": "Темне фентезі" },
-                        { "name": "Молодіжне фентезі" }
+                        {
+                            "name": "Epic Fantasy"
+                        },
+                        {
+                            "name": "Dark Fantasy"
+                        },
+                        {
+                            "name": "Young Adult Fantasy"
+                        }
                     ]
                 },
                 {
-                    "name": "Наукова фантастика",
+                    "name": "Science Fiction",
                     "children": [
-                        { "name": "Космічна опера" },
-                        { "name": "Кіберпанк" },
-                        { "name": "Постапокаліптика" }
+                        {
+                            "name": "Space Opera"
+                        },
+                        {
+                            "name": "Cyberpunk"
+                        },
+                        {
+                            "name": "Post-apocalyptic"
+                        }
                     ]
                 },
                 {
-                    "name": "Фантастика жахів",
+                    "name": "Horror Fiction",
                     "children": [
-                        { "name": "Космічний жах" },
-                        { "name": "Біологічний жах" },
-                        { "name": "Психологічний жах" }
+                        {
+                            "name": "Space Horror"
+                        },
+                        {
+                            "name": "Biological Horror"
+                        },
+                        {
+                            "name": "Psychological Horror"
+                        }
                     ]
                 }
             ]
         },
         {
-            "name": "Література",
+            "name": "Literature",
             "children": [
                 {
-                    "name": "Класика",
+                    "name": "Classics",
                     "children": [
-                        { "name": "Антична література" },
-                        { "name": "Європейська класика" }
+                        {
+                            "name": "Ancient Literature"
+                        },
+                        {
+                            "name": "European Classics"
+                        }
                     ]
                 },
                 {
-                    "name": "Сучасна проза",
+                    "name": "Modern Prose",
                     "children": [
-                        { "name": "Роман" },
-                        { "name": "Новела" },
-                        { "name": "Оповідання" }
+                        {
+                            "name": "Novel"
+                        },
+                        {
+                            "name": "Novel"
+                        },
+                        {
+                            "name": "Short Story"
+                        }
                     ]
                 },
                 {
-                    "name": "Поезія",
+                    "name": "Poetry",
                     "children": [
-                        { "name": "Лірика" },
-                        { "name": "Епіка" },
-                        { "name": "Драма" }
+                        {
+                            "name": "Lyrics"
+                        },
+                        {
+                            "name": "Epic"
+                        },
+                        {
+                            "name": "Drama"
+                        }
                     ]
                 }
             ]
         },
         {
-            "name": "Дитяча література",
+            "name": "Children's Literature",
             "children": [
                 {
-                    "name": "Казки",
+                    "name": "Fairy Tales",
                     "children": [
-                        { "name": "Народні казки" },
-                        { "name": "Авторські казки" },
-                        { "name": "Казки для найменших" }
+                        {
+                            "name": "Folk Tales"
+                        },
+                        {
+                            "name": "Author's Tales"
+                        },
+                        {
+                            "name": "Tales for the Little Ones"
+                        }
                     ]
                 },
                 {
-                    "name": "Пригоди",
+                    "name": "Adventure",
                     "children": [
-                        { "name": "Пригоди дітей" },
-                        { "name": "Пригоди тварин" },
-                        { "name": "Історичні пригоди" }
+                        {
+                            "name": "Children's Adventures"
+                        },
+                        {
+                            "name": "Animal Adventures"
+                        },
+                        {
+                            "name": "Historical Adventures"
+                        }
                     ]
                 },
                 {
-                    "name": "Фентезі для дітей",
+                    "name": "Fantasy for Children",
                     "children": [
-                        { "name": "Чарівні світи" },
-                        { "name": "Міфічні істоти" },
-                        { "name": "Юнацьке фентезі" }
+                        {
+                            "name": "Magical Worlds"
+                        },
+                        {
+                            "name": "Mythical Creatures"
+                        },
+                        {
+                            "name": "Youth Fantasy"
+                        }
                     ]
                 }
             ]
         },
         {
-            "name": "Наукова література",
+            "name": "Scientific Literature",
             "children": [
                 {
-                    "name": "Природничі науки",
+                    "name": "Natural Sciences",
                     "children": [
-                        { "name": "Біологія" },
-                        { "name": "Фізика" },
-                        { "name": "Хімія" }
+                        {
+                            "name": "Biology"
+                        },
+                        {
+                            "name": "Physics"
+                        },
+                        {
+                            "name": "Chemistry"
+                        }
                     ]
                 },
                 {
-                    "name": "Гуманітарні науки",
+                    "name": "Humanities",
                     "children": [
-                        { "name": "Історія" },
-                        { "name": "Філософія" },
-                        { "name": "Соціологія" }
+                        {
+                            "name": "History"
+                        },
+                        {
+                            "name": "Philosophy"
+                        },
+                        {
+                            "name": "Sociology"
+                        }
                     ]
                 },
                 {
-                    "name": "Технічні науки",
+                    "name": "Technical Sciences",
                     "children": [
-                        { "name": "Інформатика" },
-                        { "name": "Інженерія" },
-                        { "name": "Математика" }
+                        {
+                            "name": "Informatics"
+                        },
+                        {
+                            "name": "Engineering"
+                        },
+                        {
+                            "name": "Mathematics"
+                        }
                     ]
                 }
             ]
         },
         {
-            "name": "Практична література",
+            "name": "Practical Literature",
             "children": [
                 {
-                    "name": "Психологія",
+                    "name": "Psychology",
                     "children": [
-                        { "name": "Саморозвиток" },
-                        { "name": "Психотерапія" },
-                        { "name": "Міжособистісні стосунки" }
+                        {
+                            "name": "Self-Development"
+                        },
+                        {
+                            "name": "Psychotherapy"
+                        },
+                        {
+                            "name": "Interpersonal Relations"
+                        }
                     ]
                 },
                 {
-                    "name": "Бізнес і фінанси",
+                    "name": "Business and Finance",
                     "children": [
-                        { "name": "Маркетинг" },
-                        { "name": "Менеджмент" },
-                        { "name": "Інвестиції" }
+                        {
+                            "name": "Marketing"
+                        },
+                        {
+                            "name": "Management"
+                        },
+                        {
+                            "name": "Investments"
+                        }
                     ]
                 },
                 {
-                    "name": "Кулінарія",
+                    "name": "Cooking",
                     "children": [
-                        { "name": "Національна кухня" },
-                        { "name": "Вегетаріанська кухня" },
-                        { "name": "Випічка" }
+                        {
+                            "name": "National cuisine"
+                        },
+                        {
+                            "name": "Vegetarian cuisine"
+                        },
+                        {
+                            "name": "Baking"
+                        }
                     ]
                 }
             ]
