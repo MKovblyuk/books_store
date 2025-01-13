@@ -16,7 +16,7 @@ This is a personal project: a Books Store application.
     git clone https://github.com/MKovblyuk/books_store.git
 2.  **In root directory create `db_root_password.txt` and write password for database**
 3.  **In root directory create `.env.nginx` (copy `.env.nginx.example`)**
-4.  **In backend direcotry `create .env`**
+4.  **In backend direcotry create `.env`**
      -  write `DB_PASSWORD` the same as in `db_root_password.txt`
 5.  **Run:**
     ```bash
