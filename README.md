@@ -5,6 +5,7 @@ This is a personal project: a Books Store application.
 The application is available at the link https://mkvb22.site
 > [!NOTE]
 > The payment system does not have a webhook connected to confirm payment.
+> Therefore, e-books and audiobooks are immediately available even with an order status of "Pending".
 
 ## Installation
 
