@@ -24,7 +24,7 @@ class FragmentSeeder extends Seeder
 
     public function run(): void
     {    
-        Book::withoutEagerLoads()->get(['id'])->chunk(1000)->each(function (Collection $books) {
+        Book::with('paperFormat')->withoutEagerLoads()->get(['id'])->chunk(1000)->each(function (Collection $books) {
             $this->seedFragmentsForBooks($books->toArray(), self::FRAGMENTS_COUNT);
         });
     }
