@@ -14,17 +14,27 @@ use Database\Seeders\Books\AdditionalSeeders\PaperFormatSeeder;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\DB;
 
 class BookSeeder extends Seeder
 {
+    private SupportCollection $authors;
+    private SupportCollection $publishers;
+    private SupportCollection $categories;
+
     public function __construct(
         private $coverImageFactory = new CoverImageFactory
     )
-    {}
+    {
+        $this->authors = Author::all('id')->pluck('id');
+        $this->publishers = Publisher::all('id')->pluck('id');
+        $this->categories = Category::whereNot('parent_id')->get('id')->pluck('id');
+    }
 
     public function run(): void
     {            
+        $start = microtime(true);
         DB::transaction(function () {
             try {
                 $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic, BookFormat::Paper]);
@@ -37,6 +47,8 @@ class BookSeeder extends Seeder
                 throw $e;
             }
         });
+        $end = microtime(true);
+        dd('execution time: ' . ($end - $start));
     }
 
     private function seedBooksWithFormats(int $count, array $formats): void
@@ -47,8 +59,8 @@ class BookSeeder extends Seeder
             }
 
             $books = Book::factory($BATCH_SIZE)
-                ->for(Publisher::inRandomOrder()->first())
-                ->for(Category::inRandomOrder()->first())
+                ->sequence(fn () => ['category_id' => $this->categories->random()])
+                ->sequence(fn () => ['publisher_id' => $this->publishers->random()])
                 ->sequence(fn () => ['cover_image_path' => $this->coverImageFactory->createLinkToImage()])
                 ->create();
 
@@ -71,14 +83,15 @@ class BookSeeder extends Seeder
 
     private function seedAuthorBookTable(int $authorsCount, Collection $books): void
     {   
-        $authors = Author::inRandomOrder()->limit($authorsCount)->pluck('id');
         $data = [];
 
         foreach ($books as $book) {
+            $authorsForBook = $this->authors->random($authorsCount);
+
             for ($i = 0; $i < $authorsCount; $i++) {
                 $data[] = [
                     'book_id' => $book->id, 
-                    'author_id' => $authors[$i]
+                    'author_id' => $authorsForBook[$i],
                 ];
             }
         }
