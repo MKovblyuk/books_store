@@ -40,3 +40,10 @@ The application is available at the link https://mkvb22.site
 8. **Grant access permission to directories:**
     - backend/storage/logs
     - backend/storage/framework
+
+## Credentials for admin:
+*Use it to login on https://mkvb22.site*
+  
+**Email:** `m1@gmail.com`
+
+**Password:** `123456`
