@@ -47,3 +47,6 @@ The application is available at the link https://mkvb22.site
 **Email:** `m1@gmail.com`
 
 **Password:** `123456`
+
+## Template data for successful payment:
+![payment_template](backend/payment_tamplate.png)
