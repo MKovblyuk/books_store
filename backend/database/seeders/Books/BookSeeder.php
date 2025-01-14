@@ -34,7 +34,6 @@ class BookSeeder extends Seeder
 
     public function run(): void
     {            
-        $start = microtime(true);
         DB::transaction(function () {
             try {
                 $this->seedBooksWithFormats(1000, [BookFormat::Audio, BookFormat::Electronic, BookFormat::Paper]);
@@ -47,8 +46,6 @@ class BookSeeder extends Seeder
                 throw $e;
             }
         });
-        $end = microtime(true);
-        dd('execution time: ' . ($end - $start));
     }
 
     private function seedBooksWithFormats(int $count, array $formats): void
