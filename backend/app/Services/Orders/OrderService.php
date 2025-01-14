@@ -55,27 +55,11 @@ class OrderService
             $attributes['total_price'] = $this->priceCalculator->calculate($attributes);
             $attributes['status'] = OrderStatus::Pending;
     
-            $paymentMethod = PaymentMethod::find($attributes['payment_method_id'])->method;
-            if ($paymentMethod === PaymentMethods::UponReceiving) {
-                throw new IncorrectPaymentMethodException('Incorrect payment method');
-            }
-
-            $payment = [
-                'methods' => [strtolower($paymentMethod->value)],
-                'capture' => ['descriptive' => 'Purchase in Book Store']
-            ];
-    
+            $payment = $this->createPaymentData($attributes);
             $order = $this->createOrder($attributes);
             ProcessPendingOrder::dispatch($order)->delay(now()->addMinutes(30));
 
-            $user = User::find($attributes['user_id']);
-            $customer = [
-                'name' => $user->first_name . ' ' . $user->last_name,
-                'email' => $user->email,
-                'phone' => $user->phone_number,
-                'phone_indicative' => '+380',
-            ];
-
+            $customer = $this->createCustomerData($attributes);
             $type = 'single';
             $orderData = [
                 'key' => $order->id,
@@ -116,5 +100,30 @@ class OrderService
         }
 
         return $order;
+    }
+
+    private function createPaymentData(array $attributes): array
+    {
+        $paymentMethod = PaymentMethod::find($attributes['payment_method_id'])->method;
+        if ($paymentMethod === PaymentMethods::UponReceiving) {
+            throw new IncorrectPaymentMethodException('Incorrect payment method');
+        }
+
+        return [
+            'methods' => [strtolower($paymentMethod->value)],
+            'capture' => ['descriptive' => 'Purchase in Book Store']
+        ];
+    }
+
+    private function createCustomerData(array $attributes): array
+    {
+        $user = User::find($attributes['user_id']);
+
+        return [
+            'name' => $user->first_name . ' ' . $user->last_name,
+            'email' => $user->email,
+            'phone' => $user->phone_number,
+            'phone_indicative' => '+380',
+        ];
     }
 }
