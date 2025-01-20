@@ -7,7 +7,7 @@ import { RouterView } from 'vue-router';
 <template>
     <div>
         <Header/>
-        <div class="d-flex pt-1">
+        <div class="d-flex pt-1 mb-5">
             <div class="col-4 col-sm-3 col-md-2 col-xxl-1 bg-body-tertiary px-1">
                 <SideMenu class="vh-100"></SideMenu>
             </div>
