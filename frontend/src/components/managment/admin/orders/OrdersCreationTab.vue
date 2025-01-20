@@ -1,13 +1,14 @@
 <script setup>
 import SimpleLineChart from '@/components/widgets/charts/SimpleLineChart.vue';
 import SwitchButtonsGroup from '@/components/widgets/SwitchButtonsGroup.vue';
+import { useMonthsLabels } from '@/composables/monthsLabels';
 import { useStatisticFormatter } from '@/composables/statisticFormatter';
 import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
 
-const labels = ref([]);
 const data = ref([]);
 const selectedYear = ref((new Date()).getFullYear());
+const { labels } = useMonthsLabels(selectedYear);
 
 onMounted(() => {
     fetchOrdersCreationInfo();
@@ -23,16 +24,9 @@ async function fetchOrdersCreationInfo() {
     });
 
     if (response.status === 200) {
-        setLabels();
         data.value = useStatisticFormatter(selectedYear.value)
             .getData(response.data.data[0], (item) => item[0]?.ordersCount);
     }
-}
-
-function setLabels() {
-    labels.value = useStatisticFormatter(selectedYear.value)
-        .getMonthsNumbers(selectedYear.value)
-        .map(item => item + '/' + selectedYear.value);
 }
 
 </script>

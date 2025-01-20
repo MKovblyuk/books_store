@@ -1,15 +1,16 @@
 <script setup>
 import LineChart from '@/components/widgets/charts/LineChart.vue';
 import SwitchButtonsGroup from '@/components/widgets/SwitchButtonsGroup.vue';
+import { useMonthsLabels } from '@/composables/monthsLabels';
 import { useStatisticFormatter } from '@/composables/statisticFormatter';
 import { ColorGenerator } from '@/helpers/ColorGenerator';
 import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
 
-const labels = ref([]);
 const datasets = ref([]);
 const statData = ref([]);
 const selectedYear = ref((new Date()).getFullYear());
+const { labels } = useMonthsLabels(selectedYear);
 const categories = ref([]);
 const parentCategoryIdsHistory = [];
 
@@ -18,13 +19,6 @@ onMounted(() => {
 })
 
 watch(selectedYear,() => fetchCategoriesStat());
-
-
-function setLabels() {
-    labels.value = useStatisticFormatter(selectedYear.value)
-        .getMonthsNumbers(selectedYear.value)
-        .map(item => item + '/' + selectedYear.value);
-}
 
 function getDataForCategory(categoryId) {
     return useStatisticFormatter(selectedYear.value).getData(
@@ -61,8 +55,6 @@ async function fetchCategoriesStat() {
 
     if (response.status === 200) {
         statData.value = response.data.data[0];
-
-        setLabels();
         setDataSets();
     }
 }

@@ -1,27 +1,21 @@
 <script setup>
 import LineChart from '@/components/widgets/charts/LineChart.vue';
 import SwitchButtonsGroup from '@/components/widgets/SwitchButtonsGroup.vue';
+import { useMonthsLabels } from '@/composables/monthsLabels';
 import { useStatisticFormatter } from '@/composables/statisticFormatter';
 import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
 
-const labels = ref([]);
 const datasets = ref([]);
 const statData = ref([]);
 const selectedYear = ref((new Date()).getFullYear());
+const { labels } = useMonthsLabels(selectedYear);
 
 onMounted(() => {
     fetchBookFormatsStat();
 })
 
 watch(selectedYear,() => fetchBookFormatsStat());
-
-
-function setLabels() {
-    labels.value = useStatisticFormatter(selectedYear.value)
-        .getMonthsNumbers()
-        .map(item => item + '/' + selectedYear.value);
-}
 
 function getDataForFormat(format) {
     return useStatisticFormatter(selectedYear.value).getData(
@@ -65,8 +59,6 @@ async function fetchBookFormatsStat() {
 
     if (response.status === 200) {
         statData.value = response.data.data[0];
-
-        setLabels();
         setDataSets();
     }
 }
