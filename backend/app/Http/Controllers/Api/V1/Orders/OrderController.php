@@ -16,9 +16,9 @@ use App\Http\Requests\V1\Orders\UpdateOrderRequest;
 use App\Http\Resources\V1\Orders\OrderCollection;
 use App\Http\Resources\V1\Orders\OrderDetailCollection;
 use App\Http\Resources\V1\Orders\OrderResource;
-use App\Http\Resources\V1\Orders\OrdersCreationInfoCollection;
 use App\Http\Transformers\BookFormatsStatTransformer;
 use App\Http\Transformers\CategoriesStatTransformer;
+use App\Http\Transformers\OrderCreationInfoTransformer;
 use App\Models\V1\Orders\Order;
 use App\Services\Orders\OrderService;
 use Illuminate\Http\Request;
@@ -100,10 +100,11 @@ class OrderController extends Controller
             : response()->json(['message' => 'Order not deleted']);
     }
 
-    public function getCreationInfo(GetOrdersCreationInfoAction $action)
+    public function getCreationInfo(GetOrdersCreationInfoAction $action, OrderCreationInfoTransformer $transformer)
     {
         $this->authorize('showStatistic', Order::class);
-        return new OrdersCreationInfoCollection($action->execute());
+        $data = $transformer->transform($action->execute(request('year'), request('month')));
+        return response()->json(['data' => $data]);
     }
 
     public function getCategoriesStat(GetCategoriesStatAction $action, CategoriesStatTransformer $transformer)
