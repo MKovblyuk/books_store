@@ -19,6 +19,7 @@ class OrderFactory extends Factory
     {
         return [
             'status' => OrderStatus::cases()[array_rand(OrderStatus::cases())],
+            'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
         ];
     }
 }
