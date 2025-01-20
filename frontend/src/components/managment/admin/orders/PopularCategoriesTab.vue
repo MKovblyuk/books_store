@@ -20,7 +20,7 @@ onMounted(() => {
 watch(selectedYear,() => fetchCategoriesStat());
 
 
- function setLabels() {
+function setLabels() {
     labels.value = useStatisticFormatter(selectedYear.value)
         .getMonthsNumbers(selectedYear.value)
         .map(item => item + '/' + selectedYear.value);
