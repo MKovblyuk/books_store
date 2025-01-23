@@ -7,6 +7,35 @@ The application is available at the link https://mkvb22.site
 > The payment system does not have a webhook connected to confirm payment.
 > Therefore, e-books and audiobooks are immediately available even with an order status of "Pending".
 
+## Description
+
+Book Store is an online book store that allows users to browse the catalog, make purchases, track orders, and manage their personal account. 
+Users can download and open electronic versions of the book, if available.
+
+The project includes an admin panel to manage the catalog, orders, and users.
+
+## Tech Stack
+
+**Backend:**
+*    PHP 8.2
+*    Laravel 10
+*    MySql 8
+*    Composer
+*    Redis
+*    NGINX
+  
+**Frontend:**
+*    HTML/CSS
+*    JavaScript
+*    Vue.js 3
+*    Bootstrap 5
+*    NPM
+
+**Other:**
+*    Git\GitHub
+*    Docker
+*    Postman
+
 ## Installation
 
 **Prerequisites:**
